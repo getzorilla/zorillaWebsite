@@ -2,6 +2,7 @@ import Link from 'next/link'
 import catalog from '@/public/catalog.json'
 import { stats } from '@/lib/store'
 import { ThemePreview } from '@/components/ThemeCard'
+import { GithubMark } from '@/components/Icons'
 
 export default async function Home() {
   const counts = await stats()
@@ -19,10 +20,17 @@ export default async function Home() {
         <div className="cta">
           <Link href="/try" className="btn primary">try the editor</Link>
           <Link href="/marketplace" className="btn">browse the marketplace</Link>
-          <a className="btn quiet" href="https://github.com/aykk/zorilla" target="_blank" rel="noreferrer">source</a>
+          <a
+            className="btn quiet"
+            href="https://github.com/zorilla-oss/zorillaApp"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <GithubMark size={15} /> source
+          </a>
         </div>
         <div className="install">
-          <b>git clone https://github.com/aykk/zorilla</b>
+          <b>git clone https://github.com/zorilla-oss/zorillaApp</b>
           <span>then npm i && npm start</span>
         </div>
       </section>

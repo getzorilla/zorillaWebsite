@@ -216,3 +216,13 @@ textarea { font-family: var(--mono); font-size: 12.5px; resize: vertical; }
 .theme-foot span { font-family: var(--mono); font-size: 11.5px; color: var(--dimmer); }
 .theme-actions { display: flex; gap: 8px; padding: 0 12px 12px; }
 .theme-actions .btn { font-size: 12px; padding: 5px 10px; }
+
+.icon-link {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 7px;
+  color: var(--dim); border: 1px solid transparent;
+  transition: color .12s, background .12s, border-color .12s;
+}
+.icon-link:hover { color: var(--text); background: var(--raise); border-color: var(--line); }
+.nav .icon-link { margin-left: -4px; }
+.footer .icon-link { width: 26px; height: 26px; }
