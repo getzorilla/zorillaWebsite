@@ -36,4 +36,22 @@ const catalog = {
 }
 
 await writeFile(path.join(here, '../public/catalog.json'), JSON.stringify(catalog, null, 2))
+
+// The automations that ship with the app are also the marketplace's first
+// listings. An empty marketplace reads as abandoned, and these are the same
+// files a new install already has, so nothing here is a mock-up.
+const { readdir, readFile } = await import('node:fs/promises')
+const exampleDir = path.join(app, 'automations')
+const starters = []
+for (const file of (await readdir(exampleDir)).filter((f) => f.endsWith('.json'))) {
+  const wf = JSON.parse(await readFile(path.join(exampleDir, file), 'utf8'))
+  starters.push({
+    slug: file.replace(/\.json$/, ''),
+    title: wf.name,
+    summary: wf.notes ?? '',
+    package: { name: wf.name, nodes: wf.nodes, edges: wf.edges },
+  })
+}
+await writeFile(path.join(here, '../public/starters.json'), JSON.stringify(starters, null, 2))
+console.log(`starters: ${starters.length} automations`)
 console.log(`catalog: ${catalog.nodes.length} steps, ${catalog.integrations.length} integrations, ${catalog.themes.length} themes`)

@@ -72,7 +72,7 @@ const LOGOS = new Set([
 // Which service a step belongs to. Integration steps say so; the rest are named
 // after their service already (gmail.send), and the built-ins are not services.
 const SERVICE_LABEL = { web3: 'Web3', gmail: 'Gmail' }
-const CORE = new Set(['core', 'logic', 'flow', 'transform', 'output', 'net', 'code'])
+const CORE = new Set(['core', 'logic', 'flow', 'transform', 'output', 'net', 'code', 'file'])
 function serviceOf(def) {
   if (def.integration) return def.integration
   const prefix = String(def.type).split('.')[0]
@@ -772,6 +772,64 @@ function touch() {
   saveTimer = setTimeout(save, 600)
 }
 
+// ---------------------------------------------------------------- undo
+
+// Snapshots of the whole graph rather than a list of reversible operations.
+// A workflow is small, and the alternative is a second implementation of every
+// change that has to stay in step with the first one.
+const history = { past: [], future: [], lastTag: null, lastAt: 0 }
+const LIMIT = 60
+
+const snapshot = () => JSON.stringify({
+  name: state.wf?.name,
+  nodes: state.wf?.nodes ?? [],
+  edges: state.wf?.edges ?? [],
+})
+
+// Typing in a field fires on every keystroke, so changes with the same tag
+// inside a second collapse into one step back.
+function remember(tag = null) {
+  if (!state.wf) return
+  const now = Date.now()
+  if (tag && tag === history.lastTag && now - history.lastAt < 900) {
+    history.lastAt = now
+    return
+  }
+  history.past.push(snapshot())
+  if (history.past.length > LIMIT) history.past.shift()
+  history.future.length = 0
+  history.lastTag = tag
+  history.lastAt = now
+}
+
+function restore(json) {
+  const state_ = JSON.parse(json)
+  state.wf.name = state_.name
+  state.wf.nodes = state_.nodes
+  state.wf.edges = state_.edges
+  if (!state.wf.nodes.some((n) => n.id === state.selected)) state.selected = null
+  renderCrumbs()
+  renderCanvas()
+  renderInspector()
+  touch()
+}
+
+function undo() {
+  if (!history.past.length) return toast('nothing to undo')
+  history.future.push(snapshot())
+  restore(history.past.pop())
+  history.lastTag = null
+  toast('undone')
+}
+
+function redo() {
+  if (!history.future.length) return toast('nothing to redo')
+  history.past.push(snapshot())
+  restore(history.future.pop())
+  history.lastTag = null
+  toast('redone')
+}
+
 async function save() {
   clearTimeout(saveTimer)
   const wf = state.wf
@@ -792,6 +850,8 @@ async function save() {
 }
 
 async function openWorkflow(id) {
+  history.past.length = 0
+  history.future.length = 0
   state.wf = await api(`/api/workflows/${id}`)
   state.selected = null
   state.run = null
@@ -846,6 +906,7 @@ function selectNode(id) {
 }
 
 function addNode(type, x, y) {
+  remember()
   const def = state.defs.get(type)
   const node = {
     id: `n${Math.random().toString(36).slice(2, 9)}`,
@@ -862,6 +923,7 @@ function addNode(type, x, y) {
 }
 
 function removeNode(id) {
+  remember()
   state.wf.nodes = state.wf.nodes.filter((n) => n.id !== id)
   state.wf.edges = state.wf.edges.filter((e) => e.from !== id && e.to !== id)
   if (state.selected === id) state.selected = null
@@ -872,6 +934,7 @@ function removeNode(id) {
 
 function connect(from, fromPort, to) {
   if (from === to) return toast('a step cannot feed itself.', true)
+  remember()
   if (state.wf.edges.some((e) => e.from === from && e.fromPort === fromPort && e.to === to)) return
   state.wf.edges.push({ from, fromPort, to, toPort: 'main' })
   renderCanvas()
@@ -1106,6 +1169,7 @@ function drawWires(temp = null) {
     hit.addEventListener('mouseenter', () => line.setAttribute('stroke', themeColor('--bad')))
     hit.addEventListener('mouseleave', () => line.setAttribute('stroke', themeColor('--wire')))
     hit.addEventListener('click', () => {
+      remember()
       state.wf.edges = state.wf.edges.filter((e) => e !== edge)
       renderCanvas()
       touch()
@@ -1162,6 +1226,7 @@ $('canvas').addEventListener('pointerdown', (event) => {
     if (box) {
       const node = nodeById(box.dataset.id)
       selectNode(node.id)
+      remember(`move:${node.id}`)
       const start = toWorld(event.clientX, event.clientY)
       drag = { kind: 'node', id: node.id, dx: start.x - node.position.x, dy: start.y - node.position.y, moved: false }
     } else {
@@ -1241,7 +1306,22 @@ $('canvas').addEventListener('wheel', (event) => {
 
 window.addEventListener('keydown', (event) => {
   const typing = ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)
-  if (typing || state.view !== 'editor' || !state.selected) return
+  if (state.view !== 'editor') return
+
+  const meta = event.metaKey || event.ctrlKey
+  if (meta && event.key.toLowerCase() === 'z') {
+    event.preventDefault()
+    if (event.shiftKey) redo()
+    else undo()
+    return
+  }
+  if (meta && event.key.toLowerCase() === 'y') {
+    event.preventDefault()
+    redo()
+    return
+  }
+
+  if (typing || !state.selected) return
   if (event.key === 'Delete' || event.key === 'Backspace') {
     event.preventDefault()
     removeNode(state.selected)
@@ -1313,6 +1393,25 @@ function renderInspector() {
   $('inspector-title').textContent = def?.label ?? node.type
   if (def?.description) host.append(el('p', { class: 'hint', text: def.description }))
 
+  // a webhook is only useful if you can see the address to paste elsewhere
+  if (node.type === 'core.webhook') {
+    const base = state.home.publicUrl || `http://127.0.0.1:${state.home.port}`
+    const secret = String(node.params.secret ?? '')
+    const address = `${base}/hook/${String(node.params.path ?? '').replace(/^\//, '')}${secret ? `?secret=${encodeURIComponent(secret)}` : ''}`
+    const line = el('div', { class: 'hook-address' }, el('code', { text: address }))
+    host.append(field('the address to give them', line,
+      state.home.publicUrl
+        ? 'this is your tunnel address, so anything on the internet can reach it. keep the secret on.'
+        : 'this only works from this machine. run a tunnel and set ZORILLA_PUBLIC_URL to let stripe or github reach it.'))
+    host.append(el('div', { class: 'row-inline', style: 'margin:-8px 0 14px' },
+      el('button', { class: 'ghost', text: 'copy', onclick: async () => { await navigator.clipboard.writeText(address); toast('copied') } }),
+      el('button', { class: 'ghost', text: secret ? 'new secret' : 'add a secret', onclick: () => {
+        node.params.secret = [...crypto.getRandomValues(new Uint8Array(16))].map((b) => b.toString(16).padStart(2, '0')).join('')
+        touch()
+        renderInspector()
+      } })))
+  }
+
   const service = def ? serviceOf(def) : null
   const spec = service ? state.integrations.find((i) => i.id === service) : null
   if (spec?.hosts?.length) {
@@ -1324,6 +1423,7 @@ function renderInspector() {
 
   const name = el('input', { type: 'text', value: node.name ?? '', placeholder: def?.label ?? node.type })
   name.oninput = () => {
+    remember(`name:${node.id}`)
     node.name = name.value
     document.querySelector(`.node[data-id="${node.id}"] .title`).textContent = node.name || def?.label || node.type
     touch()
@@ -1333,7 +1433,11 @@ function renderInspector() {
   for (const param of def?.params ?? []) {
     if (!visible(param, node.params)) continue
     const value = node.params[param.key]
-    const set = (next) => { node.params[param.key] = next; touch() }
+    const set = (next) => {
+      remember(`param:${node.id}:${param.key}`)
+      node.params[param.key] = next
+      touch()
+    }
     let control
 
     if (param.type === 'select') {
@@ -1528,7 +1632,7 @@ state.workflows = boot.workflows
 state.runs = boot.runs
 state.workspace = boot.workspace
 state.themes = boot.themes ?? []
-state.home = { port: boot.port, path: boot.home }
+state.home = { port: boot.port, path: boot.home, publicUrl: boot.publicUrl ?? '' }
 applyTheme(currentTheme())
 
 renderPalette()

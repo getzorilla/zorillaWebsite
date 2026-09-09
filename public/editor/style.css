@@ -402,3 +402,9 @@ textarea { resize: vertical; font-family: var(--mono); font-size: 12px; }
 
 .port.out.error { background: var(--bad); }
 .node .port-label { font-size: 9.5px; }
+
+.hook-address {
+  background: var(--sunk); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 7px 9px; overflow-x: auto;
+}
+.hook-address code { font-size: 11px; color: var(--text); white-space: nowrap; }

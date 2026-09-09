@@ -1,0 +1,575 @@
+[
+  {
+    "slug": "daily-digest-email",
+    "title": "daily digest email",
+    "summary": "One mail a day. Needs a saved Gmail key named my_gmail — an app password, not your account password.",
+    "package": {
+      "name": "daily digest email",
+      "nodes": [
+        {
+          "id": "clock",
+          "type": "core.schedule",
+          "params": {
+            "mode": "every",
+            "every": 1,
+            "unit": "days"
+          },
+          "position": {
+            "x": 60,
+            "y": 200
+          }
+        },
+        {
+          "id": "price",
+          "type": "coingecko.price",
+          "params": {
+            "ids": "ethereum,bitcoin",
+            "currency": "usd"
+          },
+          "position": {
+            "x": 320,
+            "y": 200
+          }
+        },
+        {
+          "id": "gas",
+          "type": "web3.gas",
+          "params": {
+            "chain": "ethereum"
+          },
+          "position": {
+            "x": 320,
+            "y": 340
+          }
+        },
+        {
+          "id": "mail",
+          "type": "gmail.send",
+          "params": {
+            "credential": "my_gmail",
+            "to": "you@example.com",
+            "subject": "morning digest",
+            "html": "ETH {{ $json.ethereum.usd }} · BTC {{ $json.bitcoin.usd }}"
+          },
+          "position": {
+            "x": 640,
+            "y": 260
+          }
+        }
+      ],
+      "edges": [
+        {
+          "from": "clock",
+          "fromPort": "main",
+          "to": "price",
+          "toPort": "main"
+        },
+        {
+          "from": "clock",
+          "fromPort": "main",
+          "to": "gas",
+          "toPort": "main"
+        },
+        {
+          "from": "price",
+          "fromPort": "main",
+          "to": "mail",
+          "toPort": "main"
+        }
+      ]
+    }
+  },
+  {
+    "slug": "eth-price-to-discord",
+    "title": "eth price to discord",
+    "summary": "Every 10 minutes. The channel is whichever one you made the webhook in, so a webhook made in #signals posts to #signals.",
+    "package": {
+      "name": "eth price to discord",
+      "nodes": [
+        {
+          "id": "clock",
+          "type": "core.schedule",
+          "params": {
+            "mode": "every",
+            "every": 10,
+            "unit": "minutes"
+          },
+          "position": {
+            "x": 60,
+            "y": 200
+          }
+        },
+        {
+          "id": "price",
+          "type": "coingecko.price",
+          "params": {
+            "ids": "ethereum",
+            "currency": "usd"
+          },
+          "position": {
+            "x": 330,
+            "y": 200
+          }
+        },
+        {
+          "id": "post",
+          "type": "discord.post",
+          "params": {
+            "credential": "signals_webhook",
+            "content": "ETH ${{ $json.ethereum.usd }}",
+            "username": "zorilla"
+          },
+          "position": {
+            "x": 600,
+            "y": 200
+          }
+        }
+      ],
+      "edges": [
+        {
+          "from": "clock",
+          "fromPort": "main",
+          "to": "price",
+          "toPort": "main"
+        },
+        {
+          "from": "price",
+          "fromPort": "main",
+          "to": "post",
+          "toPort": "main"
+        }
+      ]
+    }
+  },
+  {
+    "slug": "eth-price-watch",
+    "title": "eth price watch",
+    "summary": "Runs with no keys at all. Reads a public price feed and stays quiet until the price crosses a line.",
+    "package": {
+      "name": "eth price watch",
+      "nodes": [
+        {
+          "id": "clock",
+          "type": "core.schedule",
+          "params": {
+            "mode": "every",
+            "every": 15,
+            "unit": "minutes"
+          },
+          "position": {
+            "x": 60,
+            "y": 200
+          }
+        },
+        {
+          "id": "price",
+          "type": "coingecko.price",
+          "params": {
+            "ids": "ethereum",
+            "currency": "usd"
+          },
+          "position": {
+            "x": 320,
+            "y": 200
+          }
+        },
+        {
+          "id": "cross",
+          "type": "logic.changed",
+          "params": {
+            "value": "{{ $json.ethereum.usd > 4000 }}",
+            "direction": "becomesTrue",
+            "key": ""
+          },
+          "position": {
+            "x": 580,
+            "y": 200
+          }
+        },
+        {
+          "id": "say",
+          "type": "output.log",
+          "params": {
+            "message": "ETH is {{ $json.ethereum.usd }} — swap this step for an email or a text"
+          },
+          "position": {
+            "x": 840,
+            "y": 200
+          }
+        }
+      ],
+      "edges": [
+        {
+          "from": "clock",
+          "fromPort": "main",
+          "to": "price",
+          "toPort": "main"
+        },
+        {
+          "from": "price",
+          "fromPort": "main",
+          "to": "cross",
+          "toPort": "main"
+        },
+        {
+          "from": "cross",
+          "fromPort": "main",
+          "to": "say",
+          "toPort": "main"
+        }
+      ]
+    }
+  },
+  {
+    "slug": "hourly-price-email",
+    "title": "hourly price email",
+    "summary": "Every hour by email. Resend only delivers from a domain you have verified with them.",
+    "package": {
+      "name": "hourly price email",
+      "nodes": [
+        {
+          "id": "clock",
+          "type": "core.schedule",
+          "params": {
+            "mode": "every",
+            "every": 1,
+            "unit": "hours"
+          },
+          "position": {
+            "x": 60,
+            "y": 200
+          }
+        },
+        {
+          "id": "price",
+          "type": "coingecko.price",
+          "params": {
+            "ids": "ethereum,bitcoin",
+            "currency": "usd"
+          },
+          "position": {
+            "x": 330,
+            "y": 200
+          }
+        },
+        {
+          "id": "mail",
+          "type": "resend.send",
+          "params": {
+            "credential": "my_resend",
+            "to": "you@example.com",
+            "subject": "ETH {{ $json.ethereum.usd }}",
+            "html": "<p>ETH {{ $json.ethereum.usd }}<br>BTC {{ $json.bitcoin.usd }}</p>",
+            "from": ""
+          },
+          "position": {
+            "x": 600,
+            "y": 200
+          }
+        }
+      ],
+      "edges": [
+        {
+          "from": "clock",
+          "fromPort": "main",
+          "to": "price",
+          "toPort": "main"
+        },
+        {
+          "from": "price",
+          "fromPort": "main",
+          "to": "mail",
+          "toPort": "main"
+        }
+      ]
+    }
+  },
+  {
+    "slug": "prepare-transaction",
+    "title": "prepare a transaction",
+    "summary": "Works out exactly what a transaction would do and what it would cost. It signs nothing and sends nothing.",
+    "package": {
+      "name": "prepare a transaction",
+      "nodes": [
+        {
+          "id": "start",
+          "type": "core.manual",
+          "params": {},
+          "position": {
+            "x": 60,
+            "y": 200
+          }
+        },
+        {
+          "id": "prep",
+          "type": "web3.prepare",
+          "params": {
+            "chain": "sepolia",
+            "to": "vitalik.eth",
+            "value": "0.001"
+          },
+          "position": {
+            "x": 340,
+            "y": 200
+          }
+        },
+        {
+          "id": "say",
+          "type": "output.log",
+          "params": {
+            "message": "would cost {{ $json.estimatedFeeEth }} ETH in fees; signed: {{ $json.signed }}"
+          },
+          "position": {
+            "x": 640,
+            "y": 200
+          }
+        }
+      ],
+      "edges": [
+        {
+          "from": "start",
+          "fromPort": "main",
+          "to": "prep",
+          "toPort": "main"
+        },
+        {
+          "from": "prep",
+          "fromPort": "main",
+          "to": "say",
+          "toPort": "main"
+        }
+      ]
+    }
+  },
+  {
+    "slug": "usdc-landing-in-a-wallet",
+    "title": "usdc landing in a wallet",
+    "summary": "Watches USDC landing in one wallet. Put your own address in \"only where\": the endpoint filters, so this stays cheap. Never reports the same transaction twice.",
+    "package": {
+      "name": "usdc landing in a wallet",
+      "nodes": [
+        {
+          "id": "clock",
+          "type": "core.schedule",
+          "params": {
+            "mode": "every",
+            "every": 5,
+            "unit": "minutes"
+          },
+          "position": {
+            "x": 60,
+            "y": 200
+          }
+        },
+        {
+          "id": "events",
+          "type": "web3.logs",
+          "params": {
+            "chain": "ethereum",
+            "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+            "event": "event Transfer(address indexed from, address indexed to, uint256 value)",
+            "match": [
+              {
+                "name": "to",
+                "value": "0x28C6c06298d514Db089934071355E5743bf21d60"
+              }
+            ],
+            "blocks": 300,
+            "rpc": ""
+          },
+          "position": {
+            "x": 320,
+            "y": 200
+          }
+        },
+        {
+          "id": "once",
+          "type": "logic.once",
+          "params": {
+            "key": "{{ $json.transactionHash }}"
+          },
+          "position": {
+            "x": 860,
+            "y": 200
+          }
+        },
+        {
+          "id": "say",
+          "type": "output.log",
+          "params": {
+            "message": "large transfer in {{ $json.transactionHash }}"
+          },
+          "position": {
+            "x": 1120,
+            "y": 200
+          }
+        }
+      ],
+      "edges": [
+        {
+          "from": "clock",
+          "fromPort": "main",
+          "to": "events",
+          "toPort": "main"
+        },
+        {
+          "from": "once",
+          "fromPort": "main",
+          "to": "say",
+          "toPort": "main"
+        },
+        {
+          "from": "events",
+          "fromPort": "main",
+          "to": "once",
+          "toPort": "main"
+        }
+      ]
+    }
+  },
+  {
+    "slug": "wallet-balance-watch",
+    "title": "wallet balance watch",
+    "summary": "Reads a balance on Ethereum mainnet and only carries on when it drops below a threshold. Reads only; it cannot move funds.",
+    "package": {
+      "name": "wallet balance watch",
+      "nodes": [
+        {
+          "id": "clock",
+          "type": "core.schedule",
+          "params": {
+            "mode": "every",
+            "every": 1,
+            "unit": "hours"
+          },
+          "position": {
+            "x": 60,
+            "y": 200
+          }
+        },
+        {
+          "id": "bal",
+          "type": "web3.balance",
+          "params": {
+            "chain": "ethereum",
+            "address": "vitalik.eth"
+          },
+          "position": {
+            "x": 320,
+            "y": 200
+          }
+        },
+        {
+          "id": "low",
+          "type": "logic.if",
+          "params": {
+            "value": "{{ Number($json.eth) }}",
+            "operation": "less",
+            "compare": "100"
+          },
+          "position": {
+            "x": 580,
+            "y": 200
+          }
+        },
+        {
+          "id": "note",
+          "type": "output.log",
+          "params": {
+            "message": "Balance is {{ $json.eth }} ETH — below the line"
+          },
+          "position": {
+            "x": 860,
+            "y": 140
+          }
+        }
+      ],
+      "edges": [
+        {
+          "from": "clock",
+          "fromPort": "main",
+          "to": "bal",
+          "toPort": "main"
+        },
+        {
+          "from": "bal",
+          "fromPort": "main",
+          "to": "low",
+          "toPort": "main"
+        },
+        {
+          "from": "low",
+          "fromPort": "true",
+          "to": "note",
+          "toPort": "main"
+        }
+      ]
+    }
+  },
+  {
+    "slug": "webhook-to-slack",
+    "title": "webhook to slack",
+    "summary": "POST to http://127.0.0.1:5177/hook/alert and it posts to Slack. Needs a saved Slack key named my_slack.",
+    "package": {
+      "name": "webhook to slack",
+      "nodes": [
+        {
+          "id": "hook",
+          "type": "core.webhook",
+          "params": {
+            "path": "alert",
+            "method": "POST"
+          },
+          "position": {
+            "x": 60,
+            "y": 200
+          }
+        },
+        {
+          "id": "shape",
+          "type": "transform.set",
+          "params": {
+            "fields": [
+              {
+                "key": "text",
+                "value": "{{ $json.body.message }}"
+              }
+            ],
+            "keepOnly": true
+          },
+          "position": {
+            "x": 340,
+            "y": 200
+          }
+        },
+        {
+          "id": "slack",
+          "type": "slack.post",
+          "params": {
+            "credential": "my_slack",
+            "channel": "#alerts",
+            "text": "{{ $json.text }}"
+          },
+          "position": {
+            "x": 620,
+            "y": 200
+          }
+        }
+      ],
+      "edges": [
+        {
+          "from": "hook",
+          "fromPort": "main",
+          "to": "shape",
+          "toPort": "main"
+        },
+        {
+          "from": "shape",
+          "fromPort": "main",
+          "to": "slack",
+          "toPort": "main"
+        }
+      ]
+    }
+  }
+]

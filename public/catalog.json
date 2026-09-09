@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-09T22:19:00.377Z",
+  "generatedAt": "2026-09-09T23:46:44.333Z",
   "nodes": [
     {
       "outputs": [
@@ -12,12 +12,118 @@
           "type": "code",
           "default": "return items.map(item => ({ json: { ...item.json } }))",
           "description": "Gets items, $creds, log. Return [{ json }], or nothing to pass through."
+        },
+        {
+          "key": "credential",
+          "label": "Key it may use",
+          "type": "credential",
+          "default": "",
+          "description": "Optional. Only the key you pick here is handed across."
+        },
+        {
+          "key": "timeout",
+          "label": "Stop it after (seconds)",
+          "type": "number",
+          "default": 15,
+          "min": 1
         }
       ],
       "mode": "batch",
-      "description": "Your own JavaScript over the items. Not sandboxed.",
+      "description": "Your own JavaScript over the items, in a process of its own.",
       "type": "code.js",
       "label": "Run JavaScript",
+      "category": "transform",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "outputs": [
+        "main"
+      ],
+      "params": [
+        {
+          "key": "which",
+          "label": "Which file",
+          "type": "text",
+          "default": "file",
+          "description": "The name it travels under. Downloads arrive as \"file\"."
+        },
+        {
+          "key": "name",
+          "label": "Save it as",
+          "type": "text",
+          "default": "",
+          "placeholder": "report.csv",
+          "description": "Leave blank to keep its own name."
+        }
+      ],
+      "mode": "perItem",
+      "description": "Writes a file the run is carrying into your zorilla files folder.",
+      "type": "file.save",
+      "label": "Save a file",
+      "category": "output",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "outputs": [
+        "main"
+      ],
+      "params": [
+        {
+          "key": "name",
+          "label": "File name",
+          "type": "text",
+          "default": "",
+          "placeholder": "report.csv"
+        },
+        {
+          "key": "as",
+          "label": "Carry it as",
+          "type": "text",
+          "default": "file"
+        },
+        {
+          "key": "asText",
+          "label": "Also read it as text",
+          "type": "boolean",
+          "default": false
+        }
+      ],
+      "mode": "perItem",
+      "description": "Picks up a file from your zorilla files folder so a later step can send it.",
+      "type": "file.read",
+      "label": "Read a file",
+      "category": "transform",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "outputs": [
+        "main"
+      ],
+      "params": [
+        {
+          "key": "text",
+          "label": "Contents",
+          "type": "textarea",
+          "default": "",
+          "placeholder": "name,amount\nada,42"
+        },
+        {
+          "key": "name",
+          "label": "File name",
+          "type": "text",
+          "default": "report.csv"
+        },
+        {
+          "key": "as",
+          "label": "Carry it as",
+          "type": "text",
+          "default": "file"
+        }
+      ],
+      "mode": "perItem",
+      "description": "Turns text into a file, so a spreadsheet or report can be attached to an email.",
+      "type": "file.fromText",
+      "label": "Make a file",
       "category": "transform",
       "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
     },
@@ -125,6 +231,76 @@
       "description": "Resets what first time only and when this changes remember.",
       "type": "flow.forget",
       "label": "Clear memory",
+      "category": "logic",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "outputs": [
+        "main"
+      ],
+      "params": [
+        {
+          "key": "value",
+          "label": "Watch this",
+          "type": "text",
+          "default": "",
+          "placeholder": "{{ $json.ethereum.usd }}"
+        },
+        {
+          "key": "amount",
+          "label": "Moved by at least",
+          "type": "number",
+          "default": 5,
+          "min": 0
+        },
+        {
+          "key": "unit",
+          "label": "Measured in",
+          "type": "select",
+          "default": "percent",
+          "options": [
+            {
+              "value": "percent",
+              "label": "percent"
+            },
+            {
+              "value": "absolute",
+              "label": "the number itself"
+            }
+          ]
+        },
+        {
+          "key": "direction",
+          "label": "Which way",
+          "type": "select",
+          "default": "either",
+          "options": [
+            {
+              "value": "either",
+              "label": "up or down"
+            },
+            {
+              "value": "up",
+              "label": "up only"
+            },
+            {
+              "value": "down",
+              "label": "down only"
+            }
+          ]
+        },
+        {
+          "key": "key",
+          "label": "Track separately by",
+          "type": "text",
+          "default": "",
+          "description": "Optional. {{ $json.symbol }} follows each coin on its own."
+        }
+      ],
+      "mode": "perItem",
+      "description": "Passes on when a number has moved by enough since last time.",
+      "type": "logic.moved",
+      "label": "When this moves",
       "category": "logic",
       "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
     },
@@ -580,7 +756,14 @@
           "type": "text",
           "default": "my-hook",
           "placeholder": "my-hook",
-          "description": "http://127.0.0.1:PORT/hook/<path>. This machine only."
+          "description": "The address ends /hook/<path>. Local only until you put a tunnel in front of it."
+        },
+        {
+          "key": "secret",
+          "label": "Secret",
+          "type": "text",
+          "default": "",
+          "description": "Optional, and worth setting the moment this is reachable from the internet. The caller has to send it as ?secret=… or an X-Zorilla-Secret header."
         },
         {
           "key": "method",
@@ -999,6 +1182,7 @@
         "main"
       ],
       "integration": "airtable",
+      "poll": false,
       "params": [
         {
           "key": "credential",
@@ -1020,9 +1204,11 @@
         },
         {
           "key": "limit",
-          "label": "How many",
+          "label": "How many at most",
           "type": "number",
-          "default": 50
+          "default": 100,
+          "min": 1,
+          "description": "zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind."
         }
       ]
     },
@@ -1035,6 +1221,7 @@
         "main"
       ],
       "integration": "airtable",
+      "poll": false,
       "params": [
         {
           "key": "credential",
@@ -1063,6 +1250,63 @@
       ]
     },
     {
+      "type": "airtable.newRecord",
+      "label": "New Airtable record",
+      "category": "trigger",
+      "description": "Fires when a record is added. One item per record.",
+      "outputs": [
+        "main"
+      ],
+      "integration": "airtable",
+      "poll": true,
+      "params": [
+        {
+          "key": "credential",
+          "label": "Airtable key",
+          "type": "credential",
+          "credentialType": "airtable",
+          "default": ""
+        },
+        {
+          "key": "baseId",
+          "label": "Base id",
+          "type": "text"
+        },
+        {
+          "key": "table",
+          "label": "Table",
+          "type": "text"
+        },
+        {
+          "key": "every",
+          "label": "Check every",
+          "type": "number",
+          "default": 5,
+          "min": 1
+        },
+        {
+          "key": "unit",
+          "label": "Unit",
+          "type": "select",
+          "default": "minutes",
+          "options": [
+            {
+              "value": "minutes",
+              "label": "minutes"
+            },
+            {
+              "value": "hours",
+              "label": "hours"
+            },
+            {
+              "value": "days",
+              "label": "days"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "type": "anthropic.ask",
       "label": "Ask Claude",
       "category": "action",
@@ -1071,6 +1315,7 @@
         "main"
       ],
       "integration": "anthropic",
+      "poll": false,
       "params": [
         {
           "key": "credential",
@@ -1115,6 +1360,7 @@
         "main"
       ],
       "integration": "coingecko",
+      "poll": false,
       "params": [
         {
           "key": "ids",
@@ -1140,6 +1386,7 @@
         "main"
       ],
       "integration": "deepseek",
+      "poll": false,
       "params": [
         {
           "key": "credential",
@@ -1172,6 +1419,7 @@
         "main"
       ],
       "integration": "discord",
+      "poll": false,
       "params": [
         {
           "key": "credential",
@@ -1202,6 +1450,7 @@
         "main"
       ],
       "integration": "etherscan",
+      "poll": false,
       "params": [
         {
           "key": "credential",
@@ -1233,9 +1482,11 @@
         },
         {
           "key": "limit",
-          "label": "How many",
+          "label": "How many at most",
           "type": "number",
-          "default": 25
+          "default": 100,
+          "min": 1,
+          "description": "zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind."
         }
       ]
     },
@@ -1248,6 +1499,7 @@
         "main"
       ],
       "integration": "gemini",
+      "poll": false,
       "params": [
         {
           "key": "credential",
@@ -1280,6 +1532,7 @@
         "main"
       ],
       "integration": "notion",
+      "poll": false,
       "params": [
         {
           "key": "credential",
@@ -1292,6 +1545,14 @@
           "key": "databaseId",
           "label": "Database id",
           "type": "text"
+        },
+        {
+          "key": "limit",
+          "label": "How many at most",
+          "type": "number",
+          "default": 100,
+          "min": 1,
+          "description": "zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind."
         }
       ]
     },
@@ -1304,6 +1565,7 @@
         "main"
       ],
       "integration": "notion",
+      "poll": false,
       "params": [
         {
           "key": "credential",
@@ -1327,6 +1589,58 @@
       ]
     },
     {
+      "type": "notion.newRow",
+      "label": "New Notion row",
+      "category": "trigger",
+      "description": "Fires when a row is added to a database. One item per row.",
+      "outputs": [
+        "main"
+      ],
+      "integration": "notion",
+      "poll": true,
+      "params": [
+        {
+          "key": "credential",
+          "label": "Notion key",
+          "type": "credential",
+          "credentialType": "notion",
+          "default": ""
+        },
+        {
+          "key": "databaseId",
+          "label": "Database id",
+          "type": "text"
+        },
+        {
+          "key": "every",
+          "label": "Check every",
+          "type": "number",
+          "default": 5,
+          "min": 1
+        },
+        {
+          "key": "unit",
+          "label": "Unit",
+          "type": "select",
+          "default": "minutes",
+          "options": [
+            {
+              "value": "minutes",
+              "label": "minutes"
+            },
+            {
+              "value": "hours",
+              "label": "hours"
+            },
+            {
+              "value": "days",
+              "label": "days"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "type": "openai.ask",
       "label": "Ask ChatGPT",
       "category": "action",
@@ -1335,6 +1649,7 @@
         "main"
       ],
       "integration": "openai",
+      "poll": false,
       "params": [
         {
           "key": "credential",
@@ -1368,11 +1683,12 @@
       "type": "resend.send",
       "label": "Send email",
       "category": "action",
-      "description": "Sends one email per item.",
+      "description": "Sends one email per item, with any files the item is carrying.",
       "outputs": [
         "main"
       ],
       "integration": "resend",
+      "poll": false,
       "params": [
         {
           "key": "credential",
@@ -1414,6 +1730,7 @@
         "main"
       ],
       "integration": "slack",
+      "poll": false,
       "params": [
         {
           "key": "credential",
@@ -1444,6 +1761,7 @@
         "main"
       ],
       "integration": "stripe",
+      "poll": false,
       "params": [
         {
           "key": "credential",
@@ -1454,9 +1772,11 @@
         },
         {
           "key": "limit",
-          "label": "How many",
+          "label": "How many at most",
           "type": "number",
-          "default": 10
+          "default": 100,
+          "min": 1,
+          "description": "zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind."
         }
       ]
     },
@@ -1469,6 +1789,7 @@
         "main"
       ],
       "integration": "stripe",
+      "poll": false,
       "params": [
         {
           "key": "credential",
@@ -1479,9 +1800,58 @@
         },
         {
           "key": "limit",
-          "label": "How many",
+          "label": "How many at most",
           "type": "number",
-          "default": 10
+          "default": 100,
+          "min": 1,
+          "description": "zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind."
+        }
+      ]
+    },
+    {
+      "type": "stripe.newCharge",
+      "label": "New Stripe payment",
+      "category": "trigger",
+      "description": "Fires when a payment goes through. One item per payment.",
+      "outputs": [
+        "main"
+      ],
+      "integration": "stripe",
+      "poll": true,
+      "params": [
+        {
+          "key": "credential",
+          "label": "Stripe key",
+          "type": "credential",
+          "credentialType": "stripe",
+          "default": ""
+        },
+        {
+          "key": "every",
+          "label": "Check every",
+          "type": "number",
+          "default": 5,
+          "min": 1
+        },
+        {
+          "key": "unit",
+          "label": "Unit",
+          "type": "select",
+          "default": "minutes",
+          "options": [
+            {
+              "value": "minutes",
+              "label": "minutes"
+            },
+            {
+              "value": "hours",
+              "label": "hours"
+            },
+            {
+              "value": "days",
+              "label": "days"
+            }
+          ]
         }
       ]
     },
@@ -1494,6 +1864,7 @@
         "main"
       ],
       "integration": "supabase",
+      "poll": false,
       "params": [
         {
           "key": "credential",
@@ -1515,9 +1886,11 @@
         },
         {
           "key": "limit",
-          "label": "How many",
+          "label": "How many at most",
           "type": "number",
-          "default": 50
+          "default": 100,
+          "min": 1,
+          "description": "zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind."
         }
       ]
     },
@@ -1530,6 +1903,7 @@
         "main"
       ],
       "integration": "supabase",
+      "poll": false,
       "params": [
         {
           "key": "credential",
@@ -1560,6 +1934,7 @@
         "main"
       ],
       "integration": "telegram",
+      "poll": false,
       "params": [
         {
           "key": "credential",
@@ -1582,6 +1957,53 @@
       ]
     },
     {
+      "type": "telegram.messages",
+      "label": "New Telegram message",
+      "category": "trigger",
+      "description": "Fires when somebody messages your bot. One item per message.",
+      "outputs": [
+        "main"
+      ],
+      "integration": "telegram",
+      "poll": true,
+      "params": [
+        {
+          "key": "credential",
+          "label": "Telegram key",
+          "type": "credential",
+          "credentialType": "telegram",
+          "default": ""
+        },
+        {
+          "key": "every",
+          "label": "Check every",
+          "type": "number",
+          "default": 5,
+          "min": 1
+        },
+        {
+          "key": "unit",
+          "label": "Unit",
+          "type": "select",
+          "default": "minutes",
+          "options": [
+            {
+              "value": "minutes",
+              "label": "minutes"
+            },
+            {
+              "value": "hours",
+              "label": "hours"
+            },
+            {
+              "value": "days",
+              "label": "days"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "type": "twilio.sendSms",
       "label": "Send a text",
       "category": "action",
@@ -1590,6 +2012,7 @@
         "main"
       ],
       "integration": "twilio",
+      "poll": false,
       "params": [
         {
           "key": "credential",
@@ -2067,6 +2490,11 @@
           "key": "create",
           "label": "Add an Airtable record",
           "description": ""
+        },
+        {
+          "key": "newRecord",
+          "label": "New Airtable record",
+          "description": "Fires when a record is added. One item per record."
         }
       ]
     },
@@ -2268,6 +2696,11 @@
           "key": "createPage",
           "label": "Add a Notion page",
           "description": ""
+        },
+        {
+          "key": "newRow",
+          "label": "New Notion row",
+          "description": "Fires when a row is added to a database. One item per row."
         }
       ]
     },
@@ -2332,7 +2765,7 @@
         {
           "key": "send",
           "label": "Send email",
-          "description": "Sends one email per item."
+          "description": "Sends one email per item, with any files the item is carrying."
         }
       ]
     },
@@ -2396,6 +2829,11 @@
           "key": "customers",
           "label": "Read Stripe customers",
           "description": "One item per customer."
+        },
+        {
+          "key": "newCharge",
+          "label": "New Stripe payment",
+          "description": "Fires when a payment goes through. One item per payment."
         }
       ]
     },
@@ -2442,7 +2880,7 @@
       "id": "telegram",
       "label": "Telegram",
       "icon": null,
-      "description": "Messages from a bot.",
+      "description": "Send messages from a bot, and hear back.",
       "docs": "https://core.telegram.org/bots#how-do-i-create-a-bot",
       "category": "action",
       "editable": false,
@@ -2470,6 +2908,11 @@
           "key": "send",
           "label": "Send a Telegram message",
           "description": ""
+        },
+        {
+          "key": "messages",
+          "label": "New Telegram message",
+          "description": "Fires when somebody messages your bot. One item per message."
         }
       ]
     },
