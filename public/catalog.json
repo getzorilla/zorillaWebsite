@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-09T21:49:01.902Z",
+  "generatedAt": "2026-09-09T22:19:00.377Z",
   "nodes": [
     {
       "outputs": [
@@ -799,6 +799,13 @@
           "type": "text",
           "default": "",
           "placeholder": "event Transfer(address indexed from, address indexed to, uint256 value)"
+        },
+        {
+          "key": "match",
+          "label": "Only where",
+          "type": "keyvalue",
+          "default": [],
+          "description": "An indexed argument and the value to match. to = your wallet gives you only transfers that landed there. Without this a busy token returns every transfer on the network."
         },
         {
           "key": "blocks",
