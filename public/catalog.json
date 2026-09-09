@@ -1,0 +1,2836 @@
+{
+  "generatedAt": "2026-09-09T21:49:01.902Z",
+  "nodes": [
+    {
+      "outputs": [
+        "main"
+      ],
+      "params": [
+        {
+          "key": "code",
+          "label": "Code",
+          "type": "code",
+          "default": "return items.map(item => ({ json: { ...item.json } }))",
+          "description": "Gets items, $creds, log. Return [{ json }], or nothing to pass through."
+        }
+      ],
+      "mode": "batch",
+      "description": "Your own JavaScript over the items. Not sandboxed.",
+      "type": "code.js",
+      "label": "Run JavaScript",
+      "category": "transform",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "outputs": [
+        "main"
+      ],
+      "params": [
+        {
+          "key": "value",
+          "label": "Watch this",
+          "type": "text",
+          "default": "",
+          "placeholder": "{{ $json.usd > 4000 }}"
+        },
+        {
+          "key": "direction",
+          "label": "Pass it on when",
+          "type": "select",
+          "default": "becomesTrue",
+          "options": [
+            {
+              "value": "becomesTrue",
+              "label": "it becomes true"
+            },
+            {
+              "value": "becomesFalse",
+              "label": "it becomes false"
+            },
+            {
+              "value": "changes",
+              "label": "the value changes at all"
+            }
+          ]
+        },
+        {
+          "key": "key",
+          "label": "Track separately by",
+          "type": "text",
+          "default": "",
+          "description": "Optional. {{ $json.address }} tracks each wallet on its own."
+        }
+      ],
+      "mode": "perItem",
+      "description": "Skips repeats. Only passes on when the value moves.",
+      "type": "logic.changed",
+      "label": "When this changes",
+      "category": "logic",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "outputs": [
+        "main"
+      ],
+      "params": [
+        {
+          "key": "key",
+          "label": "Same thing means",
+          "type": "text",
+          "default": "",
+          "description": "Optional. {{ $json.transactionHash }} = once per transaction, not once ever."
+        }
+      ],
+      "mode": "perItem",
+      "description": "Passes once, never again.",
+      "type": "logic.once",
+      "label": "First time only",
+      "category": "logic",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "outputs": [
+        "main"
+      ],
+      "params": [
+        {
+          "key": "reason",
+          "label": "Why",
+          "type": "text",
+          "default": "",
+          "placeholder": "Alert sent, nothing left to watch"
+        }
+      ],
+      "mode": "perItem",
+      "description": "Stops a repeating workflow once it is done.",
+      "type": "flow.stop",
+      "label": "Switch off",
+      "category": "output",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "outputs": [
+        "main"
+      ],
+      "params": [
+        {
+          "key": "key",
+          "label": "Which memory",
+          "type": "text",
+          "default": "",
+          "description": "Blank clears the default. Otherwise match the key that step used."
+        }
+      ],
+      "mode": "perItem",
+      "description": "Resets what first time only and when this changes remember.",
+      "type": "flow.forget",
+      "label": "Clear memory",
+      "category": "logic",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "outputs": [
+        "main"
+      ],
+      "params": [
+        {
+          "key": "credential",
+          "label": "Gmail key",
+          "type": "credential",
+          "credentialType": "gmail",
+          "default": ""
+        },
+        {
+          "key": "to",
+          "label": "To",
+          "type": "text",
+          "default": "",
+          "placeholder": "someone@example.com"
+        },
+        {
+          "key": "subject",
+          "label": "Subject",
+          "type": "text",
+          "default": ""
+        },
+        {
+          "key": "html",
+          "label": "Message",
+          "type": "textarea",
+          "default": ""
+        }
+      ],
+      "mode": "perItem",
+      "description": "From your Gmail, with an app password.",
+      "type": "gmail.send",
+      "label": "Send email",
+      "category": "action",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "outputs": [
+        "main"
+      ],
+      "params": [
+        {
+          "key": "method",
+          "label": "Method",
+          "type": "select",
+          "default": "GET",
+          "options": [
+            {
+              "value": "GET",
+              "label": "GET"
+            },
+            {
+              "value": "POST",
+              "label": "POST"
+            },
+            {
+              "value": "PUT",
+              "label": "PUT"
+            },
+            {
+              "value": "PATCH",
+              "label": "PATCH"
+            },
+            {
+              "value": "DELETE",
+              "label": "DELETE"
+            }
+          ]
+        },
+        {
+          "key": "url",
+          "label": "URL",
+          "type": "text",
+          "default": "",
+          "placeholder": "https://api.example.com/things"
+        },
+        {
+          "key": "credential",
+          "label": "Use a saved key",
+          "type": "credential",
+          "default": "",
+          "description": "Adds what the service needs to authenticate. No header to write."
+        },
+        {
+          "key": "headers",
+          "label": "Extra headers",
+          "type": "keyvalue",
+          "default": []
+        },
+        {
+          "key": "sendBody",
+          "label": "Send a body",
+          "type": "boolean",
+          "default": false
+        },
+        {
+          "key": "bodyType",
+          "label": "Body format",
+          "type": "select",
+          "default": "json",
+          "options": [
+            {
+              "value": "json",
+              "label": "JSON"
+            },
+            {
+              "value": "text",
+              "label": "Plain text"
+            },
+            {
+              "value": "form",
+              "label": "Form fields"
+            }
+          ],
+          "showWhen": {
+            "sendBody": true
+          }
+        },
+        {
+          "key": "body",
+          "label": "Body",
+          "type": "textarea",
+          "default": "",
+          "showWhen": {
+            "sendBody": true
+          }
+        },
+        {
+          "key": "timeout",
+          "label": "Timeout (seconds)",
+          "type": "number",
+          "default": 30,
+          "min": 1
+        },
+        {
+          "key": "failOnError",
+          "label": "Stop on an error status",
+          "type": "boolean",
+          "default": true
+        }
+      ],
+      "mode": "perItem",
+      "description": "Calls a URL, passes the response on.",
+      "type": "net.http",
+      "label": "HTTP request",
+      "category": "action",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "outputs": [
+        "main"
+      ],
+      "params": [
+        {
+          "key": "message",
+          "label": "Message",
+          "type": "text",
+          "default": "{{ $json }}"
+        }
+      ],
+      "mode": "perItem",
+      "description": "Writes a line to the run log.",
+      "type": "output.log",
+      "label": "Log",
+      "category": "output",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "outputs": [
+        "true",
+        "false"
+      ],
+      "params": [
+        {
+          "key": "value",
+          "label": "Value",
+          "type": "text",
+          "default": "",
+          "placeholder": "{{ $json.status }}"
+        },
+        {
+          "key": "operation",
+          "label": "Condition",
+          "type": "select",
+          "default": "equals",
+          "options": [
+            {
+              "value": "equals",
+              "label": "is equal to"
+            },
+            {
+              "value": "notEquals",
+              "label": "is not equal to"
+            },
+            {
+              "value": "contains",
+              "label": "contains"
+            },
+            {
+              "value": "notContains",
+              "label": "does not contain"
+            },
+            {
+              "value": "greater",
+              "label": "is greater than"
+            },
+            {
+              "value": "less",
+              "label": "is less than"
+            },
+            {
+              "value": "isEmpty",
+              "label": "is empty"
+            },
+            {
+              "value": "isNotEmpty",
+              "label": "is not empty"
+            },
+            {
+              "value": "isTrue",
+              "label": "is true"
+            }
+          ]
+        },
+        {
+          "key": "compare",
+          "label": "Compared with",
+          "type": "text",
+          "default": "",
+          "showWhen": {
+            "operation": [
+              "equals",
+              "notEquals",
+              "contains",
+              "notContains",
+              "greater",
+              "less"
+            ]
+          }
+        }
+      ],
+      "mode": "perItem",
+      "description": "Two paths: true and false.",
+      "type": "logic.if",
+      "label": "If",
+      "category": "logic",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "outputs": [
+        "main"
+      ],
+      "params": [
+        {
+          "key": "value",
+          "label": "Value",
+          "type": "text",
+          "default": "",
+          "placeholder": "{{ $json.amount }}"
+        },
+        {
+          "key": "operation",
+          "label": "Condition",
+          "type": "select",
+          "default": "isNotEmpty",
+          "options": [
+            {
+              "value": "equals",
+              "label": "is equal to"
+            },
+            {
+              "value": "notEquals",
+              "label": "is not equal to"
+            },
+            {
+              "value": "contains",
+              "label": "contains"
+            },
+            {
+              "value": "notContains",
+              "label": "does not contain"
+            },
+            {
+              "value": "greater",
+              "label": "is greater than"
+            },
+            {
+              "value": "less",
+              "label": "is less than"
+            },
+            {
+              "value": "isEmpty",
+              "label": "is empty"
+            },
+            {
+              "value": "isNotEmpty",
+              "label": "is not empty"
+            },
+            {
+              "value": "isTrue",
+              "label": "is true"
+            }
+          ]
+        },
+        {
+          "key": "compare",
+          "label": "Compared with",
+          "type": "text",
+          "default": "",
+          "showWhen": {
+            "operation": [
+              "equals",
+              "notEquals",
+              "contains",
+              "notContains",
+              "greater",
+              "less"
+            ]
+          }
+        }
+      ],
+      "mode": "perItem",
+      "description": "Keeps the items that match.",
+      "type": "logic.filter",
+      "label": "Filter",
+      "category": "logic",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "outputs": [
+        "main"
+      ],
+      "params": [
+        {
+          "key": "fields",
+          "label": "Fields",
+          "type": "keyvalue",
+          "default": [],
+          "description": "A bare expression keeps its type: {{ $json.n * 2 }} stays a number."
+        },
+        {
+          "key": "keepOnly",
+          "label": "Drop the other fields",
+          "type": "boolean",
+          "default": false
+        }
+      ],
+      "mode": "perItem",
+      "description": "Adds or replaces fields on every item.",
+      "type": "transform.set",
+      "label": "Set fields",
+      "category": "transform",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "outputs": [
+        "main"
+      ],
+      "params": [],
+      "mode": "batch",
+      "description": "Runs when you press run.",
+      "type": "core.manual",
+      "label": "Manual start",
+      "category": "trigger",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "outputs": [
+        "main"
+      ],
+      "params": [
+        {
+          "key": "mode",
+          "label": "When",
+          "type": "select",
+          "default": "every",
+          "options": [
+            {
+              "value": "every",
+              "label": "On an interval"
+            },
+            {
+              "value": "once",
+              "label": "Once, at a set time"
+            }
+          ]
+        },
+        {
+          "key": "every",
+          "label": "Run every",
+          "type": "number",
+          "default": 15,
+          "min": 1,
+          "showWhen": {
+            "mode": "every"
+          }
+        },
+        {
+          "key": "unit",
+          "label": "Unit",
+          "type": "select",
+          "default": "minutes",
+          "showWhen": {
+            "mode": "every"
+          },
+          "options": [
+            {
+              "value": "minutes",
+              "label": "minutes"
+            },
+            {
+              "value": "hours",
+              "label": "hours"
+            },
+            {
+              "value": "days",
+              "label": "days"
+            }
+          ]
+        },
+        {
+          "key": "at",
+          "label": "Date and time",
+          "type": "datetime",
+          "default": "",
+          "showWhen": {
+            "mode": "once"
+          },
+          "description": "Runs once when this time passes, then never again. A time already gone runs at the next start."
+        }
+      ],
+      "mode": "batch",
+      "description": "Runs on a repeat, or once at a set time.",
+      "type": "core.schedule",
+      "label": "Schedule",
+      "category": "trigger",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "outputs": [
+        "main"
+      ],
+      "params": [
+        {
+          "key": "path",
+          "label": "Path",
+          "type": "text",
+          "default": "my-hook",
+          "placeholder": "my-hook",
+          "description": "http://127.0.0.1:PORT/hook/<path>. This machine only."
+        },
+        {
+          "key": "method",
+          "label": "Method",
+          "type": "select",
+          "default": "POST",
+          "options": [
+            {
+              "value": "GET",
+              "label": "GET"
+            },
+            {
+              "value": "POST",
+              "label": "POST"
+            },
+            {
+              "value": "PUT",
+              "label": "PUT"
+            },
+            {
+              "value": "DELETE",
+              "label": "DELETE"
+            }
+          ]
+        }
+      ],
+      "mode": "batch",
+      "description": "Runs when something calls a URL on this machine.",
+      "type": "core.webhook",
+      "label": "Webhook",
+      "category": "trigger",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "outputs": [
+        "main"
+      ],
+      "params": [
+        {
+          "key": "chain",
+          "label": "Network",
+          "type": "select",
+          "default": "ethereum",
+          "options": [
+            {
+              "value": "ethereum",
+              "label": "Ethereum"
+            },
+            {
+              "value": "sepolia",
+              "label": "Sepolia (test network)"
+            }
+          ]
+        },
+        {
+          "key": "address",
+          "label": "Wallet or ENS name",
+          "type": "text",
+          "default": "",
+          "placeholder": "vitalik.eth"
+        },
+        {
+          "key": "rpc",
+          "label": "RPC endpoint",
+          "type": "credential",
+          "credentialType": "evmRpc",
+          "default": "",
+          "description": "Optional. Public endpoints rate limit."
+        }
+      ],
+      "mode": "perItem",
+      "description": "How much ETH a wallet holds.",
+      "type": "web3.balance",
+      "label": "ETH balance",
+      "category": "web3",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "outputs": [
+        "main"
+      ],
+      "params": [
+        {
+          "key": "chain",
+          "label": "Network",
+          "type": "select",
+          "default": "ethereum",
+          "options": [
+            {
+              "value": "ethereum",
+              "label": "Ethereum"
+            },
+            {
+              "value": "sepolia",
+              "label": "Sepolia (test network)"
+            }
+          ]
+        },
+        {
+          "key": "token",
+          "label": "Token contract",
+          "type": "text",
+          "default": "",
+          "placeholder": "0xA0b8…eB48 (USDC)"
+        },
+        {
+          "key": "address",
+          "label": "Wallet or ENS name",
+          "type": "text",
+          "default": "",
+          "placeholder": "vitalik.eth"
+        },
+        {
+          "key": "rpc",
+          "label": "RPC endpoint",
+          "type": "credential",
+          "credentialType": "evmRpc",
+          "default": "",
+          "description": "Optional. Public endpoints rate limit."
+        }
+      ],
+      "mode": "perItem",
+      "description": "How much of one token a wallet holds.",
+      "type": "web3.erc20Balance",
+      "label": "Token balance",
+      "category": "web3",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "outputs": [
+        "main"
+      ],
+      "params": [
+        {
+          "key": "chain",
+          "label": "Network",
+          "type": "select",
+          "default": "ethereum",
+          "options": [
+            {
+              "value": "ethereum",
+              "label": "Ethereum"
+            },
+            {
+              "value": "sepolia",
+              "label": "Sepolia (test network)"
+            }
+          ]
+        },
+        {
+          "key": "address",
+          "label": "Contract address",
+          "type": "text",
+          "default": ""
+        },
+        {
+          "key": "signature",
+          "label": "Function",
+          "type": "text",
+          "default": "",
+          "placeholder": "function balanceOf(address) view returns (uint256)"
+        },
+        {
+          "key": "args",
+          "label": "Values",
+          "type": "list",
+          "default": [],
+          "description": "In the order the function takes them."
+        },
+        {
+          "key": "rpc",
+          "label": "RPC endpoint",
+          "type": "credential",
+          "credentialType": "evmRpc",
+          "default": "",
+          "description": "Optional. Public endpoints rate limit."
+        }
+      ],
+      "mode": "perItem",
+      "description": "Asks a contract a question. Costs nothing.",
+      "type": "web3.read",
+      "label": "Read from a contract",
+      "category": "web3",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "outputs": [
+        "main"
+      ],
+      "params": [
+        {
+          "key": "chain",
+          "label": "Network",
+          "type": "select",
+          "default": "ethereum",
+          "options": [
+            {
+              "value": "ethereum",
+              "label": "Ethereum"
+            },
+            {
+              "value": "sepolia",
+              "label": "Sepolia (test network)"
+            }
+          ]
+        },
+        {
+          "key": "address",
+          "label": "Contract address",
+          "type": "text",
+          "default": ""
+        },
+        {
+          "key": "event",
+          "label": "Event",
+          "type": "text",
+          "default": "",
+          "placeholder": "event Transfer(address indexed from, address indexed to, uint256 value)"
+        },
+        {
+          "key": "blocks",
+          "label": "Recent blocks",
+          "type": "number",
+          "default": 1000,
+          "min": 1,
+          "description": "Public endpoints cap this. A few thousand is the ceiling."
+        },
+        {
+          "key": "rpc",
+          "label": "RPC endpoint",
+          "type": "credential",
+          "credentialType": "evmRpc",
+          "default": "",
+          "description": "Optional. Public endpoints rate limit."
+        }
+      ],
+      "mode": "perItem",
+      "description": "Recent events from a contract. One item each.",
+      "type": "web3.logs",
+      "label": "Contract events",
+      "category": "web3",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "outputs": [
+        "main"
+      ],
+      "params": [
+        {
+          "key": "chain",
+          "label": "Network",
+          "type": "select",
+          "default": "ethereum",
+          "options": [
+            {
+              "value": "ethereum",
+              "label": "Ethereum"
+            },
+            {
+              "value": "sepolia",
+              "label": "Sepolia (test network)"
+            }
+          ]
+        },
+        {
+          "key": "rpc",
+          "label": "RPC endpoint",
+          "type": "credential",
+          "credentialType": "evmRpc",
+          "default": "",
+          "description": "Optional. Public endpoints rate limit."
+        }
+      ],
+      "mode": "perItem",
+      "description": "What a transaction costs to send right now.",
+      "type": "web3.gas",
+      "label": "Gas price",
+      "category": "web3",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "outputs": [
+        "main"
+      ],
+      "params": [
+        {
+          "key": "direction",
+          "label": "Direction",
+          "type": "select",
+          "default": "resolve",
+          "options": [
+            {
+              "value": "resolve",
+              "label": "Name to address"
+            },
+            {
+              "value": "reverse",
+              "label": "Address to name"
+            }
+          ]
+        },
+        {
+          "key": "value",
+          "label": "Name or address",
+          "type": "text",
+          "default": "",
+          "placeholder": "vitalik.eth"
+        },
+        {
+          "key": "rpc",
+          "label": "RPC endpoint",
+          "type": "credential",
+          "credentialType": "evmRpc",
+          "default": "",
+          "description": "Optional. Public endpoints rate limit."
+        }
+      ],
+      "mode": "perItem",
+      "description": "Name to address, or back.",
+      "type": "web3.ens",
+      "label": "ENS name",
+      "category": "web3",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "outputs": [
+        "main"
+      ],
+      "params": [
+        {
+          "key": "chain",
+          "label": "Network",
+          "type": "select",
+          "default": "ethereum",
+          "options": [
+            {
+              "value": "ethereum",
+              "label": "Ethereum"
+            },
+            {
+              "value": "sepolia",
+              "label": "Sepolia (test network)"
+            }
+          ]
+        },
+        {
+          "key": "from",
+          "label": "Send from",
+          "type": "text",
+          "default": "",
+          "placeholder": "your wallet address"
+        },
+        {
+          "key": "to",
+          "label": "Send to",
+          "type": "text",
+          "default": "",
+          "placeholder": "address or ENS name"
+        },
+        {
+          "key": "value",
+          "label": "ETH to send",
+          "type": "text",
+          "default": "0"
+        },
+        {
+          "key": "signature",
+          "label": "Contract function",
+          "type": "text",
+          "default": "",
+          "description": "Leave blank to send plain ETH.",
+          "placeholder": "function transfer(address, uint256) returns (bool)"
+        },
+        {
+          "key": "args",
+          "label": "Values",
+          "type": "list",
+          "default": []
+        },
+        {
+          "key": "reason",
+          "label": "What it is for",
+          "type": "text",
+          "default": "",
+          "description": "Shown before anyone approves it."
+        },
+        {
+          "key": "rpc",
+          "label": "RPC endpoint",
+          "type": "credential",
+          "credentialType": "evmRpc",
+          "default": "",
+          "description": "Optional. Public endpoints rate limit."
+        }
+      ],
+      "mode": "perItem",
+      "description": "What a transaction would do and cost. Sends nothing.",
+      "type": "web3.prepare",
+      "label": "Prepare transaction",
+      "category": "web3",
+      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
+    },
+    {
+      "type": "airtable.list",
+      "label": "Read Airtable records",
+      "category": "action",
+      "description": "One item per record.",
+      "outputs": [
+        "main"
+      ],
+      "integration": "airtable",
+      "params": [
+        {
+          "key": "credential",
+          "label": "Airtable key",
+          "type": "credential",
+          "credentialType": "airtable",
+          "default": ""
+        },
+        {
+          "key": "baseId",
+          "label": "Base id",
+          "type": "text",
+          "placeholder": "app…"
+        },
+        {
+          "key": "table",
+          "label": "Table",
+          "type": "text"
+        },
+        {
+          "key": "limit",
+          "label": "How many",
+          "type": "number",
+          "default": 50
+        }
+      ]
+    },
+    {
+      "type": "airtable.create",
+      "label": "Add an Airtable record",
+      "category": "action",
+      "description": "",
+      "outputs": [
+        "main"
+      ],
+      "integration": "airtable",
+      "params": [
+        {
+          "key": "credential",
+          "label": "Airtable key",
+          "type": "credential",
+          "credentialType": "airtable",
+          "default": ""
+        },
+        {
+          "key": "baseId",
+          "label": "Base id",
+          "type": "text",
+          "placeholder": "app…"
+        },
+        {
+          "key": "table",
+          "label": "Table",
+          "type": "text"
+        },
+        {
+          "key": "fields",
+          "label": "Fields",
+          "type": "keyvalue",
+          "default": []
+        }
+      ]
+    },
+    {
+      "type": "anthropic.ask",
+      "label": "Ask Claude",
+      "category": "action",
+      "description": "",
+      "outputs": [
+        "main"
+      ],
+      "integration": "anthropic",
+      "params": [
+        {
+          "key": "credential",
+          "label": "Claude key",
+          "type": "credential",
+          "credentialType": "anthropic",
+          "default": ""
+        },
+        {
+          "key": "prompt",
+          "label": "Prompt",
+          "type": "textarea",
+          "description": "Put {{ $json.field }} in here to feed it whatever the previous step produced."
+        },
+        {
+          "key": "model",
+          "label": "Model",
+          "type": "text",
+          "default": "claude-sonnet-5",
+          "description": "claude-opus-5, claude-sonnet-5, claude-haiku-4-5-20251001, claude-fable-5-1"
+        },
+        {
+          "key": "system",
+          "label": "Instructions",
+          "type": "textarea",
+          "description": "Optional. How it should behave."
+        },
+        {
+          "key": "maxTokens",
+          "label": "Longest reply",
+          "type": "number",
+          "default": 1024
+        }
+      ]
+    },
+    {
+      "type": "coingecko.price",
+      "label": "Coin price",
+      "category": "action",
+      "description": "Current price of one or more coins.",
+      "outputs": [
+        "main"
+      ],
+      "integration": "coingecko",
+      "params": [
+        {
+          "key": "ids",
+          "label": "Coins",
+          "type": "text",
+          "default": "ethereum",
+          "description": "CoinGecko ids, comma separated. ethereum, bitcoin, solana."
+        },
+        {
+          "key": "currency",
+          "label": "In",
+          "type": "text",
+          "default": "usd"
+        }
+      ]
+    },
+    {
+      "type": "deepseek.ask",
+      "label": "Ask DeepSeek",
+      "category": "action",
+      "description": "",
+      "outputs": [
+        "main"
+      ],
+      "integration": "deepseek",
+      "params": [
+        {
+          "key": "credential",
+          "label": "DeepSeek key",
+          "type": "credential",
+          "credentialType": "deepseek",
+          "default": ""
+        },
+        {
+          "key": "prompt",
+          "label": "Prompt",
+          "type": "textarea",
+          "description": "Put {{ $json.field }} in here to feed it whatever the previous step produced."
+        },
+        {
+          "key": "model",
+          "label": "Model",
+          "type": "text",
+          "default": "deepseek-chat",
+          "description": "deepseek-chat, deepseek-reasoner"
+        }
+      ]
+    },
+    {
+      "type": "discord.post",
+      "label": "Post to Discord",
+      "category": "action",
+      "description": "",
+      "outputs": [
+        "main"
+      ],
+      "integration": "discord",
+      "params": [
+        {
+          "key": "credential",
+          "label": "Discord key",
+          "type": "credential",
+          "credentialType": "discord",
+          "default": ""
+        },
+        {
+          "key": "content",
+          "label": "Message",
+          "type": "textarea"
+        },
+        {
+          "key": "username",
+          "label": "Show as",
+          "type": "text",
+          "description": "Optional. Overrides the webhook's name."
+        }
+      ]
+    },
+    {
+      "type": "etherscan.transactions",
+      "label": "Wallet transactions",
+      "category": "web3",
+      "description": "One item per transaction, newest first.",
+      "outputs": [
+        "main"
+      ],
+      "integration": "etherscan",
+      "params": [
+        {
+          "key": "credential",
+          "label": "Etherscan key",
+          "type": "credential",
+          "credentialType": "etherscan",
+          "default": ""
+        },
+        {
+          "key": "address",
+          "label": "Wallet address",
+          "type": "text"
+        },
+        {
+          "key": "chainId",
+          "label": "Network",
+          "type": "select",
+          "default": "1",
+          "options": [
+            {
+              "value": "1",
+              "label": "Ethereum"
+            },
+            {
+              "value": "11155111",
+              "label": "Sepolia"
+            }
+          ]
+        },
+        {
+          "key": "limit",
+          "label": "How many",
+          "type": "number",
+          "default": 25
+        }
+      ]
+    },
+    {
+      "type": "gemini.ask",
+      "label": "Ask Gemini",
+      "category": "action",
+      "description": "",
+      "outputs": [
+        "main"
+      ],
+      "integration": "gemini",
+      "params": [
+        {
+          "key": "credential",
+          "label": "Gemini key",
+          "type": "credential",
+          "credentialType": "gemini",
+          "default": ""
+        },
+        {
+          "key": "prompt",
+          "label": "Prompt",
+          "type": "textarea",
+          "description": "Put {{ $json.field }} in here to feed it whatever the previous step produced."
+        },
+        {
+          "key": "model",
+          "label": "Model",
+          "type": "text",
+          "default": "gemini-2.0-flash",
+          "description": "gemini-2.0-flash, gemini-1.5-pro"
+        }
+      ]
+    },
+    {
+      "type": "notion.query",
+      "label": "Read a Notion database",
+      "category": "action",
+      "description": "One item per row.",
+      "outputs": [
+        "main"
+      ],
+      "integration": "notion",
+      "params": [
+        {
+          "key": "credential",
+          "label": "Notion key",
+          "type": "credential",
+          "credentialType": "notion",
+          "default": ""
+        },
+        {
+          "key": "databaseId",
+          "label": "Database id",
+          "type": "text"
+        }
+      ]
+    },
+    {
+      "type": "notion.createPage",
+      "label": "Add a Notion page",
+      "category": "action",
+      "description": "",
+      "outputs": [
+        "main"
+      ],
+      "integration": "notion",
+      "params": [
+        {
+          "key": "credential",
+          "label": "Notion key",
+          "type": "credential",
+          "credentialType": "notion",
+          "default": ""
+        },
+        {
+          "key": "databaseId",
+          "label": "Database id",
+          "type": "text"
+        },
+        {
+          "key": "properties",
+          "label": "Properties",
+          "type": "code",
+          "default": "{\n  \"Name\": { \"title\": [{ \"text\": { \"content\": \"Hello\" } }] }\n}",
+          "description": "Notion's own property shape. Copy one from their docs and edit it."
+        }
+      ]
+    },
+    {
+      "type": "openai.ask",
+      "label": "Ask ChatGPT",
+      "category": "action",
+      "description": "",
+      "outputs": [
+        "main"
+      ],
+      "integration": "openai",
+      "params": [
+        {
+          "key": "credential",
+          "label": "ChatGPT key",
+          "type": "credential",
+          "credentialType": "openai",
+          "default": ""
+        },
+        {
+          "key": "prompt",
+          "label": "Prompt",
+          "type": "textarea",
+          "description": "Put {{ $json.field }} in here to feed it whatever the previous step produced."
+        },
+        {
+          "key": "model",
+          "label": "Model",
+          "type": "text",
+          "default": "gpt-4o-mini",
+          "description": "gpt-4o, gpt-4o-mini, o3-mini"
+        },
+        {
+          "key": "maxTokens",
+          "label": "Longest reply",
+          "type": "number",
+          "default": 1024
+        }
+      ]
+    },
+    {
+      "type": "resend.send",
+      "label": "Send email",
+      "category": "action",
+      "description": "Sends one email per item.",
+      "outputs": [
+        "main"
+      ],
+      "integration": "resend",
+      "params": [
+        {
+          "key": "credential",
+          "label": "Resend key",
+          "type": "credential",
+          "credentialType": "resend",
+          "default": ""
+        },
+        {
+          "key": "to",
+          "label": "To",
+          "type": "text",
+          "placeholder": "someone@example.com"
+        },
+        {
+          "key": "subject",
+          "label": "Subject",
+          "type": "text"
+        },
+        {
+          "key": "html",
+          "label": "Message",
+          "type": "textarea"
+        },
+        {
+          "key": "from",
+          "label": "From",
+          "type": "text",
+          "description": "Leave blank to use the sender saved with the key."
+        }
+      ]
+    },
+    {
+      "type": "slack.post",
+      "label": "Post to Slack",
+      "category": "action",
+      "description": "Posts one message per item.",
+      "outputs": [
+        "main"
+      ],
+      "integration": "slack",
+      "params": [
+        {
+          "key": "credential",
+          "label": "Slack key",
+          "type": "credential",
+          "credentialType": "slack",
+          "default": ""
+        },
+        {
+          "key": "channel",
+          "label": "Channel",
+          "type": "text",
+          "placeholder": "#alerts or a channel ID"
+        },
+        {
+          "key": "text",
+          "label": "Message",
+          "type": "textarea"
+        }
+      ]
+    },
+    {
+      "type": "stripe.charges",
+      "label": "Read Stripe payments",
+      "category": "action",
+      "description": "One item per payment.",
+      "outputs": [
+        "main"
+      ],
+      "integration": "stripe",
+      "params": [
+        {
+          "key": "credential",
+          "label": "Stripe key",
+          "type": "credential",
+          "credentialType": "stripe",
+          "default": ""
+        },
+        {
+          "key": "limit",
+          "label": "How many",
+          "type": "number",
+          "default": 10
+        }
+      ]
+    },
+    {
+      "type": "stripe.customers",
+      "label": "Read Stripe customers",
+      "category": "action",
+      "description": "One item per customer.",
+      "outputs": [
+        "main"
+      ],
+      "integration": "stripe",
+      "params": [
+        {
+          "key": "credential",
+          "label": "Stripe key",
+          "type": "credential",
+          "credentialType": "stripe",
+          "default": ""
+        },
+        {
+          "key": "limit",
+          "label": "How many",
+          "type": "number",
+          "default": 10
+        }
+      ]
+    },
+    {
+      "type": "supabase.select",
+      "label": "Read rows (Supabase)",
+      "category": "action",
+      "description": "One item per row.",
+      "outputs": [
+        "main"
+      ],
+      "integration": "supabase",
+      "params": [
+        {
+          "key": "credential",
+          "label": "Supabase key",
+          "type": "credential",
+          "credentialType": "supabase",
+          "default": ""
+        },
+        {
+          "key": "table",
+          "label": "Table",
+          "type": "text"
+        },
+        {
+          "key": "columns",
+          "label": "Columns",
+          "type": "text",
+          "default": "*"
+        },
+        {
+          "key": "limit",
+          "label": "How many",
+          "type": "number",
+          "default": 50
+        }
+      ]
+    },
+    {
+      "type": "supabase.insert",
+      "label": "Add a row (Supabase)",
+      "category": "action",
+      "description": "",
+      "outputs": [
+        "main"
+      ],
+      "integration": "supabase",
+      "params": [
+        {
+          "key": "credential",
+          "label": "Supabase key",
+          "type": "credential",
+          "credentialType": "supabase",
+          "default": ""
+        },
+        {
+          "key": "table",
+          "label": "Table",
+          "type": "text"
+        },
+        {
+          "key": "row",
+          "label": "Fields",
+          "type": "keyvalue",
+          "default": []
+        }
+      ]
+    },
+    {
+      "type": "telegram.send",
+      "label": "Send a Telegram message",
+      "category": "action",
+      "description": "",
+      "outputs": [
+        "main"
+      ],
+      "integration": "telegram",
+      "params": [
+        {
+          "key": "credential",
+          "label": "Telegram key",
+          "type": "credential",
+          "credentialType": "telegram",
+          "default": ""
+        },
+        {
+          "key": "text",
+          "label": "Message",
+          "type": "textarea"
+        },
+        {
+          "key": "chatId",
+          "label": "Chat id",
+          "type": "text",
+          "description": "Leave blank to use the one saved with the key."
+        }
+      ]
+    },
+    {
+      "type": "twilio.sendSms",
+      "label": "Send a text",
+      "category": "action",
+      "description": "Sends one text message per item.",
+      "outputs": [
+        "main"
+      ],
+      "integration": "twilio",
+      "params": [
+        {
+          "key": "credential",
+          "label": "Twilio key",
+          "type": "credential",
+          "credentialType": "twilio",
+          "default": ""
+        },
+        {
+          "key": "to",
+          "label": "To",
+          "type": "text",
+          "placeholder": "+15551234567",
+          "description": "Include the country code. Trial accounts can only text verified numbers."
+        },
+        {
+          "key": "body",
+          "label": "Message",
+          "type": "textarea"
+        }
+      ]
+    }
+  ],
+  "credentialTypes": [
+    {
+      "type": "generic",
+      "label": "Anything else",
+      "description": "Named fields you fill in yourself. Read them in a step with {{ $creds.name.field }}.",
+      "fields": null,
+      "checkable": false
+    },
+    {
+      "type": "bearer",
+      "label": "Bearer token",
+      "description": "Sends Authorization: Bearer <token>. Works for most modern APIs.",
+      "fields": [
+        {
+          "key": "token",
+          "label": "Token",
+          "secret": true,
+          "required": true,
+          "placeholder": "sk_live_…"
+        }
+      ],
+      "checkable": false
+    },
+    {
+      "type": "apiHeader",
+      "label": "API key in a header",
+      "description": "Sends the key under a header name of your choosing.",
+      "fields": [
+        {
+          "key": "name",
+          "label": "Header name",
+          "default": "X-API-Key",
+          "required": true
+        },
+        {
+          "key": "value",
+          "label": "Key",
+          "secret": true,
+          "required": true
+        }
+      ],
+      "checkable": false
+    },
+    {
+      "type": "github",
+      "label": "GitHub",
+      "description": "Personal access token.",
+      "docs": "https://github.com/settings/tokens",
+      "fields": [
+        {
+          "key": "token",
+          "label": "Token",
+          "secret": true,
+          "required": true,
+          "placeholder": "ghp_…"
+        }
+      ],
+      "checkable": true
+    },
+    {
+      "type": "evmRpc",
+      "label": "Ethereum RPC endpoint",
+      "description": "Your own node URL from Alchemy, Infura or similar. Steps fall back to free public endpoints without one, which rate limit under load.",
+      "docs": "https://dashboard.alchemy.com",
+      "fields": [
+        {
+          "key": "url",
+          "label": "RPC URL",
+          "secret": true,
+          "required": true,
+          "placeholder": "https://eth-mainnet.g.alchemy.com/v2/…"
+        }
+      ],
+      "checkable": false
+    },
+    {
+      "type": "gmail",
+      "label": "Gmail",
+      "description": "Gmail has no API key. Turn on 2-step verification, then make an app password at myaccount.google.com/apppasswords and paste it here.",
+      "docs": "https://myaccount.google.com/apppasswords",
+      "fields": [
+        {
+          "key": "user",
+          "label": "Your Gmail address",
+          "required": true,
+          "placeholder": "you@gmail.com"
+        },
+        {
+          "key": "appPassword",
+          "label": "App password",
+          "secret": true,
+          "required": true,
+          "placeholder": "sixteen letters, no spaces"
+        }
+      ],
+      "checkable": false
+    },
+    {
+      "type": "airtable",
+      "label": "Airtable",
+      "description": "Records in a base.",
+      "docs": "https://airtable.com/create/tokens",
+      "fields": [
+        {
+          "key": "token",
+          "label": "Personal access token",
+          "secret": true,
+          "required": true,
+          "placeholder": "pat…"
+        }
+      ],
+      "fromIntegration": true,
+      "hosts": [
+        "api.airtable.com"
+      ],
+      "warnings": [],
+      "checkable": true
+    },
+    {
+      "type": "anthropic",
+      "label": "Claude",
+      "description": "Anthropic's models.",
+      "docs": "https://console.anthropic.com/settings/keys",
+      "fields": [
+        {
+          "key": "apiKey",
+          "label": "API key",
+          "secret": true,
+          "required": true,
+          "placeholder": "sk-ant-…"
+        }
+      ],
+      "fromIntegration": true,
+      "hosts": [
+        "api.anthropic.com"
+      ],
+      "warnings": [],
+      "checkable": true
+    },
+    {
+      "type": "deepseek",
+      "label": "DeepSeek",
+      "description": "DeepSeek's models.",
+      "docs": "https://platform.deepseek.com/api_keys",
+      "fields": [
+        {
+          "key": "apiKey",
+          "label": "API key",
+          "secret": true,
+          "required": true,
+          "placeholder": "sk-…"
+        }
+      ],
+      "fromIntegration": true,
+      "hosts": [
+        "api.deepseek.com"
+      ],
+      "warnings": [],
+      "checkable": true
+    },
+    {
+      "type": "discord",
+      "label": "Discord",
+      "description": "In Discord: Channel settings, Integrations, Webhooks, Copy Webhook URL. The URL is the secret.",
+      "docs": "https://support.discord.com/hc/en-us/articles/228383668",
+      "fields": [
+        {
+          "key": "webhookUrl",
+          "label": "Webhook URL",
+          "secret": true,
+          "required": true,
+          "placeholder": "https://discord.com/api/webhooks/…"
+        }
+      ],
+      "fromIntegration": true,
+      "hosts": [
+        "a web address you provide (Webhook URL)"
+      ],
+      "warnings": [],
+      "checkable": true
+    },
+    {
+      "type": "etherscan",
+      "label": "Etherscan",
+      "description": "Transaction history, which a node cannot give you.",
+      "docs": "https://etherscan.io/myapikey",
+      "fields": [
+        {
+          "key": "apiKey",
+          "label": "API key",
+          "secret": true,
+          "required": true
+        }
+      ],
+      "fromIntegration": true,
+      "hosts": [
+        "api.etherscan.io"
+      ],
+      "warnings": [
+        "Wallet transactions puts your key in the web address, where it can be logged along the way."
+      ],
+      "checkable": true
+    },
+    {
+      "type": "gemini",
+      "label": "Gemini",
+      "description": "Google's models.",
+      "docs": "https://aistudio.google.com/apikey",
+      "fields": [
+        {
+          "key": "apiKey",
+          "label": "API key",
+          "secret": true,
+          "required": true,
+          "placeholder": "AIza…"
+        }
+      ],
+      "fromIntegration": true,
+      "hosts": [
+        "generativelanguage.googleapis.com"
+      ],
+      "warnings": [],
+      "checkable": true
+    },
+    {
+      "type": "notion",
+      "label": "Notion",
+      "description": "Create an internal integration, then share the database with it from the page's Connections menu.",
+      "docs": "https://www.notion.so/my-integrations",
+      "fields": [
+        {
+          "key": "token",
+          "label": "Integration secret",
+          "secret": true,
+          "required": true,
+          "placeholder": "ntn_…"
+        }
+      ],
+      "fromIntegration": true,
+      "hosts": [
+        "api.notion.com"
+      ],
+      "warnings": [],
+      "checkable": true
+    },
+    {
+      "type": "openai",
+      "label": "ChatGPT",
+      "description": "OpenAI's models.",
+      "docs": "https://platform.openai.com/api-keys",
+      "fields": [
+        {
+          "key": "apiKey",
+          "label": "API key",
+          "secret": true,
+          "required": true,
+          "placeholder": "sk-…"
+        }
+      ],
+      "fromIntegration": true,
+      "hosts": [
+        "api.openai.com"
+      ],
+      "warnings": [],
+      "checkable": true
+    },
+    {
+      "type": "resend",
+      "label": "Resend",
+      "description": "Create a key at resend.com/api-keys. Delivery needs a domain you have verified there.",
+      "docs": "https://resend.com/api-keys",
+      "fields": [
+        {
+          "key": "apiKey",
+          "label": "API key",
+          "secret": true,
+          "required": true,
+          "placeholder": "re_…"
+        },
+        {
+          "key": "from",
+          "label": "Default sender",
+          "required": false,
+          "placeholder": "you@yourdomain.com",
+          "description": "Optional. Steps use this unless they set their own."
+        }
+      ],
+      "fromIntegration": true,
+      "hosts": [
+        "api.resend.com"
+      ],
+      "warnings": [],
+      "checkable": true
+    },
+    {
+      "type": "slack",
+      "label": "Slack",
+      "description": "A bot token, starting xoxb-. The bot has to be invited to the channel it posts in.",
+      "docs": "https://api.slack.com/apps",
+      "fields": [
+        {
+          "key": "botToken",
+          "label": "Bot token",
+          "secret": true,
+          "required": true,
+          "placeholder": "xoxb-…"
+        }
+      ],
+      "fromIntegration": true,
+      "hosts": [
+        "slack.com"
+      ],
+      "warnings": [],
+      "checkable": true
+    },
+    {
+      "type": "stripe",
+      "label": "Stripe",
+      "description": "Payments data.",
+      "docs": "https://dashboard.stripe.com/apikeys",
+      "fields": [
+        {
+          "key": "secretKey",
+          "label": "Secret key",
+          "secret": true,
+          "required": true,
+          "placeholder": "sk_live_… or sk_test_…"
+        }
+      ],
+      "fromIntegration": true,
+      "hosts": [
+        "api.stripe.com"
+      ],
+      "warnings": [],
+      "checkable": true
+    },
+    {
+      "type": "supabase",
+      "label": "Supabase",
+      "description": "Project URL and the service role key, both under Project Settings, API.",
+      "docs": "https://supabase.com/dashboard/project/_/settings/api",
+      "fields": [
+        {
+          "key": "url",
+          "label": "Project URL",
+          "required": true,
+          "placeholder": "https://abcdefgh.supabase.co"
+        },
+        {
+          "key": "serviceKey",
+          "label": "Service role key",
+          "secret": true,
+          "required": true
+        }
+      ],
+      "fromIntegration": true,
+      "hosts": [
+        "a web address you provide (Project URL)"
+      ],
+      "warnings": [],
+      "checkable": true
+    },
+    {
+      "type": "telegram",
+      "label": "Telegram",
+      "description": "Make a bot by messaging @BotFather. Message your bot once, then read the chat id from api.telegram.org/bot<token>/getUpdates.",
+      "docs": "https://core.telegram.org/bots#how-do-i-create-a-bot",
+      "fields": [
+        {
+          "key": "botToken",
+          "label": "Bot token",
+          "secret": true,
+          "required": true,
+          "placeholder": "123456:ABC-…"
+        },
+        {
+          "key": "chatId",
+          "label": "Default chat id",
+          "required": false,
+          "placeholder": "123456789"
+        }
+      ],
+      "fromIntegration": true,
+      "hosts": [
+        "api.telegram.org"
+      ],
+      "warnings": [],
+      "checkable": true
+    },
+    {
+      "type": "twilio",
+      "label": "Twilio",
+      "description": "The Account SID and Auth Token are both on the Twilio console home page.",
+      "docs": "https://console.twilio.com",
+      "fields": [
+        {
+          "key": "accountSid",
+          "label": "Account SID",
+          "required": true,
+          "placeholder": "AC…"
+        },
+        {
+          "key": "authToken",
+          "label": "Auth token",
+          "secret": true,
+          "required": true
+        },
+        {
+          "key": "fromNumber",
+          "label": "Your Twilio number",
+          "required": true,
+          "placeholder": "+15551234567"
+        }
+      ],
+      "fromIntegration": true,
+      "hosts": [
+        "api.twilio.com"
+      ],
+      "warnings": [],
+      "checkable": true
+    }
+  ],
+  "integrations": [
+    {
+      "id": "airtable",
+      "label": "Airtable",
+      "icon": null,
+      "description": "Records in a base.",
+      "docs": "https://airtable.com/create/tokens",
+      "category": "action",
+      "editable": false,
+      "fields": [
+        {
+          "key": "token",
+          "label": "Personal access token",
+          "secret": true,
+          "required": true,
+          "placeholder": "pat…"
+        }
+      ],
+      "hosts": [
+        "api.airtable.com"
+      ],
+      "warnings": [],
+      "actions": [
+        {
+          "key": "list",
+          "label": "Read Airtable records",
+          "description": "One item per record."
+        },
+        {
+          "key": "create",
+          "label": "Add an Airtable record",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "id": "anthropic",
+      "label": "Claude",
+      "icon": null,
+      "description": "Anthropic's models.",
+      "docs": "https://console.anthropic.com/settings/keys",
+      "category": "action",
+      "editable": false,
+      "fields": [
+        {
+          "key": "apiKey",
+          "label": "API key",
+          "secret": true,
+          "required": true,
+          "placeholder": "sk-ant-…"
+        }
+      ],
+      "hosts": [
+        "api.anthropic.com"
+      ],
+      "warnings": [],
+      "actions": [
+        {
+          "key": "ask",
+          "label": "Ask Claude",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "id": "coingecko",
+      "label": "CoinGecko",
+      "icon": null,
+      "description": "Coin prices. Needs no key.",
+      "docs": "https://www.coingecko.com/en/api",
+      "category": "action",
+      "editable": false,
+      "fields": [],
+      "hosts": [
+        "api.coingecko.com"
+      ],
+      "warnings": [],
+      "actions": [
+        {
+          "key": "price",
+          "label": "Coin price",
+          "description": "Current price of one or more coins."
+        }
+      ]
+    },
+    {
+      "id": "deepseek",
+      "label": "DeepSeek",
+      "icon": null,
+      "description": "DeepSeek's models.",
+      "docs": "https://platform.deepseek.com/api_keys",
+      "category": "action",
+      "editable": false,
+      "fields": [
+        {
+          "key": "apiKey",
+          "label": "API key",
+          "secret": true,
+          "required": true,
+          "placeholder": "sk-…"
+        }
+      ],
+      "hosts": [
+        "api.deepseek.com"
+      ],
+      "warnings": [],
+      "actions": [
+        {
+          "key": "ask",
+          "label": "Ask DeepSeek",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "id": "discord",
+      "label": "Discord",
+      "icon": null,
+      "description": "Post through a channel webhook.",
+      "docs": "https://support.discord.com/hc/en-us/articles/228383668",
+      "category": "action",
+      "editable": false,
+      "fields": [
+        {
+          "key": "webhookUrl",
+          "label": "Webhook URL",
+          "secret": true,
+          "required": true,
+          "placeholder": "https://discord.com/api/webhooks/…"
+        }
+      ],
+      "hosts": [
+        "a web address you provide (Webhook URL)"
+      ],
+      "warnings": [],
+      "actions": [
+        {
+          "key": "post",
+          "label": "Post to Discord",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "id": "etherscan",
+      "label": "Etherscan",
+      "icon": null,
+      "description": "Transaction history, which a node cannot give you.",
+      "docs": "https://etherscan.io/myapikey",
+      "category": "web3",
+      "editable": false,
+      "fields": [
+        {
+          "key": "apiKey",
+          "label": "API key",
+          "secret": true,
+          "required": true
+        }
+      ],
+      "hosts": [
+        "api.etherscan.io"
+      ],
+      "warnings": [
+        "Wallet transactions puts your key in the web address, where it can be logged along the way."
+      ],
+      "actions": [
+        {
+          "key": "transactions",
+          "label": "Wallet transactions",
+          "description": "One item per transaction, newest first."
+        }
+      ]
+    },
+    {
+      "id": "gemini",
+      "label": "Gemini",
+      "icon": null,
+      "description": "Google's models.",
+      "docs": "https://aistudio.google.com/apikey",
+      "category": "action",
+      "editable": false,
+      "fields": [
+        {
+          "key": "apiKey",
+          "label": "API key",
+          "secret": true,
+          "required": true,
+          "placeholder": "AIza…"
+        }
+      ],
+      "hosts": [
+        "generativelanguage.googleapis.com"
+      ],
+      "warnings": [],
+      "actions": [
+        {
+          "key": "ask",
+          "label": "Ask Gemini",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "id": "notion",
+      "label": "Notion",
+      "icon": null,
+      "description": "Databases and pages.",
+      "docs": "https://www.notion.so/my-integrations",
+      "category": "action",
+      "editable": false,
+      "fields": [
+        {
+          "key": "token",
+          "label": "Integration secret",
+          "secret": true,
+          "required": true,
+          "placeholder": "ntn_…"
+        }
+      ],
+      "hosts": [
+        "api.notion.com"
+      ],
+      "warnings": [],
+      "actions": [
+        {
+          "key": "query",
+          "label": "Read a Notion database",
+          "description": "One item per row."
+        },
+        {
+          "key": "createPage",
+          "label": "Add a Notion page",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "id": "openai",
+      "label": "ChatGPT",
+      "icon": null,
+      "description": "OpenAI's models.",
+      "docs": "https://platform.openai.com/api-keys",
+      "category": "action",
+      "editable": false,
+      "fields": [
+        {
+          "key": "apiKey",
+          "label": "API key",
+          "secret": true,
+          "required": true,
+          "placeholder": "sk-…"
+        }
+      ],
+      "hosts": [
+        "api.openai.com"
+      ],
+      "warnings": [],
+      "actions": [
+        {
+          "key": "ask",
+          "label": "Ask ChatGPT",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "id": "resend",
+      "label": "Resend",
+      "icon": null,
+      "description": "Email built for automations.",
+      "docs": "https://resend.com/api-keys",
+      "category": "action",
+      "editable": false,
+      "fields": [
+        {
+          "key": "apiKey",
+          "label": "API key",
+          "secret": true,
+          "required": true,
+          "placeholder": "re_…"
+        },
+        {
+          "key": "from",
+          "label": "Default sender",
+          "required": false,
+          "placeholder": "you@yourdomain.com",
+          "description": "Optional. Steps use this unless they set their own."
+        }
+      ],
+      "hosts": [
+        "api.resend.com"
+      ],
+      "warnings": [],
+      "actions": [
+        {
+          "key": "send",
+          "label": "Send email",
+          "description": "Sends one email per item."
+        }
+      ]
+    },
+    {
+      "id": "slack",
+      "label": "Slack",
+      "icon": null,
+      "description": "Post into a channel.",
+      "docs": "https://api.slack.com/apps",
+      "category": "action",
+      "editable": false,
+      "fields": [
+        {
+          "key": "botToken",
+          "label": "Bot token",
+          "secret": true,
+          "required": true,
+          "placeholder": "xoxb-…"
+        }
+      ],
+      "hosts": [
+        "slack.com"
+      ],
+      "warnings": [],
+      "actions": [
+        {
+          "key": "post",
+          "label": "Post to Slack",
+          "description": "Posts one message per item."
+        }
+      ]
+    },
+    {
+      "id": "stripe",
+      "label": "Stripe",
+      "icon": null,
+      "description": "Payments data.",
+      "docs": "https://dashboard.stripe.com/apikeys",
+      "category": "action",
+      "editable": false,
+      "fields": [
+        {
+          "key": "secretKey",
+          "label": "Secret key",
+          "secret": true,
+          "required": true,
+          "placeholder": "sk_live_… or sk_test_…"
+        }
+      ],
+      "hosts": [
+        "api.stripe.com"
+      ],
+      "warnings": [],
+      "actions": [
+        {
+          "key": "charges",
+          "label": "Read Stripe payments",
+          "description": "One item per payment."
+        },
+        {
+          "key": "customers",
+          "label": "Read Stripe customers",
+          "description": "One item per customer."
+        }
+      ]
+    },
+    {
+      "id": "supabase",
+      "label": "Supabase",
+      "icon": null,
+      "description": "Read and write rows in your database.",
+      "docs": "https://supabase.com/dashboard/project/_/settings/api",
+      "category": "action",
+      "editable": false,
+      "fields": [
+        {
+          "key": "url",
+          "label": "Project URL",
+          "required": true,
+          "placeholder": "https://abcdefgh.supabase.co"
+        },
+        {
+          "key": "serviceKey",
+          "label": "Service role key",
+          "secret": true,
+          "required": true
+        }
+      ],
+      "hosts": [
+        "a web address you provide (Project URL)"
+      ],
+      "warnings": [],
+      "actions": [
+        {
+          "key": "select",
+          "label": "Read rows (Supabase)",
+          "description": "One item per row."
+        },
+        {
+          "key": "insert",
+          "label": "Add a row (Supabase)",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "id": "telegram",
+      "label": "Telegram",
+      "icon": null,
+      "description": "Messages from a bot.",
+      "docs": "https://core.telegram.org/bots#how-do-i-create-a-bot",
+      "category": "action",
+      "editable": false,
+      "fields": [
+        {
+          "key": "botToken",
+          "label": "Bot token",
+          "secret": true,
+          "required": true,
+          "placeholder": "123456:ABC-…"
+        },
+        {
+          "key": "chatId",
+          "label": "Default chat id",
+          "required": false,
+          "placeholder": "123456789"
+        }
+      ],
+      "hosts": [
+        "api.telegram.org"
+      ],
+      "warnings": [],
+      "actions": [
+        {
+          "key": "send",
+          "label": "Send a Telegram message",
+          "description": ""
+        }
+      ]
+    },
+    {
+      "id": "twilio",
+      "label": "Twilio",
+      "icon": null,
+      "description": "Text messages.",
+      "docs": "https://console.twilio.com",
+      "category": "action",
+      "editable": false,
+      "fields": [
+        {
+          "key": "accountSid",
+          "label": "Account SID",
+          "required": true,
+          "placeholder": "AC…"
+        },
+        {
+          "key": "authToken",
+          "label": "Auth token",
+          "secret": true,
+          "required": true
+        },
+        {
+          "key": "fromNumber",
+          "label": "Your Twilio number",
+          "required": true,
+          "placeholder": "+15551234567"
+        }
+      ],
+      "hosts": [
+        "api.twilio.com"
+      ],
+      "warnings": [],
+      "actions": [
+        {
+          "key": "sendSms",
+          "label": "Send a text",
+          "description": "Sends one text message per item."
+        }
+      ]
+    }
+  ],
+  "themes": [
+    {
+      "id": "zorilla-dark",
+      "label": "zorilla dark",
+      "appearance": "dark",
+      "author": "zorilla",
+      "colors": {
+        "bg": "#101013",
+        "raise": "#16161a",
+        "sunk": "#0c0c0f",
+        "line": "#23232a",
+        "text": "#d8d8de",
+        "dim": "#6d6e78",
+        "dimmer": "#4a4b54",
+        "accent": "#6ea8fe",
+        "onAccent": "#0a0f1a",
+        "ok": "#5fd08a",
+        "warn": "#e3b341",
+        "bad": "#f0736f",
+        "skip": "#45464f",
+        "grid": "#1b1b21",
+        "wire": "#3a3b45",
+        "wireHot": "#6ea8fe"
+      }
+    },
+    {
+      "id": "catppuccin-latte",
+      "label": "Catppuccin Latte",
+      "appearance": "light",
+      "author": "Catppuccin",
+      "notes": "",
+      "colors": {
+        "bg": "#EFF1F5",
+        "raise": "#E6E9EF",
+        "sunk": "#DCE0E8",
+        "line": "#CCD0DA",
+        "text": "#4C4F69",
+        "dim": "#6C6F85",
+        "dimmer": "#9CA0B0",
+        "accent": "#1E66F5",
+        "onAccent": "#FFFFFF",
+        "ok": "#40A02B",
+        "warn": "#DF8E1D",
+        "bad": "#D20F39",
+        "skip": "#ACB0BE",
+        "grid": "#DCE0E8",
+        "wire": "#9CA0B0",
+        "wireHot": "#1E66F5"
+      }
+    },
+    {
+      "id": "catppuccin-mocha",
+      "label": "Catppuccin Mocha",
+      "appearance": "dark",
+      "author": "Catppuccin",
+      "notes": "",
+      "colors": {
+        "bg": "#1E1E2E",
+        "raise": "#26263B",
+        "sunk": "#11111B",
+        "line": "#313244",
+        "text": "#CDD6F4",
+        "dim": "#A6ADC8",
+        "dimmer": "#6C7086",
+        "accent": "#89B4FA",
+        "onAccent": "#11111B",
+        "ok": "#A6E3A1",
+        "warn": "#F9E2AF",
+        "bad": "#F38BA8",
+        "skip": "#45475A",
+        "grid": "#2A2A40",
+        "wire": "#45475A",
+        "wireHot": "#CBA6F7"
+      }
+    },
+    {
+      "id": "dracula",
+      "label": "Dracula",
+      "appearance": "dark",
+      "author": "Dracula Theme — draculatheme.com",
+      "notes": "",
+      "colors": {
+        "bg": "#282A36",
+        "raise": "#21222C",
+        "sunk": "#191A21",
+        "line": "#44475A",
+        "text": "#F8F8F2",
+        "dim": "#8B95B8",
+        "dimmer": "#6272A4",
+        "accent": "#BD93F9",
+        "onAccent": "#1B1C24",
+        "ok": "#50FA7B",
+        "warn": "#F1FA8C",
+        "bad": "#FF5555",
+        "skip": "#44475A",
+        "grid": "#343746",
+        "wire": "#44475A",
+        "wireHot": "#FF79C6"
+      }
+    },
+    {
+      "id": "github-dark",
+      "label": "GitHub Dark",
+      "appearance": "dark",
+      "author": "GitHub",
+      "notes": "",
+      "colors": {
+        "bg": "#0D1117",
+        "raise": "#161B22",
+        "sunk": "#010409",
+        "line": "#30363D",
+        "text": "#C9D1D9",
+        "dim": "#8B949E",
+        "dimmer": "#6E7681",
+        "accent": "#58A6FF",
+        "onAccent": "#010409",
+        "ok": "#3FB950",
+        "warn": "#D29922",
+        "bad": "#F85149",
+        "skip": "#484F58",
+        "grid": "#161B22",
+        "wire": "#30363D",
+        "wireHot": "#58A6FF"
+      }
+    },
+    {
+      "id": "gruvbox-dark",
+      "label": "Gruvbox Dark",
+      "appearance": "dark",
+      "author": "Pavel Pertsev",
+      "notes": "",
+      "colors": {
+        "bg": "#282828",
+        "raise": "#32302F",
+        "sunk": "#1D2021",
+        "line": "#3C3836",
+        "text": "#EBDBB2",
+        "dim": "#A89984",
+        "dimmer": "#7C6F64",
+        "accent": "#83A598",
+        "onAccent": "#1D2021",
+        "ok": "#B8BB26",
+        "warn": "#FABD2F",
+        "bad": "#FB4934",
+        "skip": "#504945",
+        "grid": "#32302F",
+        "wire": "#504945",
+        "wireHot": "#FE8019"
+      }
+    },
+    {
+      "id": "monokai",
+      "label": "Monokai",
+      "appearance": "dark",
+      "author": "Wimer Hazenberg",
+      "notes": "",
+      "colors": {
+        "bg": "#272822",
+        "raise": "#2E2F28",
+        "sunk": "#1E1F1C",
+        "line": "#3E3D32",
+        "text": "#F8F8F2",
+        "dim": "#A59F85",
+        "dimmer": "#75715E",
+        "accent": "#66D9EF",
+        "onAccent": "#14150F",
+        "ok": "#A6E22E",
+        "warn": "#E6DB74",
+        "bad": "#F92672",
+        "skip": "#49483E",
+        "grid": "#32332B",
+        "wire": "#49483E",
+        "wireHot": "#FD971F"
+      }
+    },
+    {
+      "id": "nord",
+      "label": "Nord",
+      "appearance": "dark",
+      "author": "Arctic Ice Studio — nordtheme.com",
+      "notes": "",
+      "colors": {
+        "bg": "#2E3440",
+        "raise": "#3B4252",
+        "sunk": "#272B35",
+        "line": "#434C5E",
+        "text": "#E5E9F0",
+        "dim": "#9BA6B8",
+        "dimmer": "#6C7789",
+        "accent": "#88C0D0",
+        "onAccent": "#22282F",
+        "ok": "#A3BE8C",
+        "warn": "#EBCB8B",
+        "bad": "#BF616A",
+        "skip": "#4C566A",
+        "grid": "#3A414F",
+        "wire": "#4C566A",
+        "wireHot": "#88C0D0"
+      }
+    },
+    {
+      "id": "one-dark",
+      "label": "One Dark",
+      "appearance": "dark",
+      "author": "Atom",
+      "notes": "",
+      "colors": {
+        "bg": "#282C34",
+        "raise": "#2F343E",
+        "sunk": "#21252B",
+        "line": "#3E4451",
+        "text": "#ABB2BF",
+        "dim": "#8B92A0",
+        "dimmer": "#5C6370",
+        "accent": "#61AFEF",
+        "onAccent": "#10131A",
+        "ok": "#98C379",
+        "warn": "#E5C07B",
+        "bad": "#E06C75",
+        "skip": "#4B5263",
+        "grid": "#333842",
+        "wire": "#4B5263",
+        "wireHot": "#C678DD"
+      }
+    },
+    {
+      "id": "paper",
+      "label": "Paper",
+      "appearance": "light",
+      "author": "zorilla",
+      "notes": "",
+      "colors": {
+        "bg": "#FBFBFA",
+        "raise": "#F3F3F1",
+        "sunk": "#EDEDEA",
+        "line": "#DFDFDA",
+        "text": "#26262A",
+        "dim": "#6B6B72",
+        "dimmer": "#9B9BA2",
+        "accent": "#2F6BFF",
+        "onAccent": "#FFFFFF",
+        "ok": "#1E8E4A",
+        "warn": "#A76B00",
+        "bad": "#C4322B",
+        "skip": "#B8B8B2",
+        "grid": "#EDEDEA",
+        "wire": "#C3C3BC",
+        "wireHot": "#2F6BFF"
+      }
+    },
+    {
+      "id": "rose-pine",
+      "label": "Rosé Pine",
+      "appearance": "dark",
+      "author": "Rosé Pine",
+      "notes": "",
+      "colors": {
+        "bg": "#191724",
+        "raise": "#1F1D2E",
+        "sunk": "#12111C",
+        "line": "#26233A",
+        "text": "#E0DEF4",
+        "dim": "#908CAA",
+        "dimmer": "#6E6A86",
+        "accent": "#C4A7E7",
+        "onAccent": "#191724",
+        "ok": "#9CCFD8",
+        "warn": "#F6C177",
+        "bad": "#EB6F92",
+        "skip": "#403D52",
+        "grid": "#211F30",
+        "wire": "#403D52",
+        "wireHot": "#EB6F92"
+      }
+    },
+    {
+      "id": "solarized-dark",
+      "label": "Solarized Dark",
+      "appearance": "dark",
+      "author": "Ethan Schoonover",
+      "notes": "",
+      "colors": {
+        "bg": "#002B36",
+        "raise": "#073642",
+        "sunk": "#00212B",
+        "line": "#0E4A58",
+        "text": "#93A1A1",
+        "dim": "#839496",
+        "dimmer": "#586E75",
+        "accent": "#268BD2",
+        "onAccent": "#002B36",
+        "ok": "#859900",
+        "warn": "#B58900",
+        "bad": "#DC322F",
+        "skip": "#586E75",
+        "grid": "#073642",
+        "wire": "#586E75",
+        "wireHot": "#2AA198"
+      }
+    },
+    {
+      "id": "tokyo-night",
+      "label": "Tokyo Night",
+      "appearance": "dark",
+      "author": "Enkia",
+      "notes": "",
+      "colors": {
+        "bg": "#1A1B26",
+        "raise": "#1F2335",
+        "sunk": "#16161E",
+        "line": "#292E42",
+        "text": "#C0CAF5",
+        "dim": "#9AA5CE",
+        "dimmer": "#565F89",
+        "accent": "#7AA2F7",
+        "onAccent": "#10111A",
+        "ok": "#9ECE6A",
+        "warn": "#E0AF68",
+        "bad": "#F7768E",
+        "skip": "#3B4261",
+        "grid": "#24283B",
+        "wire": "#3B4261",
+        "wireHot": "#BB9AF7"
+      }
+    }
+  ]
+}

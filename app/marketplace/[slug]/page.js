@@ -1,0 +1,96 @@
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import { getListing } from '@/lib/store'
+import InstallButton from '@/components/InstallButton'
+import { ThemePreview } from '@/components/ThemeCard'
+
+export const dynamic = 'force-dynamic'
+
+export default async function ListingPage({ params }) {
+  const { slug } = await params
+  const listing = await getListing(slug)
+  if (!listing) notFound()
+
+  const derived = listing.derived ?? {}
+  const isAutomation = listing.kind === 'automation'
+  const isTheme = listing.kind === 'theme'
+
+  return (
+    <main className="page section" style={{ borderTop: 0 }}>
+      <h2>{listing.title}</h2>
+      <p className="sub">
+        {listing.kind} · by <Link href={`/u/${listing.authorHandle}`}>{listing.authorHandle}</Link>
+        {' · '}{listing.installs ?? 0} installs
+        {listing.updatedAt ? ` · updated ${new Date(listing.updatedAt).toLocaleDateString()}` : ''}
+      </p>
+      {listing.summary && <p style={{ maxWidth: '62ch' }}>{listing.summary}</p>}
+
+      {isTheme && (
+        <div className="theme-card" style={{ maxWidth: 320, marginBottom: 16 }}>
+          <ThemePreview colors={listing.package.colors} />
+          <div className="theme-foot">
+            <strong>{listing.package.label}</strong>
+            <span>{listing.package.appearance}</span>
+          </div>
+        </div>
+      )}
+
+      <div className="panel">
+        <h3>what this can do</h3>
+        <p className="dim" style={{ fontSize: 12.5, marginTop: -4 }}>
+          Read out of the file, not written by the author.
+        </p>
+        <div style={{ marginTop: 10 }}>
+          {(derived.hosts ?? []).length > 0
+            ? derived.hosts.map((host) => <span key={host} className="tag">contacts {host}</span>)
+            : <span className="tag">contacts nothing</span>}
+          {isTheme && <span className="tag">colours only, nothing runs</span>}
+        {isAutomation && derived.readsChain && <span className="tag">reads ethereum</span>}
+          {isAutomation && derived.buildsTransaction && <span className="tag warn">builds a transaction (does not send)</span>}
+          {isAutomation && derived.runsCode && <span className="tag warn">runs custom javascript</span>}
+        </div>
+        {isAutomation && (derived.credentials ?? []).length > 0 && (
+          <p className="dim" style={{ fontSize: 13, marginBottom: 0 }}>
+            Uses your saved keys named{' '}
+            {derived.credentials.map((name) => <code key={name} className="tag">{name}</code>)}
+            . It binds to your own keys of those names. No key travels in the file.
+          </p>
+        )}
+        {isAutomation && (
+          <p className="dim" style={{ fontSize: 13, marginBottom: 0 }}>
+            {derived.steps} steps{derived.triggers?.length ? `, started by ${derived.triggers.join(' or ')}` : ''}.
+          </p>
+        )}
+        {!isAutomation && (derived.fields ?? []).length > 0 && (
+          <p className="dim" style={{ fontSize: 13, marginBottom: 0 }}>
+            You fill in {derived.fields.map((f) => f.label).join(', ')}.
+          </p>
+        )}
+      </div>
+
+      {isAutomation && derived.runsCode && (
+        <div className="notice">
+          <b>This runs javascript written by its author.</b> That code is not sandboxed. It
+          runs with the same access as zorilla itself. Read it before you install it.
+        </div>
+      )}
+
+      <div className="panel">
+        <h3>the file</h3>
+        <pre className="mono dim" style={{ fontSize: 12, overflowX: 'auto', margin: 0, maxHeight: 320 }}>
+          {JSON.stringify(listing.package, null, 2)}
+        </pre>
+      </div>
+
+      <div className="row wrap" style={{ marginTop: 18 }}>
+        <InstallButton slug={listing.slug} title={listing.title} kind={listing.kind} />
+        <Link href="/marketplace" className="btn quiet">back</Link>
+      </div>
+      <p className="dim" style={{ fontSize: 13 }}>
+        {isAutomation && 'Import it in your app: workspace, automations, import.'}
+        {isTheme && 'Save it into ~/.zorilla/themes/ and press refresh in the themes panel, or paste it into add from json.'}
+        {listing.kind === 'integration' && 'Save it into ~/.zorilla/integrations/ and reload, or paste it into the integration editor.'}
+      </p>
+    </main>
+  )
+}

@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.data/
+.env.local
+
+# local agent/spec files, not part of the repo
+CLAUDE.md
+AGENTS.md
+DESIGN_SPEC.md
+*.spec.md
+.claude/
+.cursor/
+.cursorrules

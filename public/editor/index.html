@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>zorilla — demo editor</title>
+  <link rel="icon" href="/editor/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/editor/style.css">
+</head>
+<body>
+  <header class="bar">
+    <button id="go-home" class="mark" title="workspace">
+      <img src="/editor/logo.svg" alt="" width="20" height="20"><span>zorilla</span>
+    </button>
+    <span class="sep">/</span>
+    <button id="workspace-name" class="crumb" title="rename workspace"></button>
+    <span class="sep" id="crumb-sep" hidden>/</span>
+    <button id="automation-name" class="crumb" hidden title="rename automation"></button>
+
+    <span class="spacer"></span>
+    <span id="save-state" class="hint"></span>
+    <span id="editor-controls" hidden>
+      <button id="active" class="switch" type="button" aria-pressed="false"
+        title="switched on, this runs by itself when its trigger fires. switched off, it only runs when you press run.">
+        <span class="pip"></span><span id="active-label">not live</span>
+      </button>
+      <button id="save-as" class="ghost">save as</button>
+      <button id="run" class="primary">run</button>
+    </span>
+  </header>
+
+  <main id="home-view">
+    <nav class="rail">
+      <button class="rail-item active" data-panel="automations">automations</button>
+      <button class="rail-item" data-panel="keys">keys</button>
+      <button class="rail-item" data-panel="integrations">integrations</button>
+      <button class="rail-item" data-panel="themes">themes</button>
+      <div class="rail-foot">
+        <div class="hint" id="home-meta"></div>
+      </div>
+    </nav>
+    <section class="side" id="home-side"></section>
+    <section class="sheet" id="home-sheet"></section>
+  </main>
+
+  <main id="editor-view" hidden>
+    <aside class="palette">
+      <div class="tabs">
+        <button class="tab active" data-tab="steps">steps</button>
+        <button class="tab" data-tab="keys">keys</button>
+      </div>
+      <div id="tab-steps">
+        <input id="palette-search" type="search" placeholder="search steps" spellcheck="false">
+        <div id="palette"></div>
+        <div id="palette-problems" class="problems"></div>
+      </div>
+      <div id="tab-keys" hidden></div>
+    </aside>
+
+    <section class="canvas" id="canvas">
+      <svg id="wires"><g id="wire-layer"></g></svg>
+      <div id="world" class="world"></div>
+      <div id="empty-hint" class="empty-hint">drag a step in from the left</div>
+    </section>
+
+    <aside class="inspector">
+      <div class="panel-title" id="inspector-title">nothing selected</div>
+      <div id="inspector"></div>
+    </aside>
+
+    <section class="drawer" id="drawer">
+      <div class="drawer-bar">
+        <button id="drawer-toggle" class="ghost">run log</button>
+        <span id="run-summary" class="hint"></span>
+        <span class="spacer"></span>
+        <select id="run-picker" title="past runs"></select>
+      </div>
+      <div id="run-body" class="run-body"></div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast"></div>
+  <script src="/editor/mock-api.js"></script>
+  <script type="module" src="/editor/app.js"></script>
+</body>
+</html>
