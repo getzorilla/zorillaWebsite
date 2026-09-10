@@ -91,16 +91,12 @@ export default function ProfileForm({ profile, claiming }) {
         <div className="help">
           Lowercase letters, numbers, dashes and underscores. Your page is
           zorilla.io/u/{form.handle || 'username'}.
-          {!claiming && ' Changing it moves everything you published, but the old address stops working.'}
         </div>
       </div>
 
       <div className="field">
         <label>Display name</label>
         <input value={form.name} onChange={set('name')} placeholder="Optional" />
-        <div className="help">
-          Shown next to your username, never instead of it.
-        </div>
       </div>
 
       <div className="field">

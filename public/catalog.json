@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-10T20:49:10.512Z",
+  "generatedAt": "2026-09-10T21:07:39.688Z",
   "nodes": [
     {
       "outputs": [
@@ -327,7 +327,7 @@
         }
       ],
       "mode": "perItem",
-      "description": "From your Gmail, with an app password.",
+      "description": "From your Gmail, with an app password. Check Spam and All Mail for the first one.",
       "type": "gmail.send",
       "label": "Send email",
       "category": "action",
@@ -1802,7 +1802,7 @@
       "type": "resend.send",
       "label": "Send email",
       "category": "action",
-      "description": "Sends one email per item, with any files the item is carrying.",
+      "description": "Sends one email per item, with any files the item is carrying. Check Spam and All Mail for the first one.",
       "outputs": [
         "main"
       ],
@@ -2496,7 +2496,7 @@
     {
       "type": "resend",
       "label": "Resend",
-      "description": "Create a key at resend.com/api-keys. Delivery needs a domain you have verified there.",
+      "description": "Create a key at resend.com/api-keys. Delivery needs a domain you have verified there: until you verify one, mail goes out from Resend's shared test sender and usually lands in Spam.",
       "docs": "https://resend.com/api-keys",
       "fields": [
         {
@@ -3020,7 +3020,7 @@
         {
           "key": "send",
           "label": "Send email",
-          "description": "Sends one email per item, with any files the item is carrying."
+          "description": "Sends one email per item, with any files the item is carrying. Check Spam and All Mail for the first one."
         }
       ]
     },

@@ -94,7 +94,7 @@ to their own saved key. Use plain names like `my_slack`, `signals_webhook`.
 
 ### action
 
-- **`gmail.send`** (action) — From your Gmail, with an app password.
+- **`gmail.send`** (action) — From your Gmail, with an app password. Check Spam and All Mail for the first one.
   - `credential`, credential, a saved gmail key — Gmail key
   - `to`, text — To
   - `subject`, text — Subject
@@ -268,7 +268,7 @@ OpenAI's models. Contacts: api.openai.com.
 
 Email built for automations. Contacts: api.resend.com.
 
-- **`resend.send`** (action) — Sends one email per item, with any files the item is carrying.
+- **`resend.send`** (action) — Sends one email per item, with any files the item is carrying. Check Spam and All Mail for the first one.
   - `credential`, credential, a saved resend key — Resend key
   - `to`, text — To
   - `subject`, text — Subject

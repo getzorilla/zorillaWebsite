@@ -130,9 +130,12 @@ export async function DELETE(request) {
   }
 
   try {
+    // a session older than the username it went on to claim carries handle:
+    // null, and answering "deleted" to that is a lie somebody would only catch
+    // by going and looking. Say what actually happened.
     const result = session.handle ? await deleteAccount(session.handle) : { removed: 0 }
     await endSession()
-    return Response.json({ deleted: true, ...result })
+    return Response.json({ deleted: Boolean(session.handle), signedOut: true, ...result })
   } catch (err) {
     return Response.json({ error: err.message }, { status: 400 })
   }
