@@ -1005,3 +1005,6 @@ table.ref td.type { font-family: var(--mono); color: var(--dimmer); white-space:
 .prompt-head .btn { margin-left: auto; flex: none; }
 .prompt-card .preview-box { min-height: 0; overflow: hidden; display: flex; flex-direction: column; }
 .prompt-card .preview-text { overflow: auto; }
+
+.meta.by { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+.meta.by .avatar-img { border-radius: 50%; flex: none; }

@@ -13,7 +13,7 @@ import starters from '@/public/starters.json'
 const CASES = [
   {
     id: 'traders', slug: 'telegram-post-to-group', who: 'Traders',
-    line: 'New posts from an X account land in your Telegram group',
+    line: 'Check if @InsertKOLHere posts on X about InsertTopicHere, get it on Telegram',
     why: 'Watches one account for the words you care about. Tells you once per post, and never repeats itself after a restart.',
     steps: [
       'every 10 minutes',
@@ -125,7 +125,6 @@ export default async function Home() {
         <LogoBelt services={catalog.integrations} />
         <div className="cta" style={{ marginTop: 26 }}>
           <Link href="/integrations" className="btn">Integrations</Link>
-          <Link href="/docs#integrations" className="btn quiet">Write one</Link>
         </div>
       </section>
 

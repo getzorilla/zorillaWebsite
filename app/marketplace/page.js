@@ -40,7 +40,7 @@ export default async function Marketplace({ searchParams }) {
       <form className="row" style={{ marginBottom: 18 }}>
         {kind && <input type="hidden" name="kind" value={kind} />}
         <input name="q" defaultValue={query} placeholder="Search" />
-        <button className="btn icon-btn" type="submit" aria-label="search" title="search">
+        <button className="btn icon-btn" type="submit" aria-label="search" title="Search">
           <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
             <circle cx="11" cy="11" r="6.5" />
             <path d="m16 16 4.5 4.5" />
@@ -49,7 +49,7 @@ export default async function Marketplace({ searchParams }) {
       </form>
 
       {listings.length === 0 ? (
-        <Empty title={query ? 'nothing matched' : 'nothing published yet'}>
+        <Empty title={query ? 'Nothing matched' : 'Nothing published yet'}>
           <p>
             {query
               ? 'Try a different word.'

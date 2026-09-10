@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import CanvasPreview from './CanvasPreview'
 import LikeButton from './LikeButton'
+import Avatar from './Avatar'
 
 export function Empty({ title, children }) {
   return (
@@ -11,6 +12,8 @@ export function Empty({ title, children }) {
   )
 }
 
+const kindLabel = (kind) => ({ automation: 'Automation', integration: 'Integration', theme: 'Theme' }[kind] ?? kind)
+
 export function ListingRow({ listing, signedIn = false }) {
   const derived = listing.derived ?? {}
   const isAutomation = listing.kind === 'automation' && listing.package?.nodes?.length
@@ -18,9 +21,12 @@ export function ListingRow({ listing, signedIn = false }) {
     <Link href={`/marketplace/${listing.slug}`} className="item listing">
       <div className="grow">
         <div className="title">{listing.title}</div>
-        <div className="meta">
-          {listing.kind} · by {listing.authorHandle}
-          {listing.shipped && ' · came with Zorilla'}
+        <div className="meta by">
+          <Avatar src={listing.author?.avatar} handle={listing.authorHandle} size={18} />
+          <span>{listing.author?.name || listing.authorHandle}</span>
+          <span className="dimmer">@{listing.authorHandle}</span>
+          <span className="dimmer">· {kindLabel(listing.kind)}</span>
+          {listing.shipped && <span className="dimmer">· Came with Zorilla</span>}
         </div>
         {listing.summary && <div className="dim" style={{ fontSize: 13, marginTop: 2 }}>{listing.summary}</div>}
         <div style={{ marginTop: 6 }}>

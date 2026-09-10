@@ -71,9 +71,9 @@ export default async function ProfilePage({ params }) {
         {profile.wallet && <span className="tag">{profile.wallet.slice(0, 6)}…{profile.wallet.slice(-4)}</span>}
       </div>
 
-      <h2 style={{ fontSize: 15 }}>published</h2>
+      <h2 style={{ fontSize: 15 }}>Published</h2>
       {listings.length === 0 ? (
-        <Empty title="nothing published yet">
+        <Empty title="Nothing published yet">
           {mine
             ? <><p>Export an automation from your app and put it here.</p><Link href="/publish" className="btn primary">Publish something</Link></>
             : <p>Nothing from {profile.handle} so far.</p>}
