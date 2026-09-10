@@ -9,7 +9,7 @@ export default function Footer() {
         <a href="/marketplace">marketplace</a>
         <a
           className="icon-link"
-          href="https://github.com/zorilla-oss/zorillaApp"
+          href="https://github.com/zorilla-automate/zorillaApp"
           target="_blank"
           rel="noreferrer"
           aria-label="zorilla on GitHub"

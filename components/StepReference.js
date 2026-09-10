@@ -26,25 +26,24 @@ function Params({ params }) {
   if (!params?.length) return <p style={{ fontSize: 12.5 }}>Takes nothing.</p>
   return (
     <table className="ref">
-      <thead>
-        <tr><th>field</th><th>type</th><th>what it is</th></tr>
-      </thead>
       <tbody>
-        {params.map((p) => (
-          <tr key={p.key}>
-            <td>{p.key}</td>
-            <td className="type">
-              {p.type}
-              {p.default !== undefined && p.default !== '' && !Array.isArray(p.default) && ` = ${JSON.stringify(p.default)}`}
-            </td>
-            <td>
-              {p.label}
-              {p.description ? `. ${p.description}` : ''}
-              {p.options?.length ? ` One of: ${p.options.map((o) => o.value ?? o).join(', ')}.` : ''}
-              {p.credentialType ? ` Names a saved ${p.credentialType} key.` : ''}
-            </td>
-          </tr>
-        ))}
+        {params.map((p) => {
+          const type = p.credentialType
+            ? `a saved ${p.credentialType} key`
+            : p.options?.length
+              ? p.options.map((o) => o.value ?? o).join(' | ')
+              : p.type
+          const fallback = p.default !== undefined && p.default !== '' && !Array.isArray(p.default)
+            ? `Defaults to ${JSON.stringify(p.default)}.`
+            : ''
+          return (
+            <tr key={p.key}>
+              <td>{p.key}</td>
+              <td className="type">{type}</td>
+              <td>{p.description || p.label}{p.description && fallback ? ` ${fallback}` : ''}</td>
+            </tr>
+          )
+        })}
       </tbody>
     </table>
   )

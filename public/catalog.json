@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-10T08:34:35.107Z",
+  "generatedAt": "2026-09-10T08:35:34.015Z",
   "nodes": [
     {
       "outputs": [
@@ -74,19 +74,22 @@
           "label": "File name",
           "type": "text",
           "default": "",
-          "placeholder": "report.csv"
+          "placeholder": "report.csv",
+          "description": "A file in your zorilla files folder. Nowhere else on the machine."
         },
         {
           "key": "as",
           "label": "Carry it as",
           "type": "text",
-          "default": "file"
+          "default": "file",
+          "description": "The name it travels under, so a later step can say which file it means."
         },
         {
           "key": "asText",
           "label": "Also read it as text",
           "type": "boolean",
-          "default": false
+          "default": false,
+          "description": "Puts the contents in the item as well, for a csv you want to read rather than send."
         }
       ],
       "mode": "perItem",
@@ -106,13 +109,15 @@
           "label": "Contents",
           "type": "textarea",
           "default": "",
-          "placeholder": "name,amount\nada,42"
+          "placeholder": "name,amount\nada,42",
+          "description": "Expressions work, so a step before this can build the rows."
         },
         {
           "key": "name",
           "label": "File name",
           "type": "text",
-          "default": "report.csv"
+          "default": "report.csv",
+          "description": "Ending in .csv makes it a spreadsheet when it lands in somebody's email."
         },
         {
           "key": "as",
@@ -138,7 +143,8 @@
           "label": "Watch this",
           "type": "text",
           "default": "",
-          "placeholder": "{{ $json.usd > 4000 }}"
+          "placeholder": "{{ $json.usd > 4000 }}",
+          "description": "The value being compared with last time. A true or false expression works, and so does a plain number."
         },
         {
           "key": "direction",
@@ -205,7 +211,8 @@
           "label": "Why",
           "type": "text",
           "default": "",
-          "placeholder": "Alert sent, nothing left to watch"
+          "placeholder": "Alert sent, nothing left to watch",
+          "description": "Written into the run log, so next week you know why it stopped."
         }
       ],
       "mode": "perItem",
@@ -225,14 +232,16 @@
           "label": "Watch this",
           "type": "text",
           "default": "",
-          "placeholder": "{{ $json.ethereum.usd }}"
+          "placeholder": "{{ $json.ethereum.usd }}",
+          "description": "A number. Anything else and the step will say so rather than guess."
         },
         {
           "key": "amount",
           "label": "Moved by at least",
           "type": "number",
           "default": 5,
-          "min": 0
+          "min": 0,
+          "description": "How far it has to move before this says anything."
         },
         {
           "key": "unit",
@@ -334,6 +343,7 @@
           "label": "Method",
           "type": "select",
           "default": "GET",
+          "description": "GET reads, POST sends. The rest are for services that ask for them.",
           "options": [
             {
               "value": "GET",
@@ -362,7 +372,8 @@
           "label": "URL",
           "type": "text",
           "default": "",
-          "placeholder": "https://api.example.com/things"
+          "placeholder": "https://api.example.com/things",
+          "description": "The whole address, including https://. Expressions work: .../users/{{ $json.id }}."
         },
         {
           "key": "credential",
@@ -376,19 +387,22 @@
           "key": "headers",
           "label": "Extra headers",
           "type": "keyvalue",
-          "default": []
+          "default": [],
+          "description": "Anything the service asks for beyond the key, like Accept or a version header."
         },
         {
           "key": "sendBody",
           "label": "Send a body",
           "type": "boolean",
-          "default": false
+          "default": false,
+          "description": "Off for a GET. On when you are sending something with the request."
         },
         {
           "key": "bodyType",
           "label": "Body format",
           "type": "select",
           "default": "json",
+          "description": "json for most APIs, form for old ones that want name=value pairs.",
           "options": [
             {
               "value": "json",
@@ -414,20 +428,23 @@
           "default": "",
           "showWhen": {
             "sendBody": true
-          }
+          },
+          "description": "What to send. Expressions work here too."
         },
         {
           "key": "timeout",
           "label": "Timeout (seconds)",
           "type": "number",
           "default": 30,
-          "min": 1
+          "min": 1,
+          "description": "How long to wait before giving up on a service that is not answering."
         },
         {
           "key": "failOnError",
           "label": "Stop on an error status",
           "type": "boolean",
-          "default": true
+          "default": true,
+          "description": "On, a 404 or a 500 fails the step. Off, the answer carries on with ok: false so a later step can decide."
         }
       ],
       "mode": "perItem",
@@ -446,7 +463,8 @@
           "key": "message",
           "label": "Message",
           "type": "text",
-          "default": "{{ $json }}"
+          "default": "{{ $json }}",
+          "description": "Written into the run log. Leave it as {{ $json }} to see everything the last step sent."
         }
       ],
       "mode": "perItem",
@@ -467,7 +485,8 @@
           "label": "Value",
           "type": "text",
           "default": "",
-          "placeholder": "{{ $json.status }}"
+          "placeholder": "{{ $json.status }}",
+          "description": "The thing being tested, usually a field from the step before."
         },
         {
           "key": "operation",
@@ -527,7 +546,8 @@
               "greater",
               "less"
             ]
-          }
+          },
+          "description": "What to test it against. Numbers compare as numbers."
         }
       ],
       "mode": "perItem",
@@ -547,7 +567,8 @@
           "label": "Value",
           "type": "text",
           "default": "",
-          "placeholder": "{{ $json.amount }}"
+          "placeholder": "{{ $json.amount }}",
+          "description": "Tested on every item. The ones that fail are dropped, not sent down another path."
         },
         {
           "key": "operation",

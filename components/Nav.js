@@ -21,7 +21,7 @@ export default async function Nav() {
         <span className="nav-end">
           <a
             className="link icon-link"
-            href="https://github.com/zorilla-oss/zorillaApp"
+            href="https://github.com/zorilla-automate/zorillaApp"
             target="_blank"
             rel="noreferrer"
             aria-label="zorilla on GitHub"

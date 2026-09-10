@@ -113,9 +113,9 @@ export default async function Docs({ searchParams }) {
             </ul>
             <h3>Getting it</h3>
             <p>One command, which fetches it, starts it and opens the page:</p>
-            <pre><code>npx github:zorilla-oss/zorillaApp</code></pre>
+            <pre><code>npx github:zorilla-automate/zorillaApp</code></pre>
             <p>To keep a copy you can edit, clone it instead:</p>
-            <pre><code>{`git clone https://github.com/zorilla-oss/zorillaApp
+            <pre><code>{`git clone https://github.com/zorilla-automate/zorillaApp
 cd zorillaApp
 npm install
 npm start`}</code></pre>

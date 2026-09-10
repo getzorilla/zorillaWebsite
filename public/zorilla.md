@@ -98,15 +98,15 @@ to their own saved key. Use plain names like `my_slack`, `signals_webhook`.
   - `subject`, text — Subject
   - `html`, textarea — Message
 - **`net.http`** (action) — Calls a URL, passes the response on.
-  - `method`, select, default "GET", one of: GET, POST, PUT, PATCH, DELETE — Method
-  - `url`, text — URL
+  - `method`, select, default "GET", one of: GET, POST, PUT, PATCH, DELETE — Method. GET reads, POST sends. The rest are for services that ask for them.
+  - `url`, text — URL. The whole address, including https://. Expressions work: .../users/{{ $json.id }}.
   - `credential`, credential — Use a saved key. Adds what the service needs to authenticate. No header to write.
-  - `headers`, keyvalue — Extra headers
-  - `sendBody`, boolean, default false — Send a body
-  - `bodyType`, select, default "json", one of: json, text, form — Body format
-  - `body`, textarea — Body
-  - `timeout`, number, default 30 — Timeout (seconds)
-  - `failOnError`, boolean, default true — Stop on an error status
+  - `headers`, keyvalue — Extra headers. Anything the service asks for beyond the key, like Accept or a version header.
+  - `sendBody`, boolean, default false — Send a body. Off for a GET. On when you are sending something with the request.
+  - `bodyType`, select, default "json", one of: json, text, form — Body format. json for most APIs, form for old ones that want name=value pairs.
+  - `body`, textarea — Body. What to send. Expressions work here too.
+  - `timeout`, number, default 30 — Timeout (seconds). How long to wait before giving up on a service that is not answering.
+  - `failOnError`, boolean, default true — Stop on an error status. On, a 404 or a 500 fails the step. Off, the answer carries on with ok: false so a later step can decide.
 
 ### Airtable
 
@@ -188,21 +188,21 @@ Google's models. Contacts: generativelanguage.googleapis.com.
 ### logic
 
 - **`logic.changed`** (logic) — Passes an item on only when this value is different from last time. Without it, a check every ten minutes tells you the same thing every ten minutes.
-  - `value`, text — Watch this
+  - `value`, text — Watch this. The value being compared with last time. A true or false expression works, and so does a plain number.
   - `direction`, select, default "becomesTrue", one of: becomesTrue, becomesFalse, changes — Pass it on when
   - `key`, text — Track separately by. Optional. {{ $json.address }} tracks each wallet on its own.
 - **`logic.filter`** (logic) — Keeps the items that match.
-  - `value`, text — Value
+  - `value`, text — Value. Tested on every item. The ones that fail are dropped, not sent down another path.
   - `operation`, select, default "isNotEmpty", one of: equals, notEquals, contains, notContains, greater, less, isEmpty, isNotEmpty, isTrue — Condition
   - `compare`, text — Compared with
 - **`logic.if`** (logic) — Two paths: true and false.
   - ports: true, false
-  - `value`, text — Value
+  - `value`, text — Value. The thing being tested, usually a field from the step before.
   - `operation`, select, default "equals", one of: equals, notEquals, contains, notContains, greater, less, isEmpty, isNotEmpty, isTrue — Condition
-  - `compare`, text — Compared with
+  - `compare`, text — Compared with. What to test it against. Numbers compare as numbers.
 - **`logic.moved`** (logic) — Passes on when a number has moved far enough since the last time it said so. 5 percent, or 100 of whatever the number counts.
-  - `value`, text — Watch this
-  - `amount`, number, default 5 — Moved by at least
+  - `value`, text — Watch this. A number. Anything else and the step will say so rather than guess.
+  - `amount`, number, default 5 — Moved by at least. How far it has to move before this says anything.
   - `unit`, select, default "percent", one of: percent, absolute — Measured in
   - `direction`, select, default "either", one of: either, up, down — Which way
   - `key`, text — Track separately by. Optional. {{ $json.symbol }} follows each coin on its own.
@@ -243,9 +243,9 @@ OpenAI's models. Contacts: api.openai.com.
   - `which`, text, default "file" — Which file. The name it travels under. Downloads arrive as "file".
   - `name`, text — Save it as. Leave blank to keep its own name.
 - **`flow.stop`** (output) — Switches the automation off from inside, once it has done what it was for. A one-shot alert that should not fire twice ends here.
-  - `reason`, text — Why
+  - `reason`, text — Why. Written into the run log, so next week you know why it stopped.
 - **`output.log`** (output) — Writes a line to the run log.
-  - `message`, text, default "{{ $json }}" — Message
+  - `message`, text, default "{{ $json }}" — Message. Written into the run log. Leave it as {{ $json }} to see everything the last step sent.
 
 ### Resend
 
@@ -316,13 +316,13 @@ Send messages from a bot, and hear back. Contacts: api.telegram.org.
   - `credential`, credential — Key it may use. Optional. Only the key you pick here is handed across.
   - `timeout`, number, default 15 — Stop it after (seconds)
 - **`file.fromText`** (transform) — Turns text into a file, so a spreadsheet or report can be attached to an email.
-  - `text`, textarea — Contents
-  - `name`, text, default "report.csv" — File name
+  - `text`, textarea — Contents. Expressions work, so a step before this can build the rows.
+  - `name`, text, default "report.csv" — File name. Ending in .csv makes it a spreadsheet when it lands in somebody's email.
   - `as`, text, default "file" — Carry it as
 - **`file.read`** (transform) — Picks up a file from your zorilla files folder so a later step can send it.
-  - `name`, text — File name
-  - `as`, text, default "file" — Carry it as
-  - `asText`, boolean, default false — Also read it as text
+  - `name`, text — File name. A file in your zorilla files folder. Nowhere else on the machine.
+  - `as`, text, default "file" — Carry it as. The name it travels under, so a later step can say which file it means.
+  - `asText`, boolean, default false — Also read it as text. Puts the contents in the item as well, for a csv you want to read rather than send.
 - **`transform.set`** (transform) — Adds or replaces fields on every item.
   - `fields`, keyvalue — Fields. A bare expression keeps its type: {{ $json.n * 2 }} stays a number.
   - `keepOnly`, boolean, default false — Drop the other fields

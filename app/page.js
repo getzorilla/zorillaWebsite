@@ -85,13 +85,13 @@ export default async function Home() {
           Fully local automation, no strings attached. Reads smart contracts, with web3
           steps built in. 16 API integrations ship with it, or build your own.
         </p>
-        <CopyCommand command="npx github:zorilla-oss/zorillaApp" />
+        <CopyCommand command="npx github:zorilla-automate/zorillaApp" />
         <div className="cta">
           <Link href="/docs" className="btn primary">docs</Link>
           <Link href="/try" className="btn">try the editor</Link>
           <a
             className="btn quiet"
-            href="https://github.com/zorilla-oss/zorillaApp"
+            href="https://github.com/zorilla-automate/zorillaApp"
             target="_blank"
             rel="noreferrer"
           >
