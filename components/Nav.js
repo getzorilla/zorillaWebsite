@@ -16,6 +16,7 @@ export default async function Nav() {
           <Link href="/docs" className="link">Docs</Link>
           <Link href="/integrations" className="link">Integrations</Link>
           <Link href="/marketplace" className="link">Marketplace</Link>
+          <Link href="/devlog" className="link">Devlog</Link>
         </span>
         <span className="nav-end">
           <a

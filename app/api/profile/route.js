@@ -1,5 +1,6 @@
 import { tooMany } from '@/lib/limit'
 import { readSession, createSession, endSession } from '@/lib/session'
+import { owns } from '@/lib/auth'
 import { getProfile, saveProfile, claimHandle, deleteAccount, renameAccount, HANDLE, handleTaken } from '@/lib/store'
 
 const AVATAR_LIMIT = 120_000
@@ -54,13 +55,6 @@ function site(value) {
   } catch {
     return ''
   }
-}
-
-const owns = (session) => {
-  const wallet = (process.env.OWNER_WALLET ?? '').toLowerCase()
-  const email = (process.env.OWNER_EMAIL ?? '').toLowerCase()
-  if (wallet && String(session.wallet ?? '').toLowerCase() === wallet) return true
-  return Boolean(email) && String(session.email ?? '').toLowerCase() === email
 }
 
 const cleanLinks = (links = {}) => ({
