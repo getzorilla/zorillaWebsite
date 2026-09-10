@@ -787,7 +787,7 @@ Every 10 minutes. The channel is whichever one you made the webhook in, so a web
 
 ### eth price watch
 
-Runs with no keys at all. Reads a public price feed and stays quiet until the price crosses a line.
+The one to press run on first. It reads the ETH price and writes it in the run log every time, and only says something separate when the price has moved 5% since it last mentioned it. Needs no keys.
 
 ```json
 {
@@ -797,12 +797,12 @@ Runs with no keys at all. Reads a public price feed and stays quiet until the pr
       "type": "core.schedule",
       "params": {
         "mode": "every",
-        "every": 15,
+        "every": 10,
         "unit": "minutes"
       },
       "position": {
-        "x": 60,
-        "y": 200
+        "x": 40,
+        "y": 170
       }
     },
     {
@@ -813,32 +813,45 @@ Runs with no keys at all. Reads a public price feed and stays quiet until the pr
         "currency": "usd"
       },
       "position": {
-        "x": 320,
-        "y": 200
+        "x": 300,
+        "y": 170
       }
     },
     {
-      "id": "cross",
-      "type": "logic.changed",
+      "id": "now",
+      "type": "output.log",
       "params": {
-        "value": "{{ $json.ethereum.usd > 4000 }}",
-        "direction": "becomesTrue",
+        "message": "ETH is ${{ $json.ethereum.usd }}"
+      },
+      "position": {
+        "x": 570,
+        "y": 80
+      }
+    },
+    {
+      "id": "moved",
+      "type": "logic.moved",
+      "params": {
+        "value": "{{ $json.ethereum.usd }}",
+        "amount": 5,
+        "unit": "percent",
+        "direction": "either",
         "key": ""
       },
       "position": {
-        "x": 580,
-        "y": 200
+        "x": 570,
+        "y": 260
       }
     },
     {
-      "id": "say",
+      "id": "shout",
       "type": "output.log",
       "params": {
-        "message": "ETH is {{ $json.ethereum.usd }} — swap this step for an email or a text"
+        "message": "that is a {{ Math.round($json.moved.percent) }}% move, {{ $json.moved.direction }} from {{ $json.moved.from }}"
       },
       "position": {
-        "x": 840,
-        "y": 200
+        "x": 830,
+        "y": 260
       }
     }
   ],
@@ -852,13 +865,19 @@ Runs with no keys at all. Reads a public price feed and stays quiet until the pr
     {
       "from": "price",
       "fromPort": "main",
-      "to": "cross",
+      "to": "now",
       "toPort": "main"
     },
     {
-      "from": "cross",
+      "from": "price",
       "fromPort": "main",
-      "to": "say",
+      "to": "moved",
+      "toPort": "main"
+    },
+    {
+      "from": "moved",
+      "fromPort": "main",
+      "to": "shout",
       "toPort": "main"
     }
   ]
@@ -1139,7 +1158,7 @@ Announces a price move to a Discord channel, and only when it actually moves. Ch
 
 ### usdc landing in a wallet
 
-Watches USDC landing in one wallet. Put your own address in "only where": the endpoint filters, so this stays cheap. Never reports the same transaction twice.
+Watches USDC landing in one wallet. It points at Circle's treasury so pressing run shows you something straight away: put your own address in "only where" instead. The endpoint does the filtering, so this stays cheap, and the same transaction is never reported twice.
 
 ```json
 {
@@ -1167,7 +1186,7 @@ Watches USDC landing in one wallet. Put your own address in "only where": the en
         "match": [
           {
             "name": "to",
-            "value": "0x28C6c06298d514Db089934071355E5743bf21d60"
+            "value": "0x55FE002aefF02F77364de339a1292923A15844B8"
           }
         ],
         "blocks": 300,

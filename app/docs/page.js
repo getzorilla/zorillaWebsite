@@ -112,14 +112,18 @@ export default async function Docs({ searchParams }) {
               <li>An account with whatever services you want to use.</li>
             </ul>
             <h3>Getting it</h3>
+            <p>One command, which fetches it, starts it and opens the page:</p>
+            <pre><code>npx github:zorilla-oss/zorillaApp</code></pre>
+            <p>To keep a copy you can edit, clone it instead:</p>
             <pre><code>{`git clone https://github.com/zorilla-oss/zorillaApp
 cd zorillaApp
 npm install
 npm start`}</code></pre>
             <p>
-              Open <code>http://127.0.0.1:5177</code>. There is no build step and no
-              configuration file. The first time it starts it copies eight example automations
-              into your workspace, all switched off.
+              Either way it opens at <code>http://127.0.0.1:5177</code>. There is no build step
+              and no configuration file. The first time it starts it copies thirteen example
+              automations into your workspace, all switched off, and four of them run with no
+              keys at all.
             </p>
             <h3>Where your things live</h3>
             <p>

@@ -7,22 +7,25 @@
 (() => {
   const KEY = 'zorilla-demo-workflows'
   const THEME_KEY = 'zorilla-demo-theme'
-  const STARTER = {
-    id: 'demo',
-    name: 'eth price watch',
-    folder: '',
-    active: false,
-    nodes: [
-      { id: 'clock', type: 'core.schedule', name: '', params: { mode: 'every', every: 15, unit: 'minutes' }, position: { x: 60, y: 180 } },
-      { id: 'price', type: 'coingecko.price', name: '', params: { ids: 'ethereum', currency: 'usd' }, position: { x: 330, y: 180 } },
-      { id: 'cross', type: 'logic.changed', name: '', params: { value: '{{ $json.ethereum.usd > 4000 }}', direction: 'becomesTrue', key: '' }, position: { x: 600, y: 180 } },
-      { id: 'say', type: 'output.log', name: '', params: { message: 'ETH is {{ $json.ethereum.usd }}' }, position: { x: 870, y: 180 } },
-    ],
-    edges: [
-      { from: 'clock', fromPort: 'main', to: 'price', toPort: 'main' },
-      { from: 'price', fromPort: 'main', to: 'cross', toPort: 'main' },
-      { from: 'cross', fromPort: 'main', to: 'say', toPort: 'main' },
-    ],
+  let STARTERS = null
+
+  const loadStarters = async () => {
+    if (STARTERS) return STARTERS
+    try {
+      const shipped = await realFetch('/starters.json').then((r) => r.json())
+      STARTERS = shipped.map((s, i) => ({
+        id: `demo${i}`,
+        name: s.package.name ?? s.title,
+        folder: 'examples',
+        notes: s.summary ?? '',
+        active: false,
+        nodes: s.package.nodes,
+        edges: s.package.edges,
+      }))
+    } catch {
+      STARTERS = []
+    }
+    return STARTERS
   }
 
   const read = () => {
@@ -30,7 +33,7 @@
       const saved = JSON.parse(localStorage.getItem(KEY))
       if (Array.isArray(saved) && saved.length) return saved
     } catch { /* first visit */ }
-    return [structuredClone(STARTER)]
+    return (STARTERS ?? []).map((w) => structuredClone(w))
   }
   const write = (list) => {
     try { localStorage.setItem(KEY, JSON.stringify(list)) } catch { /* private window */ }
@@ -55,6 +58,7 @@
     const body = options.body ? JSON.parse(options.body) : {}
     const path = url.split('?')[0]
     catalog ??= await realFetch('/catalog.json').then((r) => r.json())
+    await loadStarters()
     const workflows = read()
 
     if (path === '/api/state') {
@@ -81,6 +85,46 @@
       return json({ name: 'demo workspace', folders: [], theme: localStorage.getItem(THEME_KEY) ?? 'zorilla-dark' })
     }
     if (path === '/api/runs') return json([])
+    if (path === '/api/tunnel') {
+      return json({ running: false, url: null, installed: false, from: null })
+    }
+    if (path === '/api/workflows/inspect') {
+      const pkg = body.package ?? body
+      const known = new Map(catalog.nodes.map((n) => [n.type, n]))
+      const specs = new Map(catalog.integrations.map((i) => [i.id, i]))
+      const hosts = new Set()
+      const credentials = new Set()
+      const unknown = new Set()
+      const triggers = new Set()
+      let runsCode = false
+      let readsChain = false
+      for (const node of pkg.nodes ?? []) {
+        const def = known.get(node.type)
+        if (!def) { unknown.add(node.type); continue }
+        if (def.category === 'trigger') triggers.add(def.label)
+        if (node.type === 'code.js') runsCode = true
+        if (def.category === 'web3') { readsChain = true; hosts.add('an Ethereum endpoint') }
+        for (const host of specs.get(def.integration)?.hosts ?? []) hosts.add(host)
+        for (const param of def.params ?? []) {
+          if (param.type === 'credential' && node.params?.[param.key]) credentials.add(node.params[param.key])
+        }
+      }
+      return json({
+        workflow: pkg,
+        derived: {
+          steps: (pkg.nodes ?? []).length, triggers: [...triggers], hosts: [...hosts].sort(),
+          credentials: [...credentials].sort(), unknown: [...unknown], runsCode, readsChain,
+          buildsTransaction: (pkg.nodes ?? []).some((n) => n.type === 'web3.prepare'),
+          writesFiles: (pkg.nodes ?? []).some((n) => n.type === 'file.save'),
+        },
+      })
+    }
+    if (path === '/api/workflows/import') {
+      const pkg = body.package ?? body
+      const saved = { ...pkg, id: `w${Math.random().toString(36).slice(2, 8)}`, folder: 'installed', active: false }
+      write([...workflows, saved])
+      return json(saved)
+    }
     if (path === '/api/credentials') return json([])
     if (path.startsWith('/api/credentials')) {
       return json({ error: 'The demo never asks for a key. Save keys in the app you run yourself.' }, 400)
