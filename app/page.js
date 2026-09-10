@@ -111,7 +111,8 @@ export default async function Home() {
             <p>
               Services on the left, one row each. Drop a step on the canvas, drag a wire to the
               next one, and each step tells you what it still needs before it can run. This one
-              checks a news feed, filters it, has Claude write a post and puts it on X.
+              checks a news feed every half hour, keeps the headlines worth posting about, has
+              Claude write the post, and puts it on X.
             </p>
           </div>
           <Shot src="/guide/hero-x.png" alt="the zorilla editor building a news to X automation" tilt />
