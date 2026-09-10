@@ -72,8 +72,8 @@ export default async function Home() {
       </section>
 
       <section className="page section">
-        <h2>what it actually does</h2>
-        <div className="grid three">
+        <h2>features</h2>
+        <div className="grid two">
           <div className="cell">
             <h3>runs where you are</h3>
             <p>
@@ -89,11 +89,20 @@ export default async function Home() {
             </p>
           </div>
           <div className="cell">
-            <h3>simulates before it spends</h3>
+            <h3>simulates contracts before spending</h3>
             <p>
               A step works out what a transaction would do and what the fee would be, then
               refuses anything that would fail. Note: onchain transactions still require
               manual signing.
+            </p>
+          </div>
+          <div className="cell">
+            <h3>the ordinary automation half</h3>
+            <p>
+              Start on a schedule, on a webhook, or when something new turns up: a Telegram
+              message, a Stripe payment, a Notion row. Then branch on a value, filter a list,
+              reshape it, call any API, and post the result somewhere. Steps hand each other
+              the same kind of item, so anything can feed anything.
             </p>
           </div>
         </div>
