@@ -148,40 +148,56 @@ npm start`}</code></pre>
           <section id="first-automation">
             <h2>Your first automation</h2>
             <p>
-              This one checks the price of ETH every ten minutes and posts it to a Discord
-              channel. It takes about five minutes, and you need a Discord server you can make
-              a webhook in.
+              Two things, in order. Something that works in three clicks, then one you build
+              yourself that posts the ETH price to a Discord channel. Fifteen minutes for both,
+              and you need a Discord server you can make a webhook in for the second half.
             </p>
 
             <h3>1. Open the workspace</h3>
             <p>
-              Starting zorilla opens on your workspace. It is empty to begin with, and offers
-              the thirteen automations that came with it. Take any of them, or start from
-              scratch. Once you have some, each row says whether it is running, when it last
-              ran, and what it is still waiting for.
+              zorilla opens on your workspace, and it is empty: nothing is installed on your
+              behalf. Thirteen automations came with it, and this is where you take one.
             </p>
             <Shot
               src="/guide/home.png"
-              alt="the zorilla workspace, listing automations"
+              alt="an empty zorilla workspace"
               spots={[
                 { n: 1, ...pct(0, 44, 150, 629), say: 'automations, keys, integrations, themes' },
-                { n: 2, ...pct(416, 145, 262, 33), say: 'start one, or add one somebody sent you' },
-                { n: 3, ...pct(576, 207, 65, 20), say: 'runs with no setup' },
-                { n: 4, ...pct(446, 711, 500, 18), say: 'what this one is waiting for' },
+                { n: 2, ...pct(416, 145, 206, 33), say: 'start one, or add one somebody sent you' },
+                { n: 3, ...pct(579, 334, 157, 33), say: 'what came with zorilla' },
               ]}
             />
 
-            <h3>2. Save a Discord key</h3>
+            <h3>2. Take one and press run</h3>
             <p>
-              In Discord, open the channel you want to post in, go to channel settings,
-              integrations, webhooks, and copy the webhook address. That address is the secret:
-              anyone holding it can post to that channel, so treat it like a password.
+              The ones that need nothing are at the top, marked <b>runs now</b>. Take{' '}
+              <b>eth price watch</b>: it reads the price of ETH and writes it in the log, and
+              says something separate when the price has moved 5% since it last mentioned it.
+              Press add, then press run in the top right. The strip along the bottom opens the
+              log, and the price is in it.
+            </p>
+            <Shot
+              src="/guide/examples.png"
+              alt="the automations that came with zorilla"
+              spots={[
+                { n: 1, ...pct(533, 207, 65, 20), say: 'no setup needed' },
+                { n: 2, ...pct(1184, 226, 50, 27), say: 'take it' },
+                { n: 3, ...pct(428, 623, 500, 18), say: 'what the others would need first' },
+              ]}
+            />
+
+            <h3>3. Give Discord somewhere to post</h3>
+            <p>
+              Now the one you build. In Discord, open the channel you want to post in, go to
+              channel settings, integrations, webhooks, and copy the webhook address. That
+              address is the secret: anyone holding it can post to that channel, so treat it
+              like a password.
             </p>
             <p>
               In zorilla, go to keys, choose Discord, paste the address in, and name it{' '}
-              <code>signals_webhook</code>. Press save. zorilla checks the address with Discord
-              and writes down where it points, so from then on every step using that key says
-              which channel it posts to instead of just showing a name.
+              <code>signals_webhook</code>. Press save. zorilla checks it with Discord and
+              writes down where it points, so from then on every step using that key says which
+              channel it posts to instead of just showing a name.
             </p>
             <Shot
               src="/guide/keys.png"
@@ -193,16 +209,16 @@ npm start`}</code></pre>
               ]}
             />
 
-            <h3>3. Put the steps on the canvas</h3>
+            <h3>4. Put the steps on the canvas</h3>
             <p>
-              Make a new automation and you get the editor. The list on the left is every step
+              Start a new automation and you get the editor. The list on the left is every step
               you can use, with services grouped one row each. Open Discord and you see what
               Discord can do. Click a step to drop it in the middle of the canvas, or drag it
               where you want it.
             </p>
             <p>
-              You need three: Schedule, under starting a run. Coin price, under CoinGecko.
-              Post, under Discord.
+              You need three: Schedule, under starting a run. Coin price, under CoinGecko. Post,
+              under Discord.
             </p>
             <Shot
               src="/guide/editor-palette.png"
@@ -213,19 +229,16 @@ npm start`}</code></pre>
               ]}
             />
 
-            <h3>4. Join them up</h3>
+            <h3>5. Join them up and fill them in</h3>
             <p>
-              Every step has a circle on its right and one on its left. Drag from the right
-              circle of one to the next step to join them. Items flow along that wire in the
-              direction you dragged. Click a wire to remove it.
+              Every step has a circle on each side. Drag from the right circle of one to the
+              next step to join them, and items flow along that wire. Click a wire to remove it.
             </p>
-
-            <h3>5. Fill in each step</h3>
             <p>
               Click a step and the panel on the right is its settings. Set the schedule to every
-              10 minutes. Set the coin to <code>ethereum</code> and the currency to{' '}
-              <code>usd</code>. On the Discord step, choose the key you saved, and write the
-              message. Double braces pull a value out of whatever the step before it produced.
+              10 minutes, the coin to <code>ethereum</code>, and on the Discord step choose the
+              key you saved and write the message. Double braces pull a value out of whatever
+              the step before it produced.
             </p>
             <pre><code>{`ETH is \${{ $json.ethereum.usd }}`}</code></pre>
             <Shot
@@ -240,14 +253,15 @@ npm start`}</code></pre>
 
             <h3>6. Run it, then leave it running</h3>
             <p>
-              Press run. The strip along the bottom opens the run log, which shows every step,
-              what it received, what it sent, and how long it took. If something is wrong, that
-              is where it says so, in words rather than error codes.
+              Press run. The log shows every step, what it received, what it sent, and how long
+              it took. If something is wrong, that is where it says so, in words rather than
+              error codes.
             </p>
             <p>
               When you are happy with it, press the switch in the top right so it reads{' '}
               <b>live</b>. From then on it runs on its own every ten minutes, for as long as
-              your computer is awake.
+              your computer is awake. Press <b>share</b> to save it as a file you can send to
+              somebody, naming the keys it needs and never their values.
             </p>
             <Shot
               src="/guide/editor-run.png"

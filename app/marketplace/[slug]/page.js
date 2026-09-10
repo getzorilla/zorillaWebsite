@@ -95,7 +95,7 @@ export default async function ListingPage({ params }) {
         <Link href="/marketplace" className="btn quiet">back</Link>
       </div>
       <p className="dim" style={{ fontSize: 13 }}>
-        {isAutomation && 'Import it in your app: workspace, automations, import.'}
+        {isAutomation && 'Download it, then in zorilla press add one from a file. You get a screen listing what it contacts and which keys it asks for before anything is saved.'}
         {isTheme && 'Save it into ~/.zorilla/themes/ and press refresh in the themes panel, or paste it into add from json.'}
         {listing.kind === 'integration' && 'Save it into ~/.zorilla/integrations/ and reload, or paste it into the integration editor.'}
       </p>
