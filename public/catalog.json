@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-10T21:07:39.688Z",
+  "generatedAt": "2026-09-10T21:24:16.363Z",
   "nodes": [
     {
       "outputs": [
@@ -3249,7 +3249,7 @@
   "themes": [
     {
       "id": "zorilla-dark",
-      "label": "zorilla dark",
+      "label": "Zorilla Dark",
       "appearance": "dark",
       "author": "zorilla",
       "colors": {
