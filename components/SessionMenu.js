@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import Avatar from './Avatar'
 
 export default function SessionMenu({ user }) {
   const router = useRouter()
@@ -9,13 +10,13 @@ export default function SessionMenu({ user }) {
   if (!user) return <Link href="/signin" className="btn">Sign in</Link>
 
   if (!user.handle) {
-    return <Link href="/welcome" className="btn primary">Pick a handle</Link>
+    return <Link href="/welcome" className="btn primary">Finish setup</Link>
   }
 
   return (
     <span className="row" style={{ gap: 8 }}>
       <Link href={`/u/${user.handle}`} className="row" style={{ gap: 7 }}>
-        <span className="avatar small">{user.handle[0].toUpperCase()}</span>
+        <Avatar src={user.avatar} handle={user.handle} size={24} />
         <span style={{ fontSize: 13 }}>{user.handle}</span>
       </Link>
       <button

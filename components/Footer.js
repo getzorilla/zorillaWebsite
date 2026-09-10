@@ -7,7 +7,6 @@ export default function Footer() {
       <div className="page row wrap">
         <Link className="dimmer mono" href="/license">Zorilla, Elastic License 2.0</Link>
         <span className="spacer" />
-        <a href="/marketplace">Marketplace</a>
         <a
           className="icon-link"
           href="https://github.com/getzorilla/zorillaApp"

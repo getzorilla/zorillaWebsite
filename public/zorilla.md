@@ -428,9 +428,9 @@ Post to X, and search what is being said. Contacts: api.x.com.
 
 ## Working examples
 
-### chain news to x
+### demo01: chain news to x
 
-Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has Claude draft a post about it, and puts it on X. Needs a Claude key named my_claude and an X key named my_x with write permission, plus a news feed you can read as JSON.
+Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has Claude draft a post about it, and puts it on X. Needs a Claude key named claude_key and an X key named x_key with write permission, plus a news feed you can read as JSON.
 
 ```json
 {
@@ -506,7 +506,7 @@ Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has
       "id": "draft",
       "type": "anthropic.ask",
       "params": {
-        "credential": "my_claude",
+        "credential": "claude_key",
         "prompt": "Write one post for X about this headline. Under 240 characters, no hashtags, no emoji, say what happened and why it matters.\n\n{{ $json.title }}",
         "model": "claude-sonnet-5",
         "system": "You write for a crypto audience that dislikes hype.",
@@ -521,7 +521,7 @@ Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has
       "id": "post",
       "type": "x.post",
       "params": {
-        "credential": "my_x",
+        "credential": "x_key",
         "text": "{{ $json.text }}"
       },
       "position": {
@@ -571,9 +571,9 @@ Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has
 }
 ```
 
-### contract numbers by email
+### demo02: contract numbers by email
 
-Reads a number straight off a contract every morning and emails it to you. This one reads how much USDC exists; change the address and the function line to read anything else. Needs a Resend key named my_resend.
+Reads a number straight off a contract every morning and emails it to you. This one reads how much USDC exists; change the address and the function line to read anything else. Needs a Resend key named resend_key.
 
 ```json
 {
@@ -610,7 +610,7 @@ Reads a number straight off a contract every morning and emails it to you. This 
       "id": "mail",
       "type": "resend.send",
       "params": {
-        "credential": "my_resend",
+        "credential": "resend_key",
         "to": "you@example.com",
         "subject": "USDC supply today",
         "html": "<p>{{ $json.result }}</p>",
@@ -639,9 +639,9 @@ Reads a number straight off a contract every morning and emails it to you. This 
 }
 ```
 
-### daily digest email
+### demo03: daily digest email
 
-One mail a day. Needs a saved Gmail key named my_gmail — an app password, not your account password.
+One mail a day. Needs a saved Gmail key named gmail_key — an app password, not your account password.
 
 ```json
 {
@@ -686,7 +686,7 @@ One mail a day. Needs a saved Gmail key named my_gmail — an app password, not 
       "id": "mail",
       "type": "gmail.send",
       "params": {
-        "credential": "my_gmail",
+        "credential": "gmail_key",
         "to": "you@example.com",
         "subject": "morning digest",
         "html": "ETH {{ $json.ethereum.usd }} · BTC {{ $json.bitcoin.usd }}"
@@ -720,9 +720,9 @@ One mail a day. Needs a saved Gmail key named my_gmail — an app password, not 
 }
 ```
 
-### eth price to discord
+### demo04: eth price to discord
 
-Every 10 minutes. The channel is whichever one you made the webhook in, so a webhook made in #signals posts to #signals. Needs a key named signals_webhook.
+Every 10 minutes. The channel is whichever one you made the webhook in, so a webhook made in #signals posts to #signals. Needs a key named discord_key.
 
 ```json
 {
@@ -756,7 +756,7 @@ Every 10 minutes. The channel is whichever one you made the webhook in, so a web
       "id": "post",
       "type": "discord.post",
       "params": {
-        "credential": "signals_webhook",
+        "credential": "discord_key",
         "content": "ETH ${{ $json.ethereum.usd }}",
         "username": "zorilla"
       },
@@ -783,7 +783,7 @@ Every 10 minutes. The channel is whichever one you made the webhook in, so a web
 }
 ```
 
-### eth price watch
+### demo05: eth price watch
 
 The one to press run on first. It reads the ETH price and writes it in the run log every time, and only says something separate when the price has moved 5% since it last mentioned it. Needs no keys.
 
@@ -882,9 +882,9 @@ The one to press run on first. It reads the ETH price and writes it in the run l
 }
 ```
 
-### hourly price email
+### demo06: hourly price email
 
-Every hour by email. Resend only delivers from a domain you have verified with them. Needs a key named my_resend.
+Every hour by email. Resend only delivers from a domain you have verified with them. Needs a key named resend_key.
 
 ```json
 {
@@ -918,7 +918,7 @@ Every hour by email. Resend only delivers from a domain you have verified with t
       "id": "mail",
       "type": "resend.send",
       "params": {
-        "credential": "my_resend",
+        "credential": "resend_key",
         "to": "you@example.com",
         "subject": "ETH {{ $json.ethereum.usd }}",
         "html": "<p>ETH {{ $json.ethereum.usd }}<br>BTC {{ $json.bitcoin.usd }}</p>",
@@ -947,9 +947,9 @@ Every hour by email. Resend only delivers from a domain you have verified with t
 }
 ```
 
-### payment to slack and notion
+### demo07: payment to slack and notion
 
-Watches for new Stripe payments and puts each one in two places at once. Fires once per payment, even though it checks every five minutes. Needs keys named my_stripe, my_slack and my_notion, and your Notion database id.
+Watches for new Stripe payments and puts each one in two places at once. Fires once per payment, even though it checks every five minutes. Needs keys named stripe_key, slack_key and notion_key, and your Notion database id.
 
 ```json
 {
@@ -958,7 +958,7 @@ Watches for new Stripe payments and puts each one in two places at once. Fires o
       "id": "paid",
       "type": "stripe.newCharge",
       "params": {
-        "credential": "my_stripe",
+        "credential": "stripe_key",
         "every": 5,
         "unit": "minutes"
       },
@@ -971,7 +971,7 @@ Watches for new Stripe payments and puts each one in two places at once. Fires o
       "id": "slack",
       "type": "slack.post",
       "params": {
-        "credential": "my_slack",
+        "credential": "slack_key",
         "channel": "#sales",
         "text": "${{ ($json.amount / 100).toFixed(2) }} from {{ $json.billing_details.email }}"
       },
@@ -984,7 +984,7 @@ Watches for new Stripe payments and puts each one in two places at once. Fires o
       "id": "notion",
       "type": "notion.createPage",
       "params": {
-        "credential": "my_notion",
+        "credential": "notion_key",
         "databaseId": "put-your-database-id-here",
         "properties": "{\"Name\":{\"title\":[{\"text\":{\"content\":\"{{ $json.id }}\"}}]}}"
       },
@@ -1011,7 +1011,7 @@ Watches for new Stripe payments and puts each one in two places at once. Fires o
 }
 ```
 
-### prepare a transaction
+### demo08: prepare a transaction
 
 Works out exactly what a transaction would do and what it would cost, on the Sepolia test network. Put your own address in "send from". It signs nothing and sends nothing.
 
@@ -1070,7 +1070,7 @@ Works out exactly what a transaction would do and what it would cost, on the Sep
 }
 ```
 
-### price move to discord
+### demo09: price move to discord
 
 Announces a price move to a Discord channel, and only when it actually moves. Checks every 10 minutes but stays quiet until ETH is 5% away from where it last told you. Needs a Discord webhook saved as announcements.
 
@@ -1154,7 +1154,7 @@ Announces a price move to a Discord channel, and only when it actually moves. Ch
 }
 ```
 
-### usdc landing in a wallet
+### demo10: usdc landing in a wallet
 
 Watches USDC landing in one wallet. It points at Circle's treasury so pressing run shows you something straight away: put your own address in "only where" instead. The endpoint does the filtering, so this stays cheap, and the same transaction is never reported twice.
 
@@ -1241,9 +1241,9 @@ Watches USDC landing in one wallet. It points at Circle's treasury so pressing r
 }
 ```
 
-### usdc landing to telegram
+### demo11: usdc landing to telegram
 
-Messages you on Telegram the moment USDC arrives in a wallet. Put your own address in "only where" on the events step. Never tells you about the same transaction twice. Needs a Telegram key named my_telegram.
+Messages you on Telegram the moment USDC arrives in a wallet. Put your own address in "only where" on the events step. Never tells you about the same transaction twice. Needs a Telegram key named telegram_key.
 
 ```json
 {
@@ -1297,7 +1297,7 @@ Messages you on Telegram the moment USDC arrives in a wallet. Put your own addre
       "id": "tell",
       "type": "telegram.send",
       "params": {
-        "credential": "my_telegram",
+        "credential": "telegram_key",
         "text": "USDC in: {{ $json.args.value }} raw units, tx {{ $json.transactionHash }}",
         "chatId": ""
       },
@@ -1330,7 +1330,7 @@ Messages you on Telegram the moment USDC arrives in a wallet. Put your own addre
 }
 ```
 
-### wallet balance watch
+### demo12: wallet balance watch
 
 Reads a balance on Ethereum mainnet and only carries on when it drops below a threshold. Reads only; it cannot move funds.
 
@@ -1410,9 +1410,9 @@ Reads a balance on Ethereum mainnet and only carries on when it drops below a th
 }
 ```
 
-### webhook to slack
+### demo13: webhook to slack
 
-Anything that sends a message to this automation's address gets posted to Slack. Press run to try it before wiring anything up: it stands in a line of its own. Needs a Slack key named my_slack.
+Anything that sends a message to this automation's address gets posted to Slack. Press run to try it before wiring anything up: it stands in a line of its own. Needs a Slack key named slack_key.
 
 ```json
 {
@@ -1450,7 +1450,7 @@ Anything that sends a message to this automation's address gets posted to Slack.
       "id": "slack",
       "type": "slack.post",
       "params": {
-        "credential": "my_slack",
+        "credential": "slack_key",
         "channel": "#alerts",
         "text": "{{ $json.text }}"
       },

@@ -66,8 +66,8 @@ const typeLabel = (type) => state.credentialTypes.get(type)?.label ?? type
 // the same box, so a row of them still lines up.
 const LOGOS = new Set([
   'airtable', 'anthropic', 'coingecko', 'deepseek', 'discord', 'etherscan', 'gemini',
-  'gmail', 'notion', 'openai', 'resend', 'slack', 'stripe', 'supabase', 'telegram',
-  'twilio', 'web3',
+  'github', 'gmail', 'notion', 'openai', 'resend', 'slack', 'stripe', 'supabase',
+  'telegram', 'twilio', 'web3', 'x',
 ])
 
 // Which service a step belongs to. Integration steps say so; the rest are named
@@ -80,8 +80,11 @@ function serviceOf(def) {
   return CORE.has(prefix) ? null : prefix
 }
 
+const LOGO_ALIAS = { evmRpc: 'web3' }
+
 function logoEl(id, size = 22) {
   const box = el('span', { class: 'logo', style: `width:${size}px;height:${size}px` })
+  id = LOGO_ALIAS[id] ?? id
   const own = state.integrations.find((i) => i.id === id)?.icon
   if (own) {
     box.append(el('img', { src: own, alt: '', width: size, height: size }))
@@ -141,6 +144,11 @@ $('automation-name').onclick = () => {
   touch()
 }
 
+$('open-editor').onclick = () => {
+  const first = state.workflows[0]
+  first ? openWorkflow(first.id) : newAutomation()
+}
+
 for (const item of document.querySelectorAll('.rail-item')) {
   item.onclick = () => {
     state.panel = item.dataset.panel
@@ -159,6 +167,10 @@ function renderHome() {
   return renderIntegrationsHome()
 }
 
+const readyTag = () => el('span', { class: 'tag ready' },
+  el('span', { class: 'tick', text: '✓' }),
+  el('span', { text: 'Ready' }))
+
 // ---------------------------------------------------------------- examples
 
 // The automations that came with zorilla. Offered, never installed on somebody's
@@ -170,10 +182,10 @@ async function showExamples() {
   sheet.textContent = ''
 
   sheet.append(el('div', { class: 'sheet-head' },
-    el('h1', { text: 'automations that came with zorilla' }),
-    el('p', { text: 'take any of these into your workspace. they arrive switched off, and you can change anything about them afterwards.' })))
+    el('h1', { text: 'Automations that came with Zorilla' }),
+    el('p', { text: 'Take any of these into your workspace. They arrive switched off, and you can change anything about them afterwards.' })))
   sheet.append(el('div', { class: 'sheet-actions' },
-    el('button', { class: 'ghost', text: 'back', onclick: renderAutomations })))
+    el('button', { class: 'ghost', text: 'Back', onclick: renderAutomations })))
 
   let examples = []
   try {
@@ -185,21 +197,21 @@ async function showExamples() {
 
   const saved = new Set(state.credentials.map((c) => c.name))
   const list = el('div', { class: 'row-list' })
-  for (const example of examples.sort((a, b) => a.derived.credentials.length - b.derived.credentials.length)) {
+  for (const example of examples.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }))) {
     const missing = example.derived.credentials.filter((name) => !saved.has(name))
     const row = el('div', { class: 'row' },
       el('div', { class: 'grow' },
         el('div', { class: 'row-inline', style: 'gap:8px' },
           el('div', { class: 'name', text: example.name }),
-          missing.length ? null : el('span', { class: 'tag on', text: 'runs now' })),
+          missing.length ? null : readyTag()),
         el('div', { class: 'note', text: example.notes }),
         el('div', { class: 'meta', text: [
-          `${example.nodes.length} steps`,
+          `${example.nodes.length} functions`,
           example.derived.hosts.length ? `contacts ${example.derived.hosts.join(', ')}` : 'contacts nothing',
         ].join('  ·  ') }),
-        missing.length ? el('div', { class: 'needs', text: `you would need a key called ${missing.join(', ')}` }) : null),
+        missing.length ? el('div', { class: 'needs', text: `The following are required: ${missing.join(', ')}` }) : null),
       el('div', { class: 'row-actions' },
-        el('button', { class: 'ghost', text: 'add it', onclick: async (event) => {
+        el('button', { class: 'ghost', text: 'Add it', onclick: async (event) => {
           event.stopPropagation()
           const added = await api('/api/workflows/import', { method: 'POST', body: { package: example, folder: 'examples' } })
           state.workflows = await api('/api/workflows')
@@ -218,12 +230,12 @@ async function showExamples() {
 // file, so none of it is the author's word for anything.
 function permissionLines(derived) {
   const lines = []
-  lines.push(`${derived.steps} step${derived.steps === 1 ? '' : 's'}${derived.triggers.length ? `, started by ${derived.triggers.join(' or ')}` : ''}`)
+  lines.push(`${derived.steps} function${derived.steps === 1 ? '' : 's'}${derived.triggers.length ? `, started by ${derived.triggers.join(' or ')}` : ''}`)
   lines.push(derived.hosts.length ? `contacts ${derived.hosts.join(', ')}` : 'contacts nothing')
   if (derived.credentials.length) lines.push(`uses your saved keys: ${derived.credentials.join(', ')}`)
   if (derived.readsChain) lines.push('reads Ethereum. it cannot move funds')
   if (derived.buildsTransaction) lines.push('works out what a transaction would cost. it signs nothing')
-  if (derived.writesFiles) lines.push('saves files into your zorilla files folder')
+  if (derived.writesFiles) lines.push('saves files into your Zorilla files folder')
   return lines
 }
 
@@ -234,12 +246,12 @@ async function showImport() {
   sheet.textContent = ''
 
   sheet.append(el('div', { class: 'sheet-head' },
-    el('h1', { text: 'add an automation' }),
-    el('p', { text: 'drop in a file you downloaded, or paste one. nothing is saved until you have read what it does.' })))
+    el('h1', { text: 'Import' }),
+    el('p', { text: 'Drop in a file you downloaded, or paste one. Nothing is saved until you have read what it does.' })))
 
-  const drop = el('div', { class: 'drop' }, el('span', { text: 'drop a .json file here, or choose one' }))
+  const drop = el('div', { class: 'drop' }, el('span', { text: 'Drop a .json file here, or choose one' }))
   const picker = el('input', { type: 'file', accept: 'application/json' })
-  const box = el('textarea', { rows: 8, spellcheck: false, placeholder: 'or paste the file here', style: 'width:100%' })
+  const box = el('textarea', { rows: 8, spellcheck: false, placeholder: 'Or paste the file here', style: 'width:100%' })
   const readout = el('div')
   const problem = el('p', { class: 'error' })
 
@@ -259,7 +271,7 @@ async function showImport() {
     try {
       const looked = await api('/api/workflows/inspect', { method: 'POST', body: { package: parsed } })
       if (!looked?.workflow || !looked?.derived) {
-        problem.textContent = 'zorilla could not read that as an automation.'
+        problem.textContent = 'Zorilla could not read that as an automation.'
         return
       }
       pending = looked.workflow
@@ -268,31 +280,31 @@ async function showImport() {
       const card = el('div', { class: 'install-card' },
         el('h3', { text: looked.workflow.name }),
         looked.workflow.notes ? el('p', { class: 'hint', text: looked.workflow.notes }) : null,
-        el('h4', { text: 'what this can do' }))
+        el('h4', { text: 'What this can do' }))
       const list = el('ul')
       for (const line of permissionLines(looked.derived)) list.append(el('li', { text: line }))
       card.append(list)
 
       if (looked.derived.unknown.length) {
-        card.append(el('p', { class: 'error', text: `this uses steps zorilla does not have: ${looked.derived.unknown.join(', ')}` }))
+        card.append(el('p', { class: 'error', text: `this uses functions Zorilla does not have: ${looked.derived.unknown.join(', ')}` }))
       }
       if (looked.derived.runsCode) {
         card.append(el('div', { class: 'checklist' },
-          el('h4', { text: 'it runs javascript its author wrote' }),
-          el('p', { class: 'hint', text: 'that code runs in a process of its own with no access to your files, but it can still reach the internet. read it before you switch this on.' })))
+          el('h4', { text: 'It runs javascript its author wrote' }),
+          el('p', { class: 'hint', text: 'That code runs in a process of its own with no access to your files, but it can still reach the internet. Read it before you switch this on.' })))
       }
       if (missing.length) {
         card.append(el('p', { class: 'needs', text: `you have no key called ${missing.join(', ')}. add one under keys, with that exact name, and this will find it.` }))
       }
 
       card.append(el('div', { class: 'row-inline', style: 'margin-top:12px' },
-        el('button', { class: 'primary', text: 'add it, switched off', onclick: async () => {
+        el('button', { class: 'primary', text: 'Add it, switched off', onclick: async () => {
           const saved = await api('/api/workflows/import', { method: 'POST', body: { package: pending } })
           state.workflows = await api('/api/workflows')
           toast(`${saved.name} added`)
           openWorkflow(saved.id)
         } }),
-        el('button', { class: 'ghost', text: 'cancel', onclick: () => renderAutomations() })))
+        el('button', { class: 'ghost', text: 'Cancel', onclick: () => renderAutomations() })))
       readout.append(card)
     } catch (err) {
       problem.textContent = err.message
@@ -333,13 +345,13 @@ function whatItNeeds(workflow) {
   const nodes = workflow.nodes ?? []
 
   const triggers = nodes.filter((n) => state.defs.get(n.type)?.category === 'trigger')
-  if (!nodes.length) needs.push('nothing in it yet')
-  else if (!triggers.length) needs.push('something to start it: a schedule, a webhook, or a step that waits')
+  if (!nodes.length) needs.push('at least one function')
+  else if (!triggers.length) needs.push('a trigger: a schedule, a webhook, or a function that waits')
 
   for (const node of nodes) {
     const def = state.defs.get(node.type)
     if (!def) {
-      needs.push(`a step it uses is not installed (${node.type})`)
+      needs.push(`the function ${node.type}, which is not installed`)
       continue
     }
     for (const param of def.params ?? []) {
@@ -357,7 +369,7 @@ function whatItNeeds(workflow) {
 
   const hooks = nodes.filter((n) => n.type === 'core.webhook')
   if (hooks.length && !(state.tunnel?.url || state.home.publicUrl)) {
-    needs.push('an address the internet can reach, so whoever calls it can get through')
+    needs.push('a public web address for the webhook')
   }
 
   return [...new Set(needs)]
@@ -365,6 +377,38 @@ function whatItNeeds(workflow) {
 
 function lastRunFor(workflowId) {
   return state.runs.find((r) => r.workflowId === workflowId) ?? null
+}
+
+// Folders live on the automations themselves, so renaming one means moving
+// everything in it and deleting one only lets go of the label.
+async function renameFolder(folder) {
+  const name = prompt('Rename folder', folder)
+  if (!name?.trim() || name.trim() === folder) return
+  for (const workflow of state.workflows.filter((w) => w.folder === folder)) {
+    await api(`/api/workflows/${workflow.id}`, { method: 'PATCH', body: { folder: name.trim() } })
+  }
+  state.workspace = await api('/api/workspace', {
+    method: 'PUT',
+    body: { folders: [...new Set(state.workspace.folders.map((f) => (f === folder ? name.trim() : f)))] },
+  })
+  state.workflows = await api('/api/workflows')
+  state.folder = name.trim()
+  renderAutomations()
+}
+
+async function deleteFolder(folder) {
+  const inside = state.workflows.filter((w) => w.folder === folder)
+  if (!confirm(`Delete the folder "${folder}"? The ${inside.length} automation(s) in it stay, without a folder.`)) return
+  for (const workflow of inside) {
+    await api(`/api/workflows/${workflow.id}`, { method: 'PATCH', body: { folder: '' } })
+  }
+  state.workspace = await api('/api/workspace', {
+    method: 'PUT',
+    body: { folders: state.workspace.folders.filter((f) => f !== folder) },
+  })
+  state.workflows = await api('/api/workflows')
+  state.folder = null
+  renderAutomations()
 }
 
 function renderAutomations() {
@@ -377,14 +421,24 @@ function renderAutomations() {
   const counts = (folder) =>
     state.workflows.filter((w) => (folder === null ? true : (w.folder || '') === folder)).length
 
-  side.append(el('div', { class: 'side-title', text: 'folders' }))
-  const entry = (label, folder) =>
-    el('div', {
+  side.append(el('div', { class: 'side-title', text: 'Folders' }))
+  const entry = (label, folder) => {
+    const row = el('div', {
       class: `side-item${state.folder === folder ? ' active' : ''}`,
       onclick: () => { state.folder = folder; renderAutomations() },
     }, el('span', { text: label }), el('span', { class: 'count', text: String(counts(folder)) }))
+    if (folder) {
+      row.oncontextmenu = (event) => contextMenu(event, [
+        { label: 'New automation here', run: () => newAutomation(folder) },
+        'divider',
+        { label: 'Rename folder', run: () => renameFolder(folder) },
+        { label: 'Delete folder', run: () => deleteFolder(folder) },
+      ])
+    }
+    return row
+  }
 
-  side.append(entry('all', null), entry('loose', ''))
+  side.append(entry('All', null), entry('Ungrouped', ''))
   for (const folder of folders) side.append(entry(folder, folder))
   side.append(el('div', {
     class: 'side-item',
@@ -413,27 +467,22 @@ function renderAutomations() {
   if (untouched && state.workflows.length) {
     const ready = state.workflows.filter((w) => !whatItNeeds(w).length).length
     sheet.append(el('div', { class: 'welcome' },
-      el('h4', { text: 'new here?' }),
+      el('h4', { text: 'New here?' }),
       el('p', {}, `${ready} of these run right now with no setup at all: open one, press run, and watch the log at the bottom. `,
-        el('a', { href: '#', text: 'the rest need a key first.', onclick: (e) => { e.preventDefault(); state.panel = 'keys'; for (const item of document.querySelectorAll('.rail-item')) item.classList.toggle('active', item.dataset.panel === 'keys'); renderHome() } }))))
+        el('a', { href: '#', text: 'The rest need a key first.', onclick: (e) => { e.preventDefault(); state.panel = 'keys'; for (const item of document.querySelectorAll('.rail-item')) item.classList.toggle('active', item.dataset.panel === 'keys'); renderHome() } }))))
   }
 
   sheet.append(el('div', { class: 'sheet-actions' },
-    el('button', { class: 'primary', text: 'new automation', onclick: () => newAutomation() }),
-    el('button', { class: 'ghost', text: 'examples', onclick: () => showExamples() }),
-    el('button', { class: 'ghost', text: 'add one from a file', onclick: () => showImport() }),
-    el('button', { class: 'ghost', text: 'open editor', onclick: () => {
-      const first = shown[0] ?? state.workflows[0]
-      first ? openWorkflow(first.id) : newAutomation()
-    } })))
+    el('button', { class: 'primary', text: 'New automation', onclick: () => newAutomation() }),
+    el('button', { class: 'ghost', text: '↧ Import', onclick: () => showImport() })))
 
   if (!shown.length) {
     sheet.append(el('div', { class: 'empty' },
-      el('h3', { text: 'nothing here yet' }),
-      el('p', { text: 'automations came with zorilla and are waiting to be taken, several of which run with no keys at all. or start from an empty canvas.' }),
+      el('h3', { text: 'Nothing here yet' }),
+      el('p', { text: 'Nothing is installed on your behalf. Start from an empty canvas, or open a demo to see how one is put together.' }),
       el('div', { class: 'row-inline', style: 'justify-content:center' },
-        el('button', { class: 'primary', text: 'see what came with it', onclick: () => showExamples() }),
-        el('button', { class: 'ghost', text: 'start from scratch', onclick: () => newAutomation() }))))
+        el('button', { class: 'primary', text: 'New automation', onclick: () => newAutomation() }),
+        el('button', { class: 'ghost', text: 'Open a demo', onclick: () => showExamples() }))))
     return
   }
 
@@ -446,12 +495,12 @@ function renderAutomations() {
       el('div', { class: 'grow' },
         el('div', { class: 'row-inline', style: 'gap:8px' },
           el('div', { class: 'name', text: workflow.name }),
-          needs.length ? null : el('span', { class: 'tag on', text: 'runs now' })),
+          needs.length ? null : readyTag()),
         workflow.notes ? el('div', { class: 'note', text: workflow.notes }) : null,
-        el('div', { class: 'meta', text: [workflow.folder || 'loose', run ? `${run.status} ${relative(run.startedAt)}` : 'never run'].join('  ·  ') }),
-        needs.length ? el('div', { class: 'needs', text: `needs ${needs.join(', ')}` }) : null),
+        el('div', { class: 'meta', text: [workflow.folder || 'Ungrouped', run ? `${run.status} ${relative(run.startedAt)}` : 'never run'].join('  ·  ') }),
+        needs.length ? el('div', { class: 'needs', text: `The following are required: ${needs.join(', ')}` }) : null),
       el('div', { class: 'row-actions' },
-        el('button', { class: 'ghost', text: 'run', onclick: async (event) => {
+        el('button', { class: 'ghost', text: 'Run', onclick: async (event) => {
           event.stopPropagation()
           try {
             const result = await api(`/api/workflows/${workflow.id}/run`, { method: 'POST', body: {} })
@@ -460,22 +509,81 @@ function renderAutomations() {
             renderAutomations()
           } catch (err) { toast(err.message, true) }
         } }),
-        el('button', { class: 'ghost', text: 'delete', onclick: async (event) => {
+        el('button', { class: 'ghost', text: 'Delete', onclick: async (event) => {
           event.stopPropagation()
-          if (!confirm(`delete "${workflow.name}"? this cannot be undone.`)) return
+          if (!confirm(`Delete "${workflow.name}"? This cannot be undone.`)) return
           await api(`/api/workflows/${workflow.id}`, { method: 'DELETE' })
           state.workflows = await api('/api/workflows')
           renderAutomations()
         } })))
+    row.oncontextmenu = (event) => contextMenu(event, [
+      { label: 'Open', run: () => openWorkflow(workflow.id) },
+      { label: 'Run', run: () => runFromList(workflow) },
+      'divider',
+      { label: 'Rename', run: () => renameWorkflow(workflow) },
+      { label: 'Duplicate', run: () => duplicateWorkflow(workflow) },
+      { label: 'Move to folder', run: () => moveWorkflow(workflow) },
+      'divider',
+      { label: 'Delete', run: () => deleteWorkflow(workflow) },
+    ])
     list.append(row)
   }
   sheet.append(list)
 }
 
-async function newAutomation() {
+async function runFromList(workflow) {
+  try {
+    const result = await api(`/api/workflows/${workflow.id}/run`, { method: 'POST', body: {} })
+    state.runs = await api('/api/runs')
+    toast(`${workflow.name}: ${result.status}`, result.status !== 'ok')
+    renderAutomations()
+  } catch (err) { toast(err.message, true) }
+}
+
+async function renameWorkflow(workflow) {
+  const name = prompt('Rename automation', workflow.name)
+  if (!name?.trim() || name.trim() === workflow.name) return
+  await api(`/api/workflows/${workflow.id}`, { method: 'PATCH', body: { name: name.trim() } })
+  state.workflows = await api('/api/workflows')
+  renderAutomations()
+}
+
+async function duplicateWorkflow(workflow) {
+  const full = await api(`/api/workflows/${workflow.id}`)
   const saved = await api('/api/workflows', {
     method: 'POST',
-    body: { name: 'untitled automation', folder: state.folder ?? '', nodes: [], edges: [] },
+    body: { ...full, id: undefined, active: false, name: `${full.name} copy` },
+  })
+  state.workflows = await api('/api/workflows')
+  renderAutomations()
+  toast(`${saved.name} created`)
+}
+
+async function moveWorkflow(workflow) {
+  const folder = prompt('Move to which folder? Leave it empty for none.', workflow.folder ?? '')
+  if (folder === null) return
+  await api(`/api/workflows/${workflow.id}`, { method: 'PATCH', body: { folder: folder.trim() } })
+  if (folder.trim() && !state.workspace.folders.includes(folder.trim())) {
+    state.workspace = await api('/api/workspace', {
+      method: 'PUT',
+      body: { folders: [...state.workspace.folders, folder.trim()] },
+    })
+  }
+  state.workflows = await api('/api/workflows')
+  renderAutomations()
+}
+
+async function deleteWorkflow(workflow) {
+  if (!confirm(`Delete "${workflow.name}"? This cannot be undone.`)) return
+  await api(`/api/workflows/${workflow.id}`, { method: 'DELETE' })
+  state.workflows = await api('/api/workflows')
+  renderAutomations()
+}
+
+async function newAutomation(folder = null) {
+  const saved = await api('/api/workflows', {
+    method: 'POST',
+    body: { name: 'untitled automation', folder: folder ?? state.folder ?? '', nodes: [], edges: [] },
   })
   state.workflows = await api('/api/workflows')
   openWorkflow(saved.id)
@@ -489,17 +597,31 @@ function renderKeysHome() {
   side.textContent = ''
   sheet.textContent = ''
 
-  side.append(el('div', { class: 'side-title', text: 'saved keys' }))
-  if (!state.credentials.length) side.append(el('div', { class: 'hint', text: 'none yet' }))
+  side.append(el('div', { class: 'side-title', text: 'Saved keys' }))
+  if (!state.credentials.length) side.append(el('div', { class: 'hint', text: 'None yet' }))
   for (const cred of state.credentials) {
-    side.append(el('div', { class: 'side-item' },
-      el('span', { text: cred.name }),
-      el('span', { class: 'count', text: typeLabel(cred.type) })))
+    const row = el('div', {
+      class: 'side-item',
+      title: `Replace ${cred.name}`,
+      onclick: () => { state.keyDraftType = cred.type; state.keyDraftName = cred.name; renderKeysHome() },
+    }, el('span', { text: cred.name }), el('span', { class: 'count', text: typeLabel(cred.type) }))
+    row.oncontextmenu = (event) => contextMenu(event, [
+      { label: 'Replace the value', run: () => { state.keyDraftType = cred.type; state.keyDraftName = cred.name; renderKeysHome() } },
+      { label: 'Copy its name', run: () => navigator.clipboard.writeText(cred.name).then(() => toast('Copied')) },
+      'divider',
+      { label: 'Delete', run: async () => {
+        if (!confirm(`Delete the key "${cred.name}"? Automations that use it will stop working.`)) return
+        const { credentials } = await api(`/api/credentials/${encodeURIComponent(cred.name)}`, { method: 'DELETE' })
+        state.credentials = credentials
+        renderKeysHome()
+      } },
+    ])
+    side.append(row)
   }
 
   sheet.append(el('div', { class: 'sheet-head' },
-    el('h1', { text: 'keys' }),
-    el('p', { text: 'encrypted here. an automation stores a key\u2019s name, never its value.' })))
+    el('h1', { text: 'Keys' }),
+    el('p', { text: 'encrypted here. An automation stores a key\u2019s name, never its value.' })))
 
   const host = el('div', { class: 'max' })
   sheet.append(host)
@@ -514,16 +636,18 @@ function renderKeysInto(host) {
     type: state.keyDraftType ?? state.credentialTypes.keys().next().value ?? 'generic',
     values: {}, pairs: [],
   }
+  const startName = state.keyDraftName ?? ''
   state.keyDraftType = null
+  state.keyDraftName = null
 
   const list = el('div')
   const form = el('div')
-  host.append(list, el('div', { class: 'panel-title', style: 'margin-top:18px', text: 'add a key' }), form)
+  host.append(list, el('div', { class: 'panel-title', style: 'margin-top:18px', text: startName ? `Replace ${startName}` : 'Add a key' }), form)
 
   const drawList = () => {
     list.textContent = ''
     if (!state.credentials.length) {
-      list.append(el('p', { class: 'hint', text: 'nothing saved yet.' }))
+      list.append(el('p', { class: 'hint', text: 'Nothing saved yet.' }))
       return
     }
     for (const cred of state.credentials) {
@@ -533,7 +657,7 @@ function renderKeysInto(host) {
       const actions = el('div', { class: 'actions' })
 
       if (state.credentialTypes.get(cred.type)?.checkable) {
-        const check = el('button', { class: 'ghost', text: 'test', onclick: async () => {
+        const check = el('button', { class: 'ghost', text: 'Test', onclick: async () => {
           check.textContent = '…'
           try {
             const result = await api(`/api/credentials/${encodeURIComponent(cred.name)}/test`, { method: 'POST', body: {} })
@@ -544,7 +668,7 @@ function renderKeysInto(host) {
         } })
         actions.append(check)
       }
-      actions.append(el('button', { class: 'ghost', text: 'delete', onclick: async () => {
+      actions.append(el('button', { class: 'ghost', text: 'Delete', onclick: async () => {
         const { credentials } = await api(`/api/credentials/${encodeURIComponent(cred.name)}`, { method: 'DELETE' })
         state.credentials = credentials
         drawList()
@@ -559,7 +683,11 @@ function renderKeysInto(host) {
     const type = state.credentialTypes.get(draft.type)
 
     const grid = el('div', { class: 'service-grid picker' })
-    for (const candidate of [...state.credentialTypes.values()].sort((a, b) => a.label.localeCompare(b.label))) {
+    // services first, then the three that are ours rather than anybody's
+    const HOUSE = { bearer: 1, apiHeader: 2, generic: 3 }
+    const ordered = [...state.credentialTypes.values()].sort((a, b) =>
+      (HOUSE[a.type] ?? 0) - (HOUSE[b.type] ?? 0) || a.label.localeCompare(b.label))
+    for (const candidate of ordered) {
       grid.append(el('button', {
         class: `service-tile${candidate.type === draft.type ? ' active' : ''}`,
         title: candidate.label,
@@ -568,12 +696,12 @@ function renderKeysInto(host) {
     }
     form.append(field('service', grid, type?.description))
 
-    const name = el('input', { type: 'text', spellcheck: false, placeholder: `my_${draft.type}` })
-    form.append(field('name', name, 'what steps will call this key.'))
+    const name = el('input', { type: 'text', spellcheck: false, value: startName, placeholder: `${String(draft.type).toLowerCase()}_key` })
+    form.append(field('name', name, 'what functions will call this key.'))
 
     if (!type?.fields) {
       form.append(field('fields', keyValueControl(draft.pairs, (rows) => { draft.pairs = rows }),
-        'read them in a step with {{ $creds.name.field }}.'))
+        'read them in a function with {{ $creds.name.field }}.'))
     } else {
       for (const spec of type.fields) {
         const input = el('input', {
@@ -586,13 +714,13 @@ function renderKeysInto(host) {
         form.append(field(spec.required === false ? `${spec.label} (optional)` : spec.label, input, spec.description))
       }
       if (type.docs) {
-        form.append(el('a', { href: type.docs, target: '_blank', rel: 'noreferrer', class: 'hint', text: 'where to find this key' }))
+        form.append(el('a', { href: type.docs, target: '_blank', rel: 'noreferrer', class: 'hint', text: 'Where to find this key' }))
       }
     }
 
     if (type?.hosts?.length) {
       const tags = el('div', { style: 'margin:10px 0' })
-      tags.append(el('span', { class: 'hint', text: 'this key is sent to  ' }))
+      tags.append(el('span', { class: 'hint', text: 'This key is sent to  ' }))
       for (const host of type.hosts) tags.append(el('span', { class: 'tag', text: host }))
       for (const warning of type.warnings ?? []) tags.append(el('span', { class: 'tag warn', text: warning }))
       form.append(tags)
@@ -604,7 +732,7 @@ function renderKeysInto(host) {
       : Object.fromEntries(draft.pairs.filter((r) => r.name).map((r) => [r.name, r.value])))
 
     form.append(el('div', { class: 'row-inline' },
-      el('button', { class: 'primary', text: 'save', onclick: async () => {
+      el('button', { class: 'primary', text: 'Save', onclick: async () => {
         problem.className = 'error'
         problem.textContent = ''
         try {
@@ -619,7 +747,7 @@ function renderKeysInto(host) {
           toast(`saved ${name.value.trim()}`)
         } catch (err) { problem.textContent = err.message }
       } }),
-      type?.test ? el('button', { class: 'ghost', text: 'test', onclick: async () => {
+      type?.test ? el('button', { class: 'ghost', text: 'Test', onclick: async () => {
         problem.className = 'error'
         problem.textContent = 'checking…'
         try {
@@ -651,22 +779,21 @@ function renderIntegrationsHome() {
     el('span', { text: '+ create integration' })))
 
   if (mine.length) {
-    side.append(el('div', { class: 'side-title spaced', text: 'yours' }))
+    side.append(el('div', { class: 'side-title spaced', text: 'Yours' }))
     for (const spec of mine) {
       side.append(el('div', { class: 'side-item', onclick: () => showIntegration(spec.id) },
         el('span', { text: spec.label }), el('span', { class: 'count', text: `${spec.actions.length}` })))
     }
   }
 
-  side.append(el('div', { class: 'side-title spaced', text: 'built in' }))
+  side.append(el('div', { class: 'side-title spaced', text: 'Built in' }))
   for (const spec of shipped) {
     side.append(el('div', { class: 'side-item', onclick: () => showIntegration(spec.id) },
       el('span', { text: spec.label }), el('span', { class: 'count', text: `${spec.actions.length}` })))
   }
 
   sheet.append(el('div', { class: 'sheet-head' },
-    el('h1', { text: 'integrations' }),
-    el('p', { text: 'a file, not code: the fields a service needs and the requests it makes. installing one runs nothing.' })))
+    el('h1', { text: 'Integrations' })))
 
   const list = el('div', { class: 'integration-list' })
   for (const spec of state.integrations) {
@@ -675,8 +802,8 @@ function renderIntegrationsHome() {
       el('span', { class: 'grow' },
         el('span', { class: 'integration-name', text: spec.label }),
         el('small', { text: spec.description || '' })),
-      el('span', { class: 'count', text: `${spec.actions.length} step${spec.actions.length === 1 ? '' : 's'}` }))
-    if (spec.editable) row.append(el('span', { class: 'tag', text: 'yours' }))
+      el('span', { class: 'count', text: `${spec.actions.length} function${spec.actions.length === 1 ? '' : 's'}` }))
+    if (spec.editable) row.append(el('span', { class: 'tag', text: 'Yours' }))
     list.append(row)
   }
   sheet.append(list)
@@ -691,19 +818,19 @@ function showIntegration(id) {
     el('p', { text: spec.description || '' })))
 
   const tags = el('div', { style: 'margin-bottom:16px' })
-  tags.append(el('span', { class: 'hint', text: 'contacts  ' }))
+  tags.append(el('span', { class: 'hint', text: 'Contacts  ' }))
   for (const host of spec.hosts) tags.append(el('span', { class: 'tag', text: host }))
   for (const warning of spec.warnings) tags.append(el('span', { class: 'tag warn', text: warning }))
   sheet.append(tags)
 
-  const steps = el('div', { class: 'card max' }, el('h3', { text: 'steps' }))
+  const steps = el('div', { class: 'card max' }, el('h3', { text: 'Functions' }))
   for (const action of spec.actions) {
-    steps.append(el('p', {}, el('code', { text: `${spec.id}.${action.key}` }), ` — ${action.label}`))
+    steps.append(el('p', {}, copyChip(`${spec.id}.${action.key}`), ` — ${action.label}`))
   }
   sheet.append(steps)
 
   if (spec.fields.length) {
-    const fields = el('div', { class: 'card max' }, el('h3', { text: 'what you fill in' }))
+    const fields = el('div', { class: 'card max' }, el('h3', { text: 'What you fill in' }))
     for (const f of spec.fields) {
       fields.append(el('p', {}, el('code', { text: f.label }), f.secret ? ' — kept secret' : ''))
     }
@@ -712,13 +839,13 @@ function showIntegration(id) {
 
   sheet.append(el('div', { class: 'row-inline' },
     el('button', { class: 'ghost', text: spec.editable ? 'edit' : 'copy and edit', onclick: () => showIntegrationEditor(spec.id) }),
-    spec.editable ? el('button', { class: 'ghost', text: 'delete', onclick: async () => {
+    spec.editable ? el('button', { class: 'ghost', text: 'Delete', onclick: async () => {
       if (!confirm(`delete the "${spec.label}" integration?`)) return
       await api(`/api/integrations/${spec.id}`, { method: 'DELETE' })
       await reloadIntegrations()
       renderIntegrationsHome()
     } }) : null,
-    el('button', { class: 'ghost', text: 'back', onclick: renderIntegrationsHome })))
+    el('button', { class: 'ghost', text: 'Back', onclick: renderIntegrationsHome })))
 }
 
 const BLANK_INTEGRATION = {
@@ -730,6 +857,25 @@ const BLANK_INTEGRATION = {
     request: { method: 'POST', url: 'https://api.example.com/v1/things', json: { text: '{{ text }}' } },
     errorPath: 'error.message',
   }],
+}
+
+function previewBlock({ title, text, filename }) {
+  const bar = el('div', { class: 'preview-bar' }, el('span', { class: 'preview-title', text: title }))
+  const copy = el('button', { class: 'icon-btn', title: 'Copy', text: '⧉' })
+  copy.onclick = async () => {
+    await navigator.clipboard.writeText(text)
+    copy.textContent = '✓'
+    setTimeout(() => { copy.textContent = '⧉' }, 1600)
+  }
+  const save = el('button', { class: 'icon-btn', title: `Download ${filename}`, text: '↓' })
+  save.onclick = () => {
+    const url = URL.createObjectURL(new Blob([text], { type: 'text/plain' }))
+    const link = el('a', { href: url, download: filename })
+    link.click()
+    URL.revokeObjectURL(url)
+  }
+  bar.append(copy, save)
+  return el('div', { class: 'preview-box' }, bar, el('pre', { class: 'preview-text', text }))
 }
 
 async function showIntegrationEditor(sourceId) {
@@ -744,25 +890,20 @@ async function showIntegrationEditor(sourceId) {
 
   sheet.append(el('div', { class: 'sheet-head' },
     el('h1', { text: sourceId ? 'edit integration' : 'create integration' }),
-    el('p', { text: 'saved as a file in ~/.zorilla/integrations. no code in it.' })))
+    el('p', { text: 'Saved as a file in ~/.zorilla/integrations. No code in it.' })))
 
   // Nobody should have to learn this file format to add a service. Hand the
   // prompt to an assistant, name the service, paste back what it writes.
   if (!sourceId) {
     const help = el('div', { class: 'prompt-help' },
-      el('h4', { text: 'have an assistant write it' }),
-      el('p', { class: 'hint', text: 'copy this, replace the service name, paste it into claude or chatgpt, then paste the json it gives you into the box below.' }))
-    const copy = el('button', { class: 'primary', text: 'copy the prompt' })
-    copy.onclick = async () => {
-      try {
-        const { prompt } = await api('/api/integration-prompt')
-        await navigator.clipboard.writeText(prompt)
-        copy.textContent = 'copied'
-        setTimeout(() => { copy.textContent = 'copy the prompt' }, 1600)
-      } catch (err) { toast(err.message, true) }
-    }
-    help.append(copy)
+      el('h4', { text: 'Have an agent write it' }),
+      el('p', { class: 'hint', text: 'Copy this, replace the service name, paste it into Claude or ChatGPT, then paste the JSON it gives you into the box below.' }))
     sheet.append(help)
+    api('/api/integration-prompt')
+      .then(({ prompt }) => help.append(previewBlock({
+        title: 'The prompt', text: prompt, filename: 'zorilla-integration-prompt.md',
+      })))
+      .catch((err) => toast(err.message, true))
   }
 
   const editor = el('textarea', { rows: 26, spellcheck: false, value: JSON.stringify(spec, null, 2), class: 'max', style: 'width:100%' })
@@ -777,7 +918,7 @@ async function showIntegrationEditor(sourceId) {
     let current = null
     try { current = JSON.parse(editor.value).icon } catch { /* mid-edit */ }
     if (current) preview.append(el('img', { src: current, alt: '', width: 28, height: 28 }))
-    else preview.append(el('span', { class: 'hint', text: 'none' }))
+    else preview.append(el('span', { class: 'hint', text: 'None' }))
   }
   const picker = el('input', { type: 'file', accept: 'image/png,image/jpeg,image/webp' })
   picker.onchange = async () => {
@@ -799,7 +940,7 @@ async function showIntegrationEditor(sourceId) {
     } catch (err) { problem.textContent = `fix the json first: ${err.message}` }
   }
   sheet.append(field('icon', el('div', { class: 'row-inline' }, preview, picker,
-    el('button', { class: 'ghost', text: 'remove', onclick: () => {
+    el('button', { class: 'ghost', text: 'Remove', onclick: () => {
       try {
         const parsed = JSON.parse(editor.value)
         delete parsed.icon
@@ -824,7 +965,7 @@ async function showIntegrationEditor(sourceId) {
       problem.textContent = result.error
       return null
     }
-    readout.append(el('span', { class: 'hint', text: `${result.actions} step(s), contacts  ` }))
+    readout.append(el('span', { class: 'hint', text: `${result.actions} function(s), contacts  ` }))
     for (const host of result.hosts) readout.append(el('span', { class: 'tag', text: host }))
     for (const warning of result.warnings) readout.append(el('span', { class: 'tag warn', text: warning }))
     return parsed
@@ -834,8 +975,8 @@ async function showIntegrationEditor(sourceId) {
 
   sheet.append(el('div', { class: 'max' }, editor), readout,
     el('div', { class: 'row-inline' },
-      el('button', { class: 'ghost', text: 'check', onclick: check }),
-      el('button', { class: 'primary', text: 'save', onclick: async () => {
+      el('button', { class: 'ghost', text: 'Check', onclick: check }),
+      el('button', { class: 'primary', text: 'Save', onclick: async () => {
         const parsed = await check()
         if (!parsed) return
         try {
@@ -845,7 +986,7 @@ async function showIntegrationEditor(sourceId) {
           renderIntegrationsHome()
         } catch (err) { problem.textContent = err.message }
       } }),
-      el('button', { class: 'ghost', text: 'cancel', onclick: renderIntegrationsHome })),
+      el('button', { class: 'ghost', text: 'Cancel', onclick: renderIntegrationsHome })),
     problem)
   check()
 }
@@ -922,22 +1063,22 @@ function renderSettings() {
   side.textContent = ''
   sheet.textContent = ''
 
-  side.append(el('p', { class: 'side-title', text: 'this workspace' }))
+  side.append(el('p', { class: 'side-title', text: 'This workspace' }))
   side.append(el('div', { class: 'side-item' },
-    el('span', { text: 'name' }), el('span', { class: 'count', text: state.workspace.name })))
+    el('span', { text: 'Name' }), el('span', { class: 'count', text: state.workspace.name })))
   side.append(el('div', { class: 'side-item' },
-    el('span', { text: 'automations' }), el('span', { class: 'count', text: String(state.workflows.length) })))
+    el('span', { text: 'Automations' }), el('span', { class: 'count', text: String(state.workflows.length) })))
   side.append(el('div', { class: 'side-item' },
-    el('span', { text: 'keys' }), el('span', { class: 'count', text: String(state.credentials.length) })))
+    el('span', { text: 'Keys' }), el('span', { class: 'count', text: String(state.credentials.length) })))
 
-  side.append(el('p', { class: 'side-title spaced', text: 'kept in' }))
+  side.append(el('p', { class: 'side-title spaced', text: 'Kept in' }))
   side.append(el('div', { class: 'hint', style: 'padding:0 9px; overflow-wrap:anywhere' }, state.home.path))
 
   sheet.append(el('div', { class: 'sheet-head' },
-    el('h1', { text: 'settings' }),
-    el('p', { text: 'the look of the app, and where it keeps things.' })))
+    el('h1', { text: 'Settings' }),
+    el('p', { text: 'The look of the app, and where it keeps things.' })))
 
-  sheet.append(el('div', { class: 'panel-title', text: 'workspace' }))
+  sheet.append(el('div', { class: 'panel-title', text: 'Workspace' }))
   const name = el('input', { type: 'text', value: state.workspace.name, style: 'max-width:320px' })
   name.onchange = async () => {
     state.workspace = await api('/api/workspace', { method: 'PUT', body: { name: name.value } })
@@ -946,12 +1087,12 @@ function renderSettings() {
   }
   sheet.append(field('what this workspace is called', name))
 
-  sheet.append(el('div', { class: 'panel-title', style: 'margin-top:22px', text: 'theme' })) 
+  sheet.append(el('div', { class: 'panel-title', style: 'margin-top:22px', text: 'Theme' })) 
 
   sheet.append(el('div', { class: 'sheet-actions' },
-    el('button', { class: 'ghost', text: 'refresh', onclick: async () => { await reloadThemes(); renderSettings(); toast('themes reloaded') } }),
-    el('button', { class: 'ghost', text: 'add from json', onclick: showThemeEditor }),
-    el('button', { class: 'ghost', text: 'copy this one', onclick: async () => {
+    el('button', { class: 'ghost', text: 'Refresh', onclick: async () => { await reloadThemes(); renderSettings(); toast('themes reloaded') } }),
+    el('button', { class: 'ghost', text: 'Add from json', onclick: showThemeEditor }),
+    el('button', { class: 'ghost', text: 'Copy this one', onclick: async () => {
       const theme = currentTheme()
       await navigator.clipboard.writeText(JSON.stringify({
         id: `${theme.id}-copy`, label: `${theme.label} copy`, appearance: theme.appearance, colors: theme.colors,
@@ -972,7 +1113,7 @@ function renderSettings() {
     if (theme.source === 'yours') {
       card.append(el('div', { class: 'row-inline', style: 'padding:0 10px 9px' },
         el('button', {
-          class: 'ghost', text: 'remove',
+          class: 'ghost', text: 'Remove',
           onclick: async (event) => {
             event.stopPropagation()
             if (!confirm(`remove the "${theme.label}" theme?`)) return
@@ -1000,12 +1141,12 @@ function showThemeEditor() {
   const problem = el('p', { class: 'error' })
 
   sheet.append(el('div', { class: 'sheet-head' },
-    el('h1', { text: 'add a theme' }),
-    el('p', { text: 'paste one. it is saved as a file in your themes folder.' })))
+    el('h1', { text: 'Add a theme' }),
+    el('p', { text: 'Paste one. It is saved as a file in your themes folder.' })))
   sheet.append(box, problem)
   sheet.append(el('div', { class: 'row-inline' },
     el('button', {
-      class: 'primary', text: 'save',
+      class: 'primary', text: 'Save',
       onclick: async () => {
         problem.textContent = ''
         let parsed
@@ -1019,7 +1160,7 @@ function showThemeEditor() {
         } catch (err) { problem.textContent = err.message }
       },
     }),
-    el('button', { class: 'ghost', text: 'back', onclick: renderSettings })))
+    el('button', { class: 'ghost', text: 'Back', onclick: renderSettings })))
 }
 
 // ---------------------------------------------------------------- editor state
@@ -1131,13 +1272,13 @@ function setActiveButton(on) {
   const button = $('active')
   button.classList.toggle('on', on)
   button.setAttribute('aria-pressed', String(on))
-  $('active-label').textContent = on ? 'live' : 'not live'
+  $('active-label').textContent = on ? 'Live' : 'Not live'
 }
 
 $('active').onclick = () => {
   state.wf.active = !state.wf.active
   setActiveButton(state.wf.active)
-  toast(state.wf.active ? 'live' : 'not live')
+  toast(state.wf.active ? 'Live' : 'Not live')
   touch()
 }
 
@@ -1195,6 +1336,134 @@ function nodeById(id) {
   return state.wf.nodes.find((n) => n.id === id)
 }
 
+// ---------------------------------------------------------------- panes
+
+// Both side panels can be dragged wider or folded away, and where somebody put
+// them is remembered.
+const PANES = {
+  palette: { grip: 'grip-palette', fold: 'fold-palette', show: 'show-palette', css: '--palette-w', min: 170, max: 460, off: 'no-palette' },
+  inspector: { grip: 'grip-inspector', fold: 'fold-inspector', show: 'show-inspector', css: '--inspector-w', min: 220, max: 560, off: 'no-inspector' },
+}
+
+function setPaneWidth(name, px) {
+  const pane = PANES[name]
+  const width = Math.min(pane.max, Math.max(pane.min, Math.round(px)))
+  document.documentElement.style.setProperty(pane.css, `${width}px`)
+  try { localStorage.setItem(`zorilla.${name}.w`, String(width)) } catch { /* private mode */ }
+}
+
+function foldPane(name, folded) {
+  const pane = PANES[name]
+  $('editor-view').classList.toggle(pane.off, folded)
+  $(pane.show).hidden = !folded
+  try { localStorage.setItem(`zorilla.${name}.folded`, folded ? '1' : '') } catch { /* private mode */ }
+}
+
+for (const [name, pane] of Object.entries(PANES)) {
+  try {
+    const saved = Number(localStorage.getItem(`zorilla.${name}.w`))
+    if (saved) setPaneWidth(name, saved)
+    if (localStorage.getItem(`zorilla.${name}.folded`)) foldPane(name, true)
+  } catch { /* private mode */ }
+
+  $(pane.fold).onclick = () => foldPane(name, true)
+  $(pane.show).onclick = () => foldPane(name, false)
+
+  const grip = $(pane.grip)
+  grip.onpointerdown = (event) => {
+    event.preventDefault()
+    grip.setPointerCapture(event.pointerId)
+    grip.classList.add('dragging')
+    const move = (e) => {
+      const box = $('editor-view').getBoundingClientRect()
+      setPaneWidth(name, name === 'palette' ? e.clientX - box.left : box.right - e.clientX)
+    }
+    const stop = () => {
+      grip.classList.remove('dragging')
+      window.removeEventListener('pointermove', move)
+      window.removeEventListener('pointerup', stop)
+    }
+    window.addEventListener('pointermove', move)
+    window.addEventListener('pointerup', stop)
+  }
+  grip.ondblclick = () => foldPane(name, !$('editor-view').classList.contains(pane.off))
+}
+
+// ---------------------------------------------------------------- right click
+
+// One menu, wherever somebody right clicks. Items are { label, run, disabled }
+// or the string 'divider'.
+let openMenu = null
+
+function closeMenu() {
+  openMenu?.remove()
+  openMenu = null
+}
+
+function contextMenu(event, items) {
+  event.preventDefault()
+  event.stopPropagation()
+  closeMenu()
+
+  const menu = el('div', { class: 'menu' })
+  for (const item of items) {
+    if (item === 'divider') { menu.append(el('div', { class: 'menu-divider' })); continue }
+    const row = el('button', { class: `menu-item${item.disabled ? ' disabled' : ''}` },
+      el('span', { text: item.label }),
+      item.hint ? el('kbd', { text: item.hint }) : null)
+    if (!item.disabled) row.onclick = () => { closeMenu(); item.run() }
+    menu.append(row)
+  }
+
+  document.body.append(menu)
+  const box = menu.getBoundingClientRect()
+  const x = Math.min(event.clientX, window.innerWidth - box.width - 8)
+  const y = Math.min(event.clientY, window.innerHeight - box.height - 8)
+  menu.style.left = `${Math.max(8, x)}px`
+  menu.style.top = `${Math.max(8, y)}px`
+  openMenu = menu
+}
+
+window.addEventListener('pointerdown', (event) => {
+  if (openMenu && !openMenu.contains(event.target)) closeMenu()
+}, true)
+window.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeMenu() })
+window.addEventListener('blur', closeMenu)
+window.addEventListener('scroll', closeMenu, true)
+
+// What a copied function is held in until it is pasted somewhere.
+let clipboardNode = null
+
+function copyNode(id) {
+  const node = state.wf.nodes.find((n) => n.id === id)
+  if (!node) return
+  clipboardNode = structuredClone(node)
+  navigator.clipboard?.writeText(JSON.stringify(clipboardNode, null, 2)).catch(() => {})
+  toast('Copied')
+}
+
+function pasteNode(x, y) {
+  if (!clipboardNode) return toast('nothing to paste')
+  const at = { x: x ?? clipboardNode.position.x + 40, y: y ?? clipboardNode.position.y + 40 }
+  remember()
+  const node = {
+    ...structuredClone(clipboardNode),
+    id: `n${Math.random().toString(36).slice(2, 9)}`,
+    position: { x: Math.round(at.x), y: Math.round(at.y) },
+  }
+  state.wf.nodes.push(node)
+  renderCanvas()
+  selectNode(node.id)
+  touch()
+}
+
+function duplicateNode(id) {
+  const node = state.wf.nodes.find((n) => n.id === id)
+  if (!node) return
+  clipboardNode = structuredClone(node)
+  pasteNode(node.position.x + 40, node.position.y + 40)
+}
+
 function selectNode(id) {
   state.selected = id
   for (const node of document.querySelectorAll('.node')) node.classList.toggle('selected', node.dataset.id === id)
@@ -1229,7 +1498,7 @@ function removeNode(id) {
 }
 
 function connect(from, fromPort, to) {
-  if (from === to) return toast('a step cannot feed itself.', true)
+  if (from === to) return toast('a function cannot feed itself.', true)
   remember()
   if (state.wf.edges.some((e) => e.from === from && e.fromPort === fromPort && e.to === to)) return
   state.wf.edges.push({ from, fromPort, to, toPort: 'main' })
@@ -1245,15 +1514,29 @@ const CATEGORY_LABEL = {
   transform: 'transform', output: 'output', web3: 'onchain',
 }
 
+// Anything somebody might retype into an expression or a prompt is one click
+// away from the clipboard instead.
+function copyChip(text, label = text) {
+  const chip = el('button', { class: 'copy-chip', title: `Copy ${text}` }, el('code', { text: label }))
+  chip.onclick = async (event) => {
+    event.stopPropagation()
+    await navigator.clipboard.writeText(text)
+    chip.classList.add('copied')
+    setTimeout(() => chip.classList.remove('copied'), 1200)
+  }
+  return chip
+}
+
 function stepItem(def) {
   const service = serviceOf(def)
   const item = el('div', { class: 'palette-item' },
     service ? logoEl(service, 18) : null,
     el('div', { class: 'palette-text' },
       el('div', { text: def.label }),
-      el('small', { text: def.description ?? '' })))
+      el('small', { text: def.description ?? '' })),
+    copyChip(def.type))
   item.dataset.type = def.type
-  item.title = 'drag onto the canvas, or click'
+  item.title = 'Drag onto the canvas, or click'
   return item
 }
 
@@ -1270,9 +1553,9 @@ function renderPalette() {
   if (term) {
     const hits = all.filter((def) =>
       `${def.label} ${def.type} ${def.description ?? ''} ${serviceOf(def) ?? ''}`.toLowerCase().includes(term))
-    host.append(el('h4', { text: `${hits.length} step${hits.length === 1 ? '' : 's'} matching` }))
+    host.append(el('h4', { text: `${hits.length} function${hits.length === 1 ? '' : 's'} matching` }))
     for (const def of hits.sort((a, b) => a.label.localeCompare(b.label))) host.append(stepItem(def))
-    if (!hits.length) host.append(el('p', { class: 'hint', text: 'no match.' }))
+    if (!hits.length) host.append(el('p', { class: 'hint', text: 'No match.' }))
     return
   }
 
@@ -1287,7 +1570,7 @@ function renderPalette() {
   }
 
   if (services.size) {
-    host.append(el('h4', { text: 'services' }))
+    host.append(el('h4', { text: 'Services' }))
     for (const [id, defs] of [...services].sort((a, b) => a[0].localeCompare(b[0]))) {
       host.append(serviceRow(id, defs))
     }
@@ -1331,7 +1614,7 @@ function serviceRow(id, defs) {
     wrap.append(el('div', { class: 'service-note hint' }, saved.length
       ? `key: ${saved.map((c) => c.name).join(', ')}`
       : el('span', {}, `no ${label} key yet. `,
-          el('a', { href: '#', onclick: (e) => { e.preventDefault(); openKeysTab(credType) }, text: 'add one' }))))
+          el('a', { href: '#', onclick: (e) => { e.preventDefault(); openKeysTab(credType) }, text: 'Add one' }))))
   }
 
   // inside Discord, a label like "Post to Discord" is saying the word twice
@@ -1409,6 +1692,29 @@ function toWorld(clientX, clientY) {
   return { x: (clientX - box.left - x) / k, y: (clientY - box.top - y) / k }
 }
 
+function disconnectNode(id) {
+  const before = state.wf.edges.length
+  remember()
+  state.wf.edges = state.wf.edges.filter((e) => e.from !== id && e.to !== id)
+  renderCanvas()
+  touch()
+  toast(`${before - state.wf.edges.length} wire(s) removed`)
+}
+
+function canvasMenu(event) {
+  if (event.target.closest('.node')) return
+  const at = toWorld(event.clientX, event.clientY)
+  contextMenu(event, [
+    { label: 'Paste', hint: '⌘V', run: () => pasteNode(at.x - NODE_W / 2, at.y - 20), disabled: !clipboardNode },
+    'divider',
+    { label: 'Undo', hint: '⌘Z', run: undo, disabled: !history.past.length },
+    { label: 'Redo', hint: '⌘⇧Z', run: redo, disabled: !history.future.length },
+    'divider',
+    { label: 'Fit to window', run: () => fitView() },
+    { label: 'Add a function', run: () => $('palette-search')?.focus() },
+  ])
+}
+
 function renderCanvas() {
   const host = world()
   host.textContent = ''
@@ -1435,7 +1741,7 @@ function renderCanvas() {
       const points = state.credentials.find((c) => c.name === chosen)?.points
       box.append(chosen
         ? el('div', { class: 'node-key', text: points ? `${chosen} · ${points}` : `as ${chosen}` })
-        : el('div', { class: 'node-key missing', text: 'no key chosen' }))
+        : el('div', { class: 'node-key missing', text: 'No key chosen' }))
     }
 
     if (def?.category !== 'trigger') {
@@ -1456,6 +1762,17 @@ function renderCanvas() {
         box.append(label)
       }
     })
+    box.oncontextmenu = (event) => {
+      selectNode(node.id)
+      contextMenu(event, [
+        { label: 'Copy', hint: '⌘C', run: () => copyNode(node.id) },
+        { label: 'Duplicate', hint: '⌘D', run: () => duplicateNode(node.id) },
+        { label: 'Paste', run: () => pasteNode(), disabled: !clipboardNode },
+        'divider',
+        { label: 'Disconnect wires', run: () => disconnectNode(node.id) },
+        { label: 'Delete', hint: '⌫', run: () => removeNode(node.id) },
+      ])
+    }
     host.append(box)
   }
   drawWires()
@@ -1540,6 +1857,8 @@ $('palette').addEventListener('pointerdown', (event) => {
   window.addEventListener('pointermove', onMove)
   window.addEventListener('pointerup', onUp, { once: true })
 })
+
+$('canvas').addEventListener('contextmenu', canvasMenu)
 
 $('canvas').addEventListener('pointerdown', (event) => {
   const port = event.target.closest('.port')
@@ -1669,8 +1988,8 @@ function keyValueControl(rows, onChange) {
   const redraw = () => {
     host.textContent = ''
     list.forEach((row, i) => {
-      const name = el('input', { type: 'text', placeholder: 'name', value: row.name ?? '' })
-      const value = el('input', { type: 'text', placeholder: 'value', value: row.value ?? '' })
+      const name = el('input', { type: 'text', placeholder: 'Name', value: row.name ?? '' })
+      const value = el('input', { type: 'text', placeholder: 'Value', value: row.value ?? '' })
       name.oninput = () => { list[i].name = name.value; onChange(list) }
       value.oninput = () => { list[i].value = value.value; onChange(list) }
       host.append(el('div', { class: 'kv-row' }, name, value,
@@ -1725,7 +2044,7 @@ function webhookAddress(node) {
       : 'this works from this machine only. stripe, shopify and github cannot reach it yet.'))
 
   box.append(el('div', { class: 'row-inline', style: 'margin:-8px 0 8px' },
-    el('button', { class: 'ghost', text: 'copy', onclick: async () => { await navigator.clipboard.writeText(address); toast('copied') } }),
+    el('button', { class: 'ghost', text: 'Copy', onclick: async () => { await navigator.clipboard.writeText(address); toast('copied') } }),
     el('button', { class: 'ghost', text: secret ? 'new secret' : 'add a secret', onclick: () => {
       node.params.secret = newSecret()
       touch()
@@ -1734,19 +2053,19 @@ function webhookAddress(node) {
 
   if (tunnel.url) {
     box.append(el('div', { class: 'row-inline' },
-      el('span', { class: 'tag on', text: 'reachable' }),
-      el('button', { class: 'ghost', text: 'stop', onclick: async () => {
+      el('span', { class: 'tag on', text: 'Reachable' }),
+      el('button', { class: 'ghost', text: 'Stop', onclick: async () => {
         state.tunnel = await api('/api/tunnel', { method: 'DELETE' })
         toast('the address is gone')
         renderInspector()
       } })))
     box.append(el('p', { class: 'hint', style: 'margin:6px 0 12px' },
-      'this address lasts until you stop it or close zorilla. it changes on a restart, and whoever you gave it to needs the new one.'))
+      'this address lasts until you stop it or close Zorilla. it changes on a restart, and whoever you gave it to needs the new one.'))
     return box
   }
 
   const note = el('p', { class: 'hint', style: 'margin:4px 0 0' })
-  const open = el('button', { class: 'primary', text: 'let the internet reach this' })
+  const open = el('button', { class: 'primary', text: 'Let the internet reach this' })
   open.onclick = async () => {
     open.disabled = true
     note.textContent = 'starting…'
@@ -1768,7 +2087,7 @@ function webhookAddress(node) {
   box.append(el('p', { class: 'hint', style: 'margin:6px 0 12px' },
     tunnel.installed
       ? 'a tunnel dials out from this machine. nothing on your computer is exposed except this one address, and it closes when you stop it.'
-      : `the first time, zorilla fetches cloudflare's tunnel program (about 30MB) from ${tunnel.from ? new URL(tunnel.from).host : 'github.com'} into your zorilla folder. nothing on your computer is exposed except this one address.`))
+      : `the first time, Zorilla fetches cloudflare's tunnel program (about 30MB) from ${tunnel.from ? new URL(tunnel.from).host : 'github.com'} into your Zorilla folder. nothing on your computer is exposed except this one address.`))
   return box
 }
 
@@ -1779,7 +2098,7 @@ function renderInspector() {
   host.textContent = ''
   const node = state.selected && state.wf ? nodeById(state.selected) : null
   if (!node) {
-    $('inspector-title').textContent = 'nothing selected'
+    $('inspector-title').textContent = 'Nothing selected'
     // with nothing selected, the panel is free to say what the whole thing
     // still needs before it could run
     if (state.wf) {
@@ -1788,9 +2107,9 @@ function renderInspector() {
       if (needs.length) {
         const list = el('ul')
         for (const line of needs) list.append(el('li', { text: line }))
-        host.append(el('div', { class: 'checklist' }, el('h4', { text: 'before this can run' }), list))
+        host.append(el('div', { class: 'checklist' }, el('h4', { text: 'The following are required:' }), list))
       } else {
-        host.append(el('p', { class: 'hint' }, 'ready. press run to try it, or switch it to live so it runs on its own.'))
+        host.append(el('p', { class: 'hint' }, 'Ready. Press run to try it, or switch it to live so it runs on its own.'))
       }
     }
     return
@@ -1806,7 +2125,7 @@ function renderInspector() {
   const spec = service ? state.integrations.find((i) => i.id === service) : null
   if (spec?.hosts?.length) {
     const tags = el('div', { style: 'margin:-2px 0 12px' })
-    tags.append(el('span', { class: 'hint', text: 'contacts  ' }))
+    tags.append(el('span', { class: 'hint', text: 'Contacts  ' }))
     for (const h of spec.hosts) tags.append(el('span', { class: 'tag', text: h }))
     host.append(tags)
   }
@@ -1884,10 +2203,10 @@ function renderInspector() {
 
   // the steps that keep something between runs can be made to forget it
   if (['logic.once', 'logic.changed', 'logic.moved'].includes(node.type)) {
-    host.append(el('div', { class: 'panel-title', style: 'margin-top:18px', text: 'what it remembers' }))
-    const note = el('p', { class: 'hint', text: 'this step remembers between runs, which is how it knows what it has already told you.' })
+    host.append(el('div', { class: 'panel-title', style: 'margin-top:18px', text: 'What it remembers' }))
+    const note = el('p', { class: 'hint', text: 'This function remembers between runs, which is how it knows what it has already told you.' })
     const forget = el('button', {
-      class: 'ghost', text: 'make it forget',
+      class: 'ghost', text: 'Make it forget',
       onclick: async () => {
         if (!state.wf?.id) return toast('save this automation first', true)
         await api(`/api/workflows/${state.wf.id}/memory/${node.id}`, { method: 'DELETE' })
@@ -1897,7 +2216,7 @@ function renderInspector() {
     host.append(note, el('div', { class: 'row-inline', style: 'margin-bottom:6px' }, forget))
   }
 
-  host.append(el('div', { class: 'panel-title', style: 'margin-top:18px', text: 'when it fails' }))
+  host.append(el('div', { class: 'panel-title', style: 'margin-top:18px', text: 'When it fails' }))
 
   const onError = el('select')
   for (const [value, label] of [
@@ -1912,7 +2231,7 @@ function renderInspector() {
     renderCanvas()
     selectNode(node.id)
   }
-  host.append(field('if this step fails', onError))
+  host.append(field('if this function fails', onError))
 
   const retries = el('input', { type: 'number', min: 0, max: 5, value: node.retries ?? 0 })
   retries.oninput = () => { node.retries = Math.min(5, Math.max(0, Number(retries.value) || 0)); touch() }
@@ -1924,7 +2243,7 @@ function renderInspector() {
     host.append(field('wait between tries (seconds)', wait))
   }
 
-  host.append(el('button', { class: 'ghost', style: 'margin-top:16px', text: 'delete step', onclick: () => removeNode(node.id) }))
+  host.append(el('button', { class: 'ghost', style: 'margin-top:16px', text: 'Delete function', onclick: () => removeNode(node.id) }))
 }
 
 // ---------------------------------------------------------------- runs
@@ -1947,7 +2266,7 @@ function renderRun(run) {
   const failed = Object.values(run.nodes).filter((n) => n.status === 'error').length
   $('run-summary').textContent = run.error
     ? run.error
-    : `${run.status === 'ok' ? 'finished' : 'finished with problems'} · ${Object.keys(run.nodes).length} steps${failed ? ` · ${failed} failed` : ''}`
+    : `${run.status === 'ok' ? 'finished' : 'finished with problems'} · ${Object.keys(run.nodes).length} functions${failed ? ` · ${failed} failed` : ''}`
 
   for (const [id, result] of Object.entries(run.nodes)) {
     const node = state.wf.nodes.find((n) => n.id === id)
@@ -1983,7 +2302,7 @@ function renderRunPicker() {
 $('run').onclick = async () => {
   await save()
   const triggers = state.wf.nodes.filter((n) => state.defs.get(n.type)?.category === 'trigger')
-  if (!triggers.length) return toast('add a trigger step first.', true)
+  if (!triggers.length) return toast('add a trigger function first.', true)
   const selected = state.selected ? nodeById(state.selected) : null
   const trigger = (selected && state.defs.get(selected.type)?.category === 'trigger') ? selected : triggers[0]
 

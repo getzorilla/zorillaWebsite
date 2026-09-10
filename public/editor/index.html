@@ -3,40 +3,41 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>zorilla — demo editor</title>
+  <title>Zorilla</title>
   <link rel="icon" href="/editor/logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/editor/style.css">
 </head>
 <body>
   <header class="bar">
-    <button id="go-home" class="mark" title="workspace">
-      <img src="/editor/logo.svg" alt="" width="20" height="20"><span>zorilla</span>
+    <button id="go-home" class="mark" title="Workspace">
+      <img src="/editor/logo.svg" alt="" width="20" height="20"><span>Zorilla</span>
     </button>
     <span class="sep">/</span>
-    <button id="workspace-name" class="crumb" title="rename workspace"></button>
+    <button id="workspace-name" class="crumb" title="Rename workspace"></button>
     <span class="sep" id="crumb-sep" hidden>/</span>
-    <button id="automation-name" class="crumb" hidden title="rename automation"></button>
+    <button id="automation-name" class="crumb" hidden title="Rename automation"></button>
 
     <span class="spacer"></span>
     <span id="save-state" class="hint"></span>
     <span id="editor-controls" hidden>
       <button id="active" class="switch" type="button" aria-pressed="false"
-        title="switched on, this runs by itself when its trigger fires. switched off, it only runs when you press run.">
-        <span class="pip"></span><span id="active-label">not live</span>
+        title="Switched on, this runs by itself when its trigger fires. Switched off, it only runs when you press run.">
+        <span class="pip"></span><span id="active-label">Not live</span>
       </button>
-      <button id="save-as" class="ghost">save as</button>
-      <button id="share" class="ghost" title="save this to a file you can send to somebody">share</button>
-      <button id="run" class="primary">run</button>
+      <button id="save-as" class="ghost">Save as</button>
+      <button id="share" class="ghost" title="Save this to a file you can send to somebody">Share</button>
+      <button id="run" class="primary">Run</button>
     </span>
   </header>
 
   <main id="home-view">
     <nav class="rail">
-      <button class="rail-item active" data-panel="automations">automations</button>
-      <button class="rail-item" data-panel="keys">keys</button>
-      <button class="rail-item" data-panel="integrations">integrations</button>
-      <button class="rail-item" data-panel="settings">settings</button>
+      <button class="rail-item active" data-panel="automations">Automations</button>
+      <button class="rail-item" data-panel="keys">Keys</button>
+      <button class="rail-item" data-panel="integrations">Integrations</button>
+      <button class="rail-item" data-panel="settings">Settings</button>
       <div class="rail-foot">
+        <button class="rail-cta" id="open-editor">Open editor</button>
         <div class="hint" id="home-meta"></div>
       </div>
     </nav>
@@ -47,31 +48,41 @@
   <main id="editor-view" hidden>
     <aside class="palette">
       <div class="tabs">
-        <button class="tab active" data-tab="steps">steps</button>
-        <button class="tab" data-tab="keys">keys</button>
+        <button class="tab active" data-tab="steps">Functions</button>
+        <button class="tab" data-tab="keys">Keys</button>
+        <button class="pane-fold" id="fold-palette" title="Hide this panel">‹</button>
       </div>
       <div id="tab-steps">
-        <input id="palette-search" type="search" placeholder="search steps" spellcheck="false">
+        <input id="palette-search" type="search" placeholder="search functions" spellcheck="false">
         <div id="palette"></div>
         <div id="palette-problems" class="problems"></div>
       </div>
       <div id="tab-keys" hidden></div>
     </aside>
 
+    <div class="pane-grip" id="grip-palette" title="Drag to resize"></div>
+
     <section class="canvas" id="canvas">
       <svg id="wires"><g id="wire-layer"></g></svg>
       <div id="world" class="world"></div>
-      <div id="empty-hint" class="empty-hint">drag a step in from the left</div>
+      <div id="empty-hint" class="empty-hint">Drag a function in from the left</div>
+      <button class="pane-show" id="show-palette" title="Show functions" hidden>›</button>
+      <button class="pane-show right" id="show-inspector" title="Show the panel" hidden>‹</button>
     </section>
 
+    <div class="pane-grip" id="grip-inspector" title="Drag to resize"></div>
+
     <aside class="inspector">
-      <div class="panel-title" id="inspector-title">nothing selected</div>
+      <div class="inspector-head">
+        <div class="panel-title" id="inspector-title">Nothing selected</div>
+        <button class="pane-fold" id="fold-inspector" title="Hide this panel">›</button>
+      </div>
       <div id="inspector"></div>
     </aside>
 
     <section class="drawer" id="drawer">
       <div class="drawer-bar">
-        <button id="drawer-toggle" class="ghost">run log</button>
+        <button id="drawer-toggle" class="ghost">Run log</button>
         <span id="run-summary" class="hint"></span>
         <span class="spacer"></span>
         <select id="run-picker" title="past runs"></select>

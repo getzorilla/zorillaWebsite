@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import CanvasPreview from './CanvasPreview'
+import LikeButton from './LikeButton'
 
 export function Empty({ title, children }) {
   return (
@@ -10,7 +11,7 @@ export function Empty({ title, children }) {
   )
 }
 
-export function ListingRow({ listing }) {
+export function ListingRow({ listing, signedIn = false }) {
   const derived = listing.derived ?? {}
   const isAutomation = listing.kind === 'automation' && listing.package?.nodes?.length
   return (
@@ -19,7 +20,7 @@ export function ListingRow({ listing }) {
         <div className="title">{listing.title}</div>
         <div className="meta">
           {listing.kind} · by {listing.authorHandle}
-          {listing.shipped ? ' · came with Zorilla' : ` · ${listing.installs ?? 0} installs`}
+          {listing.shipped && ' · came with Zorilla'}
         </div>
         {listing.summary && <div className="dim" style={{ fontSize: 13, marginTop: 2 }}>{listing.summary}</div>}
         <div style={{ marginTop: 6 }}>
@@ -33,6 +34,7 @@ export function ListingRow({ listing }) {
           <CanvasPreview workflow={listing.package} height={92} />
         </div>
       )}
+      <LikeButton slug={listing.slug} likes={listing.likes ?? 0} liked={listing.liked} signedIn={signedIn} />
     </Link>
   )
 }

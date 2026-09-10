@@ -1,6 +1,6 @@
 import { tooMany } from '@/lib/limit'
 import { readSession } from '@/lib/session'
-import { getListing, saveListing, publishingWorks } from '@/lib/store'
+import { getListing, saveListing, publishingWorks, SHIPPED_SLUGS } from '@/lib/store'
 import { derivePermissions, describeIntegrationSubmission, describeThemeSubmission, sanitizeWorkflow, slugify } from '@/lib/permissions'
 
 export async function POST(request) {
@@ -12,7 +12,7 @@ export async function POST(request) {
   }
 
   const session = await readSession()
-  if (!session?.handle) return Response.json({ error: 'Pick a handle before publishing.' }, { status: 401 })
+  if (!session?.handle) return Response.json({ error: 'Pick a username before publishing.' }, { status: 401 })
 
   const body = await request.json().catch(() => ({}))
   const kind = ['integration', 'theme'].includes(body.kind) ? body.kind : 'automation'
@@ -53,6 +53,9 @@ export async function POST(request) {
   }
 
   const slug = slugify(`${session.handle}-${title}`)
+  if (SHIPPED_SLUGS.has(slug)) {
+    return Response.json({ error: 'That name belongs to one of the automations that ship with Zorilla. Pick another.' }, { status: 409 })
+  }
   const existing = await getListing(slug)
   if (existing && existing.authorHandle !== session.handle) {
     return Response.json({ error: 'Somebody else already published under that name.' }, { status: 409 })

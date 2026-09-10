@@ -1,6 +1,9 @@
 import Link from 'next/link'
+import Preview from '@/components/Preview'
 import { notFound } from 'next/navigation'
-import { getListing } from '@/lib/store'
+import { getListing, likeCounts, hasLiked } from '@/lib/store'
+import { currentUser } from '@/lib/auth'
+import LikeButton from '@/components/LikeButton'
 import InstallButton from '@/components/InstallButton'
 import { ThemePreview } from '@/components/ThemeCard'
 import CanvasPreview from '@/components/CanvasPreview'
@@ -12,6 +15,9 @@ export default async function ListingPage({ params }) {
   const listing = await getListing(slug)
   if (!listing) notFound()
 
+  const [me, counts] = await Promise.all([currentUser(), likeCounts([slug])])
+  const liked = await hasLiked(slug, me?.handle)
+
   const derived = listing.derived ?? {}
   const isAutomation = listing.kind === 'automation'
   const isTheme = listing.kind === 'theme'
@@ -19,11 +25,19 @@ export default async function ListingPage({ params }) {
   return (
     <main className="page section" style={{ borderTop: 0 }}>
       <h2>{listing.title}</h2>
-      <p className="sub">
-        {listing.kind} · by <Link href={`/u/${listing.authorHandle}`}>{listing.authorHandle}</Link>
-        {' · '}{listing.installs ?? 0} installs
-        {listing.updatedAt ? ` · updated ${new Date(listing.updatedAt).toLocaleDateString()}` : ''}
-      </p>
+      <div className="row" style={{ gap: 12, marginBottom: 6 }}>
+        <p className="sub" style={{ margin: 0 }}>
+          {listing.kind} · by <Link href={`/u/${listing.authorHandle}`}>{listing.authorHandle}</Link>
+          {listing.shipped && ' · came with Zorilla'}
+          {listing.updatedAt ? ` · updated ${new Date(listing.updatedAt).toLocaleDateString()}` : ''}
+        </p>
+        <LikeButton
+          slug={slug}
+          likes={counts[slug] ?? 0}
+          liked={liked}
+          signedIn={Boolean(me?.handle)}
+        />
+      </div>
       {listing.summary && <p style={{ maxWidth: '62ch' }}>{listing.summary}</p>}
 
       {isTheme && (
@@ -83,12 +97,11 @@ export default async function ListingPage({ params }) {
         </div>
       )}
 
-      <div className="panel">
-        <h3>The file</h3>
-        <pre className="mono dim" style={{ fontSize: 12, overflowX: 'auto', margin: 0, maxHeight: 320 }}>
-          {JSON.stringify(listing.package, null, 2)}
-        </pre>
-      </div>
+      <Preview
+        title="Contents"
+        text={JSON.stringify(listing.package, null, 2)}
+        filename={`${listing.slug}.json`}
+      />
 
       <div className="row wrap" style={{ marginTop: 18 }}>
         <InstallButton slug={listing.slug} title={listing.title} kind={listing.kind} />

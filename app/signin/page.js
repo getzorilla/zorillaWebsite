@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation'
 import SignIn from '@/components/SignIn'
 import { currentUser, googleConfigured } from '@/lib/auth'
 
+export const dynamic = 'force-dynamic'
+
 export const metadata = { title: 'Sign in · Zorilla' }
 
 export default async function SignInPage() {

@@ -28,7 +28,7 @@ export default async function Nav() {
           >
             <GithubMark size={16} />
           </a>
-          <SessionMenu user={user ? { handle: user.handle, method: user.method } : null} />
+          <SessionMenu user={user ? { handle: user.handle, avatar: user.profile?.avatar ?? null } : null} />
         </span>
       </div>
     </nav>

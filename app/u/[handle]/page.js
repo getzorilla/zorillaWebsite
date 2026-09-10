@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation'
 import { getProfile, listListings } from '@/lib/store'
 import { currentUser } from '@/lib/auth'
 import { ListingRow, Empty } from '@/components/Listings'
+import Avatar from '@/components/Avatar'
+import { GithubMark, XMark } from '@/components/Icons'
 
 export const dynamic = 'force-dynamic'
 
@@ -16,19 +18,16 @@ export default async function ProfilePage({ params }) {
   const profile = await getProfile(handle)
   if (!profile) notFound()
 
-  const [listings, me] = await Promise.all([
-    listListings({ author: profile.handle }),
-    currentUser(),
-  ])
+  const me = await currentUser()
+  const listings = await listListings({ author: profile.handle, viewer: me?.handle ?? null })
   const mine = me?.handle === profile.handle
 
   return (
     <main className="page section" style={{ borderTop: 0 }}>
       <div className="row" style={{ gap: 16, marginBottom: 8 }}>
-        <span className="avatar">{profile.handle[0].toUpperCase()}</span>
+        <Avatar src={profile.avatar} handle={profile.handle} size={56} />
         <div>
-          <h2 style={{ margin: 0 }}>{profile.name || profile.handle}</h2>
-          <div className="dim mono" style={{ fontSize: 13 }}>@{profile.handle}</div>
+          <h2 className="plain" style={{ margin: 0 }}>@{profile.handle}</h2>
         </div>
         <span className="spacer" />
         {mine && <Link href="/settings" className="btn quiet">Edit</Link>}
@@ -37,9 +36,35 @@ export default async function ProfilePage({ params }) {
       {profile.bio && <p style={{ maxWidth: '62ch' }}>{profile.bio}</p>}
 
       <div className="row wrap" style={{ marginBottom: 26 }}>
-        {profile.links?.x && <a className="btn quiet" href={`https://x.com/${profile.links.x}`} target="_blank" rel="noreferrer">x</a>}
-        {profile.links?.github && <a className="btn quiet" href={`https://github.com/${profile.links.github}`} target="_blank" rel="noreferrer">github</a>}
-        {profile.links?.site && <a className="btn quiet" href={profile.links.site} target="_blank" rel="noreferrer">website</a>}
+        {profile.links?.x && (
+          <a
+            className="btn icon-btn"
+            href={`https://x.com/${profile.links.x}`}
+            target="_blank"
+            rel="noreferrer"
+            title={`@${profile.links.x} on X`}
+            aria-label={`@${profile.links.x} on X`}
+          >
+            <XMark size={13} />
+          </a>
+        )}
+        {profile.links?.github && (
+          <a
+            className="btn icon-btn"
+            href={`https://github.com/${profile.links.github}`}
+            target="_blank"
+            rel="noreferrer"
+            title={`${profile.links.github} on GitHub`}
+            aria-label={`${profile.links.github} on GitHub`}
+          >
+            <GithubMark size={14} />
+          </a>
+        )}
+        {profile.links?.site && (
+          <a className="btn quiet" href={profile.links.site} target="_blank" rel="noreferrer">
+            {profile.links.site.replace(/^https?:\/\//, '').replace(/\/$/, '')}
+          </a>
+        )}
         {profile.wallet && <span className="tag">{profile.wallet.slice(0, 6)}…{profile.wallet.slice(-4)}</span>}
       </div>
 
@@ -52,7 +77,9 @@ export default async function ProfilePage({ params }) {
         </Empty>
       ) : (
         <div className="list">
-          {listings.map((listing) => <ListingRow key={listing.slug} listing={listing} />)}
+          {listings.map((listing) => (
+            <ListingRow key={listing.slug} listing={listing} signedIn={Boolean(me?.handle)} />
+          ))}
         </div>
       )}
     </main>

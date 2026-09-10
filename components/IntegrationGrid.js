@@ -94,7 +94,12 @@ export default function IntegrationGrid({ integrations, steps }) {
 
               <div className="int-foot">
                 <span>{needs(spec)}</span>
-                <span>{(spec.hosts ?? []).map((h) => h.replace(/^a web address you provide.*/, 'an address you provide')).join(', ')}</span>
+                <span>
+                  Sends requests to{' '}
+                  {(spec.hosts ?? [])
+                    .map((h) => h.replace(/^a web address you provide.*/, 'an address you provide'))
+                    .join(', ')}
+                </span>
               </div>
             </div>
           )

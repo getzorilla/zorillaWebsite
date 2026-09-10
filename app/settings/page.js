@@ -1,6 +1,9 @@
 import { redirect } from 'next/navigation'
 import ProfileForm from '@/components/ProfileForm'
+import DeleteAccount from '@/components/DeleteAccount'
 import { currentUser } from '@/lib/auth'
+
+export const dynamic = 'force-dynamic'
 
 export const metadata = { title: 'Settings · Zorilla' }
 
@@ -16,6 +19,7 @@ export default async function Settings() {
         {user.wallet ? `${user.wallet.slice(0, 6)}…${user.wallet.slice(-4)}` : user.email}
       </p>
       <ProfileForm profile={user.profile} />
+      <DeleteAccount handle={user.handle} />
     </main>
   )
 }

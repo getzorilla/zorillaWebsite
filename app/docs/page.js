@@ -4,6 +4,7 @@ import path from 'node:path'
 import catalog from '@/public/catalog.json'
 import Shot from '@/components/Shot'
 import AgentDoc from '@/components/AgentDoc'
+import Command from '@/components/Command'
 import StepReference from '@/components/StepReference'
 
 export const metadata = { title: 'Docs · Zorilla' }
@@ -91,14 +92,6 @@ export default async function Docs({ searchParams }) {
               APIs, posts to Discord and Slack, and sends email.
             </p>
             <p>
-              The difference from Zapier or n8n cloud is that there is no account and no server
-              in the middle. The engine, your automations, your keys and your run history are
-              files on your machine. Nothing is sent anywhere except the services you
-              deliberately call. The source is public and you can read it, run it, change it and use
-              it at work. The one thing you cannot do is sell it to other people as a hosted
-              service.
-            </p>
-            <p>
               It ships with 16 service integrations, {catalog.nodes.length} steps, and reads
               Ethereum (Solidity). It cannot sign a transaction, and there are other limits worth
               knowing before you start, listed at the end.
@@ -115,12 +108,12 @@ export default async function Docs({ searchParams }) {
             </ul>
             <h3>Getting it</h3>
             <p>One command, which fetches it, starts it and opens the page:</p>
-            <pre><code>npx github:getzorilla/zorillaApp</code></pre>
+            <Command>npx github:getzorilla/zorillaApp</Command>
             <p>To keep a copy you can edit, clone it instead:</p>
-            <pre><code>{`git clone https://github.com/getzorilla/zorillaApp
+            <Command>{`git clone https://github.com/getzorilla/zorillaApp
 cd zorillaApp
 npm install
-npm start`}</code></pre>
+npm start`}</Command>
             <p>
               Either way it opens at <code>http://127.0.0.1:5177</code>. There is no build step
               and no configuration file. Your workspace starts empty: nothing is installed on

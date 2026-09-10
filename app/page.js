@@ -3,7 +3,9 @@ import catalog from '@/public/catalog.json'
 import { stats } from '@/lib/store'
 import { ThemePreview } from '@/components/ThemeCard'
 import { GithubMark } from '@/components/Icons'
-import Shot from '@/components/Shot'
+import LogoBelt from '@/components/LogoBelt'
+import LocalDiagram from '@/components/LocalDiagram'
+import ChainDiagram from '@/components/ChainDiagram'
 import UseCases from '@/components/UseCases'
 import CanvasPreview from '@/components/CanvasPreview'
 import CopyCommand from '@/components/CopyCommand'
@@ -111,40 +113,40 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="page section">
-        <div className="feature wide">
-          <div>
-            <h3>Build it by dragging</h3>
-            <p>
-              Services on the left, one row each. Drop a step on the canvas, drag a wire to the
-              next one, and each step tells you what it still needs before it can run.
-            </p>
-          </div>
-          <Shot src="/guide/hero-x.png" alt="the Zorilla editor building a news to X automation" tilt />
+      <section className="page belt-section">
+        <h2>Plug in a service, or build your own</h2>
+        <p className="sub">
+          {catalog.integrations.length} are built in. Each one is a file you can read before
+          you use it, and writing another takes no code.
+        </p>
+        <LogoBelt services={catalog.integrations} />
+        <div className="cta" style={{ marginTop: 26 }}>
+          <Link href="/integrations" className="btn">Integrations</Link>
+          <Link href="/docs#integrations" className="btn quiet">Write one</Link>
         </div>
+      </section>
 
-        <div className="feature wide">
-          <div>
-            <h3>Keys are saved once, and say where they point</h3>
-            <p>
-              Paste a Discord webhook or a Resend key in, name it, and every step that uses it
-              shows which channel or account it goes to. Keys are encrypted on your machine, and
-              a shared automation carries the name, never the value.
-            </p>
-          </div>
-          <Shot src="/guide/keys.png" alt="the keys panel showing where a saved key points" />
+      <section className="page tall" id="local">
+        <div className="tall-head">
+          <h2>Fully local</h2>
+          <p className="sub">
+            The engine, your automations, your keys and your run history are files on your
+            machine. There is no account, and nothing is sent anywhere except the services a
+            step deliberately calls.
+          </p>
         </div>
+        <LocalDiagram />
+      </section>
 
-        <div className="feature wide">
-          <div>
-            <h3>Run it, watch what happened</h3>
-            <p>
-              Press run and the log shows every step, what it received, what it sent, and why
-              anything failed. When it looks right, switch it live and it runs on its own.
-            </p>
-          </div>
-          <Shot src="/guide/editor-run.png" alt="an automation switched live, with the run log" />
+      <section className="page tall" id="onchain">
+        <div className="tall-head">
+          <h2>Reads Ethereum (Solidity)</h2>
+          <p className="sub">
+            Balances, ERC-20 balances at the token&apos;s own decimals, events, gas and ENS, on
+            mainnet or Sepolia. Any read function on any contract.
+          </p>
         </div>
+        <ChainDiagram />
       </section>
 
       <section className="page section">
@@ -184,57 +186,9 @@ export default async function Home() {
       </section>
 
       <section className="page section">
-        <h2>Features</h2>
-        <div className="grid two">
-          <div className="cell">
-            <h3>Runs where you are</h3>
-            <p>
-              Binds to 127.0.0.1 and holds an encrypted vault. Put it on a small rented box
-              if you want it awake at 3am.
-            </p>
-          </div>
-          <div className="cell">
-            <h3>Reads Ethereum (Solidity)</h3>
-            <p>
-              Call any read function on any contract. Balances, ERC-20 balances at the
-              token&apos;s own decimals, events, gas, ENS. Amounts stay integers end to end.
-            </p>
-          </div>
-          <div className="cell">
-            <h3>Simulates contracts before spending</h3>
-            <p>
-              A step works out what a transaction would do and what the fee would be, then
-              refuses anything that would fail. Note: onchain transactions still require
-              manual signing.
-            </p>
-          </div>
-          <div className="cell">
-            <h3>The ordinary automation half</h3>
-            <p>
-              Start on a schedule, on a webhook, or when something new turns up: a Telegram
-              message, a Stripe payment, a Notion row. Then branch on a value, filter a list,
-              reshape it, call any API, and post the result somewhere. Steps hand each other
-              the same kind of item, so anything can feed anything.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="page section">
-        <h2>{catalog.integrations.length} integrations, {catalog.nodes.length} steps</h2>
-        <p className="sub">
-          An integration is a JSON file, not code. You can read what it contacts before you
-          install it.
-        </p>
-        <div>
-          {integrations.map((name) => <span key={name} className="tag">{name}</span>)}
-        </div>
-      </section>
-
-      <section className="page section">
         <h2>Themes</h2>
         <p className="sub">
-          13 color themes ripped off of VS Code, plus you can build your own, or
+          13 color themes I ripped off of VS Code, plus you can build your own, or
           share and download others.
         </p>
         <div className="theme-grid">
