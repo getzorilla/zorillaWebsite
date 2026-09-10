@@ -115,12 +115,19 @@ export default async function Docs({ searchParams }) {
             </ul>
             <h3>Getting it</h3>
             <p>One command, which fetches it, starts it and opens the page:</p>
-            <pre><code>npx github:getzorilla/zorillaApp</code></pre>
-            <p>To keep a copy you can edit, clone it instead:</p>
-            <pre><code>{`git clone https://github.com/getzorilla/zorillaApp
-cd zorillaApp
+            <pre><code>npx zorilla</code></pre>
+            <p>To keep a copy you can edit, unpack the package instead:</p>
+            <pre><code>{`npm pack zorilla
+tar -xf zorilla-*.tgz
+cd package
 npm install
 npm start`}</code></pre>
+            <p>
+              The source is the package. Read it before you run it at{' '}
+              <a href="https://unpkg.com/browse/zorilla@latest/" target="_blank" rel="noreferrer">
+                unpkg.com/browse/zorilla
+              </a>, which serves the same files npm hands you.
+            </p>
             <p>
               Either way it opens at <code>http://127.0.0.1:5177</code>. There is no build step
               and no configuration file. Your workspace starts empty: nothing is installed on

@@ -528,3 +528,9 @@ table.ref td.type { font-family: var(--mono); color: var(--dimmer); white-space:
 .item.listing { align-items: flex-start; gap: 20px; }
 .listing-preview { width: 300px; flex: none; }
 @media (max-width: 760px) { .listing-preview { display: none; } }
+
+.license {
+  margin-top: 22px; white-space: pre-wrap; font-size: 12.5px; line-height: 1.7;
+  color: var(--dim); background: var(--sunk); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 20px 22px; max-width: 78ch;
+}

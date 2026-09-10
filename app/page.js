@@ -2,7 +2,7 @@ import Link from 'next/link'
 import catalog from '@/public/catalog.json'
 import { stats } from '@/lib/store'
 import { ThemePreview } from '@/components/ThemeCard'
-import { GithubMark } from '@/components/Icons'
+import { NpmMark } from '@/components/Icons'
 import Shot from '@/components/Shot'
 import UseCases from '@/components/UseCases'
 import CanvasPreview from '@/components/CanvasPreview'
@@ -38,7 +38,7 @@ const CASES = [
   },
   {
     id: 'community', slug: 'price-move-to-discord', who: 'Communities',
-    line: 'Announce a price move to Discord with @everyone, once',
+    line: 'Announce a price move to Discord with @everyone',
     why: 'Checks every ten minutes but stays quiet until the price is 5% away from the last thing it told you.',
     steps: [
       'every 10 minutes',
@@ -92,16 +92,16 @@ export default async function Home() {
               <li>Keys live in an encrypted vault on your disk and never leave it.</li>
               <li>Free, and the source is public.</li>
             </ul>
-            <CopyCommand command="npx github:getzorilla/zorillaApp" />
+            <CopyCommand command="npx zorilla" />
             <div className="cta">
               <Link href="/docs" className="btn primary">Docs</Link>
               <a
                 className="btn quiet"
-                href="https://github.com/getzorilla/zorillaApp"
+                href="https://unpkg.com/browse/zorilla@latest/"
                 target="_blank"
                 rel="noreferrer"
               >
-                <GithubMark size={15} /> Source
+                <NpmMark size={26} /> Source
               </a>
             </div>
             <p className="hero-note">

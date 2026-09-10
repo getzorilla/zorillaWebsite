@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { currentUser } from '@/lib/auth'
 import SessionMenu from './SessionMenu'
-import { GithubMark } from './Icons'
+import { NpmMark } from './Icons'
 
 export default async function Nav() {
   const user = await currentUser()
@@ -20,13 +20,13 @@ export default async function Nav() {
         <span className="nav-end">
           <a
             className="link icon-link"
-            href="https://github.com/getzorilla/zorillaApp"
+            href="https://www.npmjs.com/package/zorilla"
             target="_blank"
             rel="noreferrer"
-            aria-label="Zorilla on GitHub"
-            title="GitHub"
+            aria-label="Zorilla on npm"
+            title="npm"
           >
-            <GithubMark size={16} />
+            <NpmMark size={28} />
           </a>
           <SessionMenu user={user ? { handle: user.handle, method: user.method } : null} />
         </span>

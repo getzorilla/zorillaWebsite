@@ -1,21 +1,22 @@
-import { GithubMark, XMark } from './Icons'
+import Link from 'next/link'
+import { NpmMark, XMark } from './Icons'
 
 export default function Footer() {
   return (
     <footer className="footer">
       <div className="page row wrap">
-        <a className="dimmer mono" href="https://github.com/getzorilla/zorillaApp/blob/main/LICENSE" target="_blank" rel="noreferrer">Zorilla, Elastic License 2.0</a>
+        <Link className="dimmer mono" href="/license">Zorilla, Elastic License 2.0</Link>
         <span className="spacer" />
         <a href="/marketplace">Marketplace</a>
         <a
           className="icon-link"
-          href="https://github.com/getzorilla/zorillaApp"
+          href="https://www.npmjs.com/package/zorilla"
           target="_blank"
           rel="noreferrer"
-          aria-label="Zorilla on GitHub"
-          title="GitHub"
+          aria-label="Zorilla on npm"
+          title="npm"
         >
-          <GithubMark size={16} />
+          <NpmMark size={28} />
         </a>
         <a
           className="icon-link"
