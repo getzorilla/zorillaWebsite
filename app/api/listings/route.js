@@ -1,8 +1,16 @@
+import { tooMany } from '@/lib/limit'
 import { readSession } from '@/lib/session'
-import { getListing, saveListing } from '@/lib/store'
+import { getListing, saveListing, publishingWorks } from '@/lib/store'
 import { derivePermissions, describeIntegrationSubmission, describeThemeSubmission, sanitizeWorkflow, slugify } from '@/lib/permissions'
 
 export async function POST(request) {
+  const slowDown = tooMany(request, { name: 'publish', limit: 12, windowMs: 3600000 })
+  if (slowDown) return slowDown
+
+  if (!(await publishingWorks())) {
+    return Response.json({ error: 'Publishing is switched off on this deployment, because there is nowhere to keep what you publish. Downloading still works.' }, { status: 503 })
+  }
+
   const session = await readSession()
   if (!session?.handle) return Response.json({ error: 'Pick a handle before publishing.' }, { status: 401 })
 

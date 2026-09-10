@@ -432,7 +432,7 @@ Post to X, and search what is being said. Contacts: api.x.com.
 
 ### chain news to x
 
-Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has Claude draft a post about it, and puts it on X. Needs a news feed you can read as JSON, a Claude key, and an X access token with write permission.
+Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has Claude draft a post about it, and puts it on X. Needs a Claude key named my_claude and an X key named my_x with write permission, plus a news feed you can read as JSON.
 
 ```json
 {
@@ -447,7 +447,7 @@ Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has
       },
       "position": {
         "x": 40,
-        "y": 150
+        "y": 110
       }
     },
     {
@@ -463,8 +463,8 @@ Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has
         "failOnError": true
       },
       "position": {
-        "x": 260,
-        "y": 150
+        "x": 290,
+        "y": 110
       }
     },
     {
@@ -476,8 +476,8 @@ Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has
         "timeout": 15
       },
       "position": {
-        "x": 480,
-        "y": 150
+        "x": 540,
+        "y": 110
       }
     },
     {
@@ -489,8 +489,8 @@ Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has
         "compare": "Robinhood"
       },
       "position": {
-        "x": 700,
-        "y": 150
+        "x": 790,
+        "y": 110
       }
     },
     {
@@ -500,8 +500,8 @@ Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has
         "key": "{{ $json.id }}"
       },
       "position": {
-        "x": 920,
-        "y": 150
+        "x": 40,
+        "y": 330
       }
     },
     {
@@ -515,8 +515,8 @@ Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has
         "maxTokens": 300
       },
       "position": {
-        "x": 1140,
-        "y": 150
+        "x": 290,
+        "y": 330
       }
     },
     {
@@ -527,8 +527,8 @@ Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has
         "text": "{{ $json.text }}"
       },
       "position": {
-        "x": 1360,
-        "y": 150
+        "x": 540,
+        "y": 330
       }
     }
   ],
@@ -573,6 +573,74 @@ Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has
 }
 ```
 
+### contract numbers by email
+
+Reads a number straight off a contract every morning and emails it to you. This one reads how much USDC exists; change the address and the function line to read anything else. Needs a Resend key named my_resend.
+
+```json
+{
+  "nodes": [
+    {
+      "id": "clock",
+      "type": "core.schedule",
+      "params": {
+        "mode": "every",
+        "every": 1,
+        "unit": "days"
+      },
+      "position": {
+        "x": 40,
+        "y": 150
+      }
+    },
+    {
+      "id": "read",
+      "type": "web3.read",
+      "params": {
+        "chain": "ethereum",
+        "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "signature": "function totalSupply() view returns (uint256)",
+        "args": [],
+        "rpc": ""
+      },
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "mail",
+      "type": "resend.send",
+      "params": {
+        "credential": "my_resend",
+        "to": "you@example.com",
+        "subject": "USDC supply today",
+        "html": "<p>{{ $json.result }}</p>",
+        "from": ""
+      },
+      "position": {
+        "x": 560,
+        "y": 150
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "clock",
+      "fromPort": "main",
+      "to": "read",
+      "toPort": "main"
+    },
+    {
+      "from": "read",
+      "fromPort": "main",
+      "to": "mail",
+      "toPort": "main"
+    }
+  ]
+}
+```
+
 ### daily digest email
 
 One mail a day. Needs a saved Gmail key named my_gmail — an app password, not your account password.
@@ -589,8 +657,8 @@ One mail a day. Needs a saved Gmail key named my_gmail — an app password, not 
         "unit": "days"
       },
       "position": {
-        "x": 60,
-        "y": 200
+        "x": 40,
+        "y": 120
       }
     },
     {
@@ -601,8 +669,8 @@ One mail a day. Needs a saved Gmail key named my_gmail — an app password, not 
         "currency": "usd"
       },
       "position": {
-        "x": 320,
-        "y": 200
+        "x": 300,
+        "y": 60
       }
     },
     {
@@ -612,8 +680,8 @@ One mail a day. Needs a saved Gmail key named my_gmail — an app password, not 
         "chain": "ethereum"
       },
       "position": {
-        "x": 320,
-        "y": 340
+        "x": 300,
+        "y": 240
       }
     },
     {
@@ -626,8 +694,8 @@ One mail a day. Needs a saved Gmail key named my_gmail — an app password, not 
         "html": "ETH {{ $json.ethereum.usd }} · BTC {{ $json.bitcoin.usd }}"
       },
       "position": {
-        "x": 640,
-        "y": 260
+        "x": 560,
+        "y": 120
       }
     }
   ],
@@ -656,7 +724,7 @@ One mail a day. Needs a saved Gmail key named my_gmail — an app password, not 
 
 ### eth price to discord
 
-Every 10 minutes. The channel is whichever one you made the webhook in, so a webhook made in #signals posts to #signals.
+Every 10 minutes. The channel is whichever one you made the webhook in, so a webhook made in #signals posts to #signals. Needs a key named signals_webhook.
 
 ```json
 {
@@ -799,7 +867,7 @@ Runs with no keys at all. Reads a public price feed and stays quiet until the pr
 
 ### hourly price email
 
-Every hour by email. Resend only delivers from a domain you have verified with them.
+Every hour by email. Resend only delivers from a domain you have verified with them. Needs a key named my_resend.
 
 ```json
 {
@@ -862,9 +930,73 @@ Every hour by email. Resend only delivers from a domain you have verified with t
 }
 ```
 
+### payment to slack and notion
+
+Watches for new Stripe payments and puts each one in two places at once. Fires once per payment, even though it checks every five minutes. Needs keys named my_stripe, my_slack and my_notion, and your Notion database id.
+
+```json
+{
+  "nodes": [
+    {
+      "id": "paid",
+      "type": "stripe.newCharge",
+      "params": {
+        "credential": "my_stripe",
+        "every": 5,
+        "unit": "minutes"
+      },
+      "position": {
+        "x": 40,
+        "y": 150
+      }
+    },
+    {
+      "id": "slack",
+      "type": "slack.post",
+      "params": {
+        "credential": "my_slack",
+        "channel": "#sales",
+        "text": "${{ ($json.amount / 100).toFixed(2) }} from {{ $json.billing_details.email }}"
+      },
+      "position": {
+        "x": 340,
+        "y": 60
+      }
+    },
+    {
+      "id": "notion",
+      "type": "notion.createPage",
+      "params": {
+        "credential": "my_notion",
+        "databaseId": "put-your-database-id-here",
+        "properties": "{\"Name\":{\"title\":[{\"text\":{\"content\":\"{{ $json.id }}\"}}]}}"
+      },
+      "position": {
+        "x": 340,
+        "y": 250
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "paid",
+      "fromPort": "main",
+      "to": "slack",
+      "toPort": "main"
+    },
+    {
+      "from": "paid",
+      "fromPort": "main",
+      "to": "notion",
+      "toPort": "main"
+    }
+  ]
+}
+```
+
 ### prepare a transaction
 
-Works out exactly what a transaction would do and what it would cost. It signs nothing and sends nothing.
+Works out exactly what a transaction would do and what it would cost, on the Sepolia test network. Put your own address in "send from". It signs nothing and sends nothing.
 
 ```json
 {
@@ -884,7 +1016,8 @@ Works out exactly what a transaction would do and what it would cost. It signs n
       "params": {
         "chain": "sepolia",
         "to": "vitalik.eth",
-        "value": "0.001"
+        "value": "0.001",
+        "from": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
       },
       "position": {
         "x": 340,
@@ -920,6 +1053,90 @@ Works out exactly what a transaction would do and what it would cost. It signs n
 }
 ```
 
+### price move to discord
+
+Announces a price move to a Discord channel, and only when it actually moves. Checks every 10 minutes but stays quiet until ETH is 5% away from where it last told you. Needs a Discord webhook saved as announcements.
+
+```json
+{
+  "nodes": [
+    {
+      "id": "clock",
+      "type": "core.schedule",
+      "params": {
+        "mode": "every",
+        "every": 10,
+        "unit": "minutes"
+      },
+      "position": {
+        "x": 40,
+        "y": 150
+      }
+    },
+    {
+      "id": "price",
+      "type": "coingecko.price",
+      "params": {
+        "ids": "ethereum",
+        "currency": "usd"
+      },
+      "position": {
+        "x": 300,
+        "y": 150
+      }
+    },
+    {
+      "id": "moved",
+      "type": "logic.moved",
+      "params": {
+        "value": "{{ $json.ethereum.usd }}",
+        "amount": 5,
+        "unit": "percent",
+        "direction": "either",
+        "key": ""
+      },
+      "position": {
+        "x": 560,
+        "y": 150
+      }
+    },
+    {
+      "id": "say",
+      "type": "discord.post",
+      "params": {
+        "credential": "announcements",
+        "content": "@everyone ETH is {{ $json.moved.direction }} {{ Math.round($json.moved.percent) }}% to ${{ $json.moved.to }}",
+        "username": "zorilla"
+      },
+      "position": {
+        "x": 820,
+        "y": 150
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "clock",
+      "fromPort": "main",
+      "to": "price",
+      "toPort": "main"
+    },
+    {
+      "from": "price",
+      "fromPort": "main",
+      "to": "moved",
+      "toPort": "main"
+    },
+    {
+      "from": "moved",
+      "fromPort": "main",
+      "to": "say",
+      "toPort": "main"
+    }
+  ]
+}
+```
+
 ### usdc landing in a wallet
 
 Watches USDC landing in one wallet. Put your own address in "only where": the endpoint filters, so this stays cheap. Never reports the same transaction twice.
@@ -936,8 +1153,8 @@ Watches USDC landing in one wallet. Put your own address in "only where": the en
         "unit": "minutes"
       },
       "position": {
-        "x": 60,
-        "y": 200
+        "x": 40,
+        "y": 120
       }
     },
     {
@@ -957,8 +1174,8 @@ Watches USDC landing in one wallet. Put your own address in "only where": the en
         "rpc": ""
       },
       "position": {
-        "x": 320,
-        "y": 200
+        "x": 300,
+        "y": 120
       }
     },
     {
@@ -968,8 +1185,8 @@ Watches USDC landing in one wallet. Put your own address in "only where": the en
         "key": "{{ $json.transactionHash }}"
       },
       "position": {
-        "x": 860,
-        "y": 200
+        "x": 560,
+        "y": 120
       }
     },
     {
@@ -979,8 +1196,8 @@ Watches USDC landing in one wallet. Put your own address in "only where": the en
         "message": "large transfer in {{ $json.transactionHash }}"
       },
       "position": {
-        "x": 1120,
-        "y": 200
+        "x": 820,
+        "y": 120
       }
     }
   ],
@@ -1001,6 +1218,95 @@ Watches USDC landing in one wallet. Put your own address in "only where": the en
       "from": "events",
       "fromPort": "main",
       "to": "once",
+      "toPort": "main"
+    }
+  ]
+}
+```
+
+### usdc landing to telegram
+
+Messages you on Telegram the moment USDC arrives in a wallet. Put your own address in "only where" on the events step. Never tells you about the same transaction twice. Needs a Telegram key named my_telegram.
+
+```json
+{
+  "nodes": [
+    {
+      "id": "clock",
+      "type": "core.schedule",
+      "params": {
+        "mode": "every",
+        "every": 5,
+        "unit": "minutes"
+      },
+      "position": {
+        "x": 40,
+        "y": 120
+      }
+    },
+    {
+      "id": "events",
+      "type": "web3.logs",
+      "params": {
+        "chain": "ethereum",
+        "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "event": "event Transfer(address indexed from, address indexed to, uint256 value)",
+        "match": [
+          {
+            "name": "to",
+            "value": "0x28C6c06298d514Db089934071355E5743bf21d60"
+          }
+        ],
+        "blocks": 300,
+        "rpc": ""
+      },
+      "position": {
+        "x": 300,
+        "y": 120
+      }
+    },
+    {
+      "id": "fresh",
+      "type": "logic.once",
+      "params": {
+        "key": "{{ $json.transactionHash }}"
+      },
+      "position": {
+        "x": 560,
+        "y": 120
+      }
+    },
+    {
+      "id": "tell",
+      "type": "telegram.send",
+      "params": {
+        "credential": "my_telegram",
+        "text": "USDC in: {{ $json.args.value }} raw units, tx {{ $json.transactionHash }}",
+        "chatId": ""
+      },
+      "position": {
+        "x": 820,
+        "y": 120
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "clock",
+      "fromPort": "main",
+      "to": "events",
+      "toPort": "main"
+    },
+    {
+      "from": "events",
+      "fromPort": "main",
+      "to": "fresh",
+      "toPort": "main"
+    },
+    {
+      "from": "fresh",
+      "fromPort": "main",
+      "to": "tell",
       "toPort": "main"
     }
   ]
@@ -1089,7 +1395,7 @@ Reads a balance on Ethereum mainnet and only carries on when it drops below a th
 
 ### webhook to slack
 
-POST to http://127.0.0.1:5177/hook/alert and it posts to Slack. Needs a saved Slack key named my_slack.
+Anything that sends a message to this automation's address gets posted to Slack. Press run to try it before wiring anything up: it stands in a line of its own. Needs a Slack key named my_slack.
 
 ```json
 {
@@ -1112,8 +1418,8 @@ POST to http://127.0.0.1:5177/hook/alert and it posts to Slack. Needs a saved Sl
       "params": {
         "fields": [
           {
-            "key": "text",
-            "value": "{{ $json.body.message }}"
+            "name": "text",
+            "value": "{{ $json.body.message ?? 'a test run, with nothing sent in' }}"
           }
         ],
         "keepOnly": true

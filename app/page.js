@@ -4,6 +4,7 @@ import { stats } from '@/lib/store'
 import { ThemePreview } from '@/components/ThemeCard'
 import { GithubMark } from '@/components/Icons'
 import Shot from '@/components/Shot'
+import UseCases from '@/components/UseCases'
 
 export default async function Home() {
   const counts = await stats()
@@ -31,50 +32,7 @@ export default async function Home() {
           </a>
         </div>
 
-        <div className="audience">
-          <div className="audience-row">
-            <span className="who">Traders can</span>
-            <span className="can">
-              Watch a wallet and get a Telegram message the moment USDC lands in it
-              <small>contract events → only new ones → telegram</small>
-            </span>
-          </div>
-          <div className="audience-row">
-            <span className="who">Influencers can</span>
-            <span className="can">
-              Check chain news every half hour, have Claude draft a post, put it on X
-              <small>schedule → news → claude → x</small>
-            </span>
-          </div>
-          <div className="audience-row">
-            <span className="who">Community leaders can</span>
-            <span className="can">
-              Announce a price move to Discord with @everyone, once, not every ten minutes
-              <small>price → moved 5% → discord #announcements</small>
-            </span>
-          </div>
-          <div className="audience-row">
-            <span className="who">Anyone selling something can</span>
-            <span className="can">
-              Turn a Stripe payment into a Slack message and a row in Notion
-              <small>new payment → slack + notion</small>
-            </span>
-          </div>
-          <div className="audience-row">
-            <span className="who">Builders can</span>
-            <span className="can">
-              Read any contract on a schedule and email themselves the numbers
-              <small>schedule → contract read → resend</small>
-            </span>
-          </div>
-          <div className="audience-row">
-            <span className="who">You can</span>
-            <span className="can">
-              Take one of these off the marketplace and change it
-              <small><Link href="/marketplace" style={{ color: 'var(--link)' }}>have a look</Link></small>
-            </span>
-          </div>
-        </div>
+        <UseCases />
       </section>
 
       <section className="page section">

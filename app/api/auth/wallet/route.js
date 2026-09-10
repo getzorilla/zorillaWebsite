@@ -1,3 +1,4 @@
+import { tooMany } from '@/lib/limit'
 import { createPublicClient, http } from 'viem'
 import { mainnet } from 'viem/chains'
 import { parseSiweMessage } from 'viem/siwe'
@@ -7,6 +8,9 @@ import { findProfileBy } from '@/lib/store'
 const client = createPublicClient({ chain: mainnet, transport: http() })
 
 export async function POST(request) {
+  const slowDown = tooMany(request, { name: 'signin', limit: 30, windowMs: 60000 })
+  if (slowDown) return slowDown
+
   const { message, signature } = await request.json().catch(() => ({}))
   if (!message || !signature) return Response.json({ error: 'Nothing to check.' }, { status: 400 })
 

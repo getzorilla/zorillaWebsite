@@ -159,6 +159,118 @@ function renderHome() {
   return renderIntegrationsHome()
 }
 
+// ---------------------------------------------------------------- installing
+
+// What somebody sees before an automation somebody else wrote goes anywhere
+// near their workspace. Everything on this screen is worked out by reading the
+// file, so none of it is the author's word for anything.
+function permissionLines(derived) {
+  const lines = []
+  lines.push(`${derived.steps} step${derived.steps === 1 ? '' : 's'}${derived.triggers.length ? `, started by ${derived.triggers.join(' or ')}` : ''}`)
+  lines.push(derived.hosts.length ? `contacts ${derived.hosts.join(', ')}` : 'contacts nothing')
+  if (derived.credentials.length) lines.push(`uses your saved keys: ${derived.credentials.join(', ')}`)
+  if (derived.readsChain) lines.push('reads Ethereum. it cannot move funds')
+  if (derived.buildsTransaction) lines.push('works out what a transaction would cost. it signs nothing')
+  if (derived.writesFiles) lines.push('saves files into your zorilla files folder')
+  return lines
+}
+
+async function showImport() {
+  const sheet = $('home-sheet')
+  const side = $('home-side')
+  side.textContent = ''
+  sheet.textContent = ''
+
+  sheet.append(el('div', { class: 'sheet-head' },
+    el('h1', { text: 'add an automation' }),
+    el('p', { text: 'drop in a file you downloaded, or paste one. nothing is saved until you have read what it does.' })))
+
+  const drop = el('div', { class: 'drop' }, el('span', { text: 'drop a .json file here, or choose one' }))
+  const picker = el('input', { type: 'file', accept: 'application/json' })
+  const box = el('textarea', { rows: 8, spellcheck: false, placeholder: 'or paste the file here', style: 'width:100%' })
+  const readout = el('div')
+  const problem = el('p', { class: 'error' })
+
+  let pending = null
+
+  const inspect = async (text) => {
+    problem.textContent = ''
+    readout.textContent = ''
+    pending = null
+    let parsed
+    try {
+      parsed = JSON.parse(text)
+    } catch (err) {
+      problem.textContent = `that file is not readable json: ${err.message}`
+      return
+    }
+    try {
+      const looked = await api('/api/workflows/inspect', { method: 'POST', body: { package: parsed } })
+      if (!looked?.workflow || !looked?.derived) {
+        problem.textContent = 'zorilla could not read that as an automation.'
+        return
+      }
+      pending = looked.workflow
+      const missing = looked.derived.credentials.filter((name) => !state.credentials.some((c) => c.name === name))
+
+      const card = el('div', { class: 'install-card' },
+        el('h3', { text: looked.workflow.name }),
+        looked.workflow.notes ? el('p', { class: 'hint', text: looked.workflow.notes }) : null,
+        el('h4', { text: 'what this can do' }))
+      const list = el('ul')
+      for (const line of permissionLines(looked.derived)) list.append(el('li', { text: line }))
+      card.append(list)
+
+      if (looked.derived.unknown.length) {
+        card.append(el('p', { class: 'error', text: `this uses steps zorilla does not have: ${looked.derived.unknown.join(', ')}` }))
+      }
+      if (looked.derived.runsCode) {
+        card.append(el('div', { class: 'checklist' },
+          el('h4', { text: 'it runs javascript its author wrote' }),
+          el('p', { class: 'hint', text: 'that code runs in a process of its own with no access to your files, but it can still reach the internet. read it before you switch this on.' })))
+      }
+      if (missing.length) {
+        card.append(el('p', { class: 'needs', text: `you have no key called ${missing.join(', ')}. add one under keys, with that exact name, and this will find it.` }))
+      }
+
+      card.append(el('div', { class: 'row-inline', style: 'margin-top:12px' },
+        el('button', { class: 'primary', text: 'add it, switched off', onclick: async () => {
+          const saved = await api('/api/workflows/import', { method: 'POST', body: { package: pending } })
+          state.workflows = await api('/api/workflows')
+          toast(`${saved.name} added`)
+          openWorkflow(saved.id)
+        } }),
+        el('button', { class: 'ghost', text: 'cancel', onclick: () => renderAutomations() })))
+      readout.append(card)
+    } catch (err) {
+      problem.textContent = err.message
+    }
+  }
+
+  picker.onchange = async () => {
+    const file = picker.files?.[0]
+    if (!file) return
+    const text = await file.text()
+    box.value = text
+    await inspect(text)
+  }
+  drop.onclick = () => picker.click()
+  drop.ondragover = (event) => { event.preventDefault(); drop.classList.add('over') }
+  drop.ondragleave = () => drop.classList.remove('over')
+  drop.ondrop = async (event) => {
+    event.preventDefault()
+    drop.classList.remove('over')
+    const file = event.dataTransfer?.files?.[0]
+    if (!file) return
+    const text = await file.text()
+    box.value = text
+    await inspect(text)
+  }
+  box.onchange = () => inspect(box.value)
+
+  sheet.append(drop, picker, box, problem, readout)
+}
+
 // ---------------------------------------------------------------- automations
 
 // What is still missing before this could work, in the words somebody would
@@ -236,14 +348,27 @@ function renderAutomations() {
     },
   }, el('span', { text: '+ folder' })))
 
-  const shown = state.workflows.filter((w) => state.folder === null || (w.folder || '') === state.folder)
+  const shown = state.workflows
+    .filter((w) => state.folder === null || (w.folder || '') === state.folder)
+    // what somebody can run right now, before what needs setting up
+    .sort((a, b) => (whatItNeeds(a).length ? 1 : 0) - (whatItNeeds(b).length ? 1 : 0))
 
   sheet.append(el('div', { class: 'sheet-head' },
     el('h1', { text: state.workspace.name }),
     el('p', { text: `${state.workflows.length} automation${state.workflows.length === 1 ? '' : 's'}` })))
 
+  const untouched = !state.credentials.length && !state.runs.length
+  if (untouched && state.workflows.length) {
+    const ready = state.workflows.filter((w) => !whatItNeeds(w).length).length
+    sheet.append(el('div', { class: 'welcome' },
+      el('h4', { text: 'new here?' }),
+      el('p', {}, `These came with zorilla. ${ready} of them run right now with no setup at all: open one, press run, and watch the log at the bottom. `,
+        el('a', { href: '#', text: 'The rest need a key first.', onclick: (e) => { e.preventDefault(); state.panel = 'keys'; for (const item of document.querySelectorAll('.rail-item')) item.classList.toggle('active', item.dataset.panel === 'keys'); renderHome() } }))))
+  }
+
   sheet.append(el('div', { class: 'sheet-actions' },
     el('button', { class: 'primary', text: 'new automation', onclick: () => newAutomation() }),
+    el('button', { class: 'ghost', text: 'add one from a file', onclick: () => showImport() }),
     el('button', { class: 'ghost', text: 'open editor', onclick: () => {
       const first = shown[0] ?? state.workflows[0]
       first ? openWorkflow(first.id) : newAutomation()
@@ -257,15 +382,16 @@ function renderAutomations() {
   const list = el('div', { class: 'row-list' })
   for (const workflow of shown) {
     const run = lastRunFor(workflow.id)
+    const needs = whatItNeeds(workflow)
     const row = el('div', { class: 'row', onclick: () => openWorkflow(workflow.id) },
       el('span', { class: `dot${workflow.active ? ' on' : ''}`, title: workflow.active ? 'on' : 'off' }),
       el('div', { class: 'grow' },
-        el('div', { class: 'name', text: workflow.name }),
+        el('div', { class: 'row-inline', style: 'gap:8px' },
+          el('div', { class: 'name', text: workflow.name }),
+          needs.length ? null : el('span', { class: 'tag on', text: 'runs now' })),
+        workflow.notes ? el('div', { class: 'note', text: workflow.notes }) : null,
         el('div', { class: 'meta', text: [workflow.folder || 'loose', run ? `${run.status} ${relative(run.startedAt)}` : 'never run'].join('  ·  ') }),
-        (() => {
-          const needs = whatItNeeds(workflow)
-          return needs.length ? el('div', { class: 'needs', text: `needs ${needs.join(', ')}` }) : null
-        })()),
+        needs.length ? el('div', { class: 'needs', text: `needs ${needs.join(', ')}` }) : null),
       el('div', { class: 'row-actions' },
         el('button', { class: 'ghost', text: 'run', onclick: async (event) => {
           event.stopPropagation()
@@ -902,6 +1028,7 @@ async function openWorkflow(id) {
   setActiveButton(Boolean(state.wf.active))
   renderCrumbs()
   renderCanvas()
+  fitView()
   renderInspector()
   state.runs = await api('/api/runs')
   renderRunPicker()
@@ -922,6 +1049,42 @@ $('active').onclick = () => {
   setActiveButton(state.wf.active)
   toast(state.wf.active ? 'live' : 'not live')
   touch()
+}
+
+// An automation leaves as a file with the names of keys in it and none of their
+// values, because the values were never part of it in the first place.
+$('share').onclick = async () => {
+  if (!state.wf) return
+  await save()
+  const wf = state.wf
+  const shareable = {
+    name: wf.name,
+    notes: wf.notes ?? '',
+    nodes: wf.nodes.map((n) => ({
+      id: n.id, type: n.type, name: n.name ?? '', params: n.params ?? {}, position: n.position,
+      onError: n.onError ?? 'stop', retries: n.retries ?? 0, retryWait: n.retryWait ?? 0,
+    })),
+    edges: wf.edges,
+  }
+
+  const blob = new Blob([JSON.stringify(shareable, null, 2)], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const link = el('a', { href: url, download: `${wf.name.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}.json` })
+  document.body.append(link)
+  link.click()
+  link.remove()
+  URL.revokeObjectURL(url)
+
+  const named = new Set()
+  for (const node of wf.nodes) {
+    const def = state.defs.get(node.type)
+    for (const param of def?.params ?? []) {
+      if (param.type === 'credential' && node.params?.[param.key]) named.add(node.params[param.key])
+    }
+  }
+  toast(named.size
+    ? `saved. it asks for ${[...named].join(', ')} by name, never the key itself`
+    : 'saved to a file')
 }
 
 $('save-as').onclick = async () => {
@@ -1123,6 +1286,33 @@ function applyView() {
   wireLayer().setAttribute('transform', `translate(${x} ${y}) scale(${k})`)
 }
 
+// Opening something somebody else built should show all of it, not a corner of
+// it. Nobody thinks to scroll a canvas they have never seen before.
+function fitView(padding = 60) {
+  const nodes = state.wf?.nodes ?? []
+  const box = $('canvas').getBoundingClientRect()
+  if (!nodes.length || !box.width) {
+    state.viewBox = { x: 60, y: 40, k: 1 }
+    applyView()
+    return
+  }
+
+  const left = Math.min(...nodes.map((n) => n.position.x))
+  const right = Math.max(...nodes.map((n) => n.position.x + NODE_W))
+  const top = Math.min(...nodes.map((n) => n.position.y))
+  const bottom = Math.max(...nodes.map((n) => n.position.y + 90))
+
+  // never shrink past readable: a wide automation stays legible and the person
+  // pans to the rest of it
+  const k = Math.max(0.5, Math.min(1, (box.width - padding * 2) / (right - left), (box.height - padding * 2) / (bottom - top)))
+  state.viewBox = {
+    k,
+    x: (box.width - (right - left) * k) / 2 - left * k,
+    y: (box.height - (bottom - top) * k) / 2 - top * k,
+  }
+  applyView()
+}
+
 function toWorld(clientX, clientY) {
   const box = $('canvas').getBoundingClientRect()
   const { x, y, k } = state.viewBox
@@ -1147,7 +1337,9 @@ function renderCanvas() {
 
     // a step that authenticates says whose key it is using, on the card itself,
     // because "post to discord" on its own never answers "as who?"
-    const credParam = (def?.params ?? []).find((p) => p.type === 'credential' && p.key === 'credential')
+    // only the key a step actually needs; an optional one saying "no key chosen"
+    // reads like something is wrong when nothing is
+    const credParam = (def?.params ?? []).find((p) => p.type === 'credential' && p.key === 'credential' && p.required !== false)
     if (credParam) {
       const chosen = node.params[credParam.key]
       const points = state.credentials.find((c) => c.name === chosen)?.points

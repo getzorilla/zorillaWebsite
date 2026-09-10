@@ -1,3 +1,4 @@
+import { tooMany } from '@/lib/limit'
 import { ed25519 } from '@noble/curves/ed25519.js'
 import bs58 from 'bs58'
 import { takeNonce, createSession } from '@/lib/session'
@@ -7,6 +8,9 @@ import { findProfileBy } from '@/lib/store'
 // message, so the check is a straight ed25519 verification against the address
 // itself. The address is the public key, which is why nothing else is needed.
 export async function POST(request) {
+  const slowDown = tooMany(request, { name: 'signin', limit: 30, windowMs: 60000 })
+  if (slowDown) return slowDown
+
   const { address, message, signature } = await request.json().catch(() => ({}))
   if (!address || !message || !signature) {
     return Response.json({ error: 'Nothing to check.' }, { status: 400 })

@@ -1,7 +1,11 @@
+import { tooMany } from '@/lib/limit'
 import { readSession, createSession } from '@/lib/session'
 import { getProfile, saveProfile, claimHandle, HANDLE } from '@/lib/store'
 
 export async function POST(request) {
+  const slowDown = tooMany(request, { name: 'profile', limit: 30, windowMs: 3600000 })
+  if (slowDown) return slowDown
+
   const session = await readSession()
   if (!session) return Response.json({ error: 'Sign in first.' }, { status: 401 })
 

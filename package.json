@@ -12,6 +12,7 @@
     "sync:docs": "node scripts/build-agent-doc.mjs"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.1.0",
     "@noble/curves": "^2.4.0",
     "bs58": "^6.0.0",
     "jose": "^6.2.12",

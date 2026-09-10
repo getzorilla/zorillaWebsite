@@ -13,6 +13,7 @@ export default async function Nav() {
           <span>zorilla</span>
         </Link>
         <Link href="/docs" className="link">docs</Link>
+        <Link href="/integrations" className="link">integrations</Link>
         <Link href="/marketplace" className="link">marketplace</Link>
         <Link href="/marketplace/themes" className="link">themes</Link>
         <Link href="/try" className="link">try the editor</Link>

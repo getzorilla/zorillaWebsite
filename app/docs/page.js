@@ -15,6 +15,7 @@ const SECTIONS = [
     ['what-it-is', 'What zorilla is'],
     ['install', 'Installing it'],
     ['first-automation', 'Your first automation'],
+    ['sharing', 'Taking and sharing'],
   ]],
   ['How it works', [
     ['items', 'Steps and items'],
@@ -250,6 +251,27 @@ npm start`}</code></pre>
                 { n: 3, ...pct(0, 618, 240, 43), say: 'the run log' },
               ]}
             />
+          </section>
+
+          <section id="sharing">
+            <h2>Taking and sharing automations</h2>
+            <p>
+              Download one from the <a href="/marketplace">marketplace</a>, then in your
+              workspace press <b>add one from a file</b> and drop it in. Nothing is saved until
+              you have read what it does.
+            </p>
+            <p>
+              That screen lists the sites it contacts, which of your keys it asks for by name,
+              whether it reads a chain, and whether it runs javascript somebody else wrote. All
+              of it is worked out by walking the file rather than read from anything the author
+              claimed, so a dishonest description cannot hide anything. Everything arrives
+              switched off.
+            </p>
+            <p>
+              To send one of yours the other way, open it and press <b>share</b>. You get a file
+              naming the keys it needs and never their values, so the person installing it binds
+              their own keys of those names.
+            </p>
           </section>
 
           <section id="items">
