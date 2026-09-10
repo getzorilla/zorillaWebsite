@@ -12,14 +12,14 @@ import starters from '@/public/starters.json'
 
 const CASES = [
   {
-    id: 'traders', slug: 'kol-post-to-telegram', who: 'Traders',
-    line: 'Get a Telegram message the moment someone posts on X about your subject',
+    id: 'traders', slug: 'telegram-post-to-group', who: 'Traders',
+    line: 'New posts from an X account land in your Telegram group',
     why: 'Watches one account for the words you care about. Tells you once per post, and never repeats itself after a restart.',
     steps: [
       'every 10 minutes',
       'search x  from:VitalikButerin (rollup OR L2)',
       'first time only  by post id',
-      'telegram  the post, as soon as it appears',
+      'telegram  into your group, as soon as it appears',
     ],
     needs: 'an X key and a Telegram bot token',
   },
@@ -37,14 +37,14 @@ const CASES = [
     needs: 'a Claude key and an X access token',
   },
   {
-    id: 'community', slug: 'price-move-to-discord', who: 'Communities',
-    line: 'Announce a price move to Discord with @everyone',
-    why: 'Checks every ten minutes but stays quiet until the price is 5% away from the last thing it told you.',
+    id: 'community', slug: 'sol-price-moves-to-discord', who: 'Communities',
+    line: 'Announce a SOL price move to Discord, and stay quiet otherwise',
+    why: 'Checks every ten minutes and says nothing until the price is 5% away from the last figure it announced.',
     steps: [
       'every 10 minutes',
       'coin price  solana in usd',
       'when this moves  by 5 percent, up or down',
-      'discord  "@everyone SOL is up 6% to $214"',
+      'discord  "SOL is up 6% to $214"',
     ],
     needs: 'a Discord webhook',
   },
@@ -56,17 +56,17 @@ const CASES = [
     needs: 'Stripe, Slack and Notion keys',
   },
   {
-    id: 'builders', slug: 'contract-event-to-slack', who: 'Builders',
-    line: 'Your contract fires an event, Claude says what it means, it lands in Slack',
+    id: 'builders', slug: 'contract-event-to-telegram', who: 'Builders',
+    line: 'Smart contract fires an event, Claude says what it means, it lands in Telegram',
     why: 'Paste a Solidity event line and it decodes every field. Amounts stay whole numbers the whole way, and each transaction is only reported once.',
     steps: [
       'every 5 minutes',
       'contract events  event Transfer(address indexed from, address indexed to, uint256 value)',
       'first time only  by transaction hash',
       'ask claude  "say what happened in one line, keep the numbers exact"',
-      'slack  #contracts',
+      'telegram  into your group',
     ],
-    needs: 'a Claude key and a Slack key',
+    needs: 'a Claude key and a Telegram bot token',
   },
 ]
 

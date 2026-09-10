@@ -60,9 +60,11 @@ export default function PostBody({ text, images = [] }) {
     if (/^[-*]\s+/.test(line)) { list = list ?? []; list.push(line.replace(/^[-*]\s+/, '')); continue }
     if (!line.trim()) { closeList(); continue }
     closeList()
+    // Strict markdown folds a single newline into the previous line. Nobody
+    // typing in a box expects that: pressing return should break the line.
     const last = blocks[blocks.length - 1]
-    if (last?.kind === 'p') last.text += ` ${line}`
-    else blocks.push({ kind: 'p', text: line })
+    if (last?.kind === 'p') last.lines.push(line)
+    else blocks.push({ kind: 'p', lines: [line] })
   }
   closeList()
   if (fence) blocks.push({ kind: 'code', text: fence.join('\n') })
@@ -90,7 +92,16 @@ export default function PostBody({ text, images = [] }) {
             </figure>
           )
         }
-        return <p key={i}>{inline(block.text, i)}</p>
+        return (
+          <p key={i}>
+            {block.lines.map((line, j) => (
+              <span key={j}>
+                {j > 0 && <br />}
+                {inline(line, `${i}-${j}`)}
+              </span>
+            ))}
+          </p>
+        )
       })}
     </div>
   )

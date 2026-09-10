@@ -1,10 +1,10 @@
 [
   {
-    "slug": "contract-event-to-slack",
-    "title": "Contract Event to Slack",
-    "summary": "Watches a contract for an event, has Claude say what it means in one line, and puts it in Slack. Point the address at your own contract and change the event line to one of yours. Needs a Claude key named claude_key and a Slack key named slack_key.",
+    "slug": "contract-event-to-telegram",
+    "title": "Contract Event to Telegram",
+    "summary": "Watches a contract for an event, has Claude say what it means in one line, and sends it to Telegram. Needs a Claude key named claude_key and a Telegram key named telegram_key.",
     "package": {
-      "name": "contract event to slack",
+      "name": "contract event to telegram",
       "nodes": [
         {
           "id": "clock",
@@ -62,11 +62,11 @@
           }
         },
         {
-          "id": "post",
-          "type": "slack.post",
+          "id": "tell",
+          "type": "telegram.send",
           "params": {
-            "credential": "slack_key",
-            "channel": "#contracts",
+            "credential": "telegram_key",
+            "chatId": "",
             "text": "{{ $json.text }}"
           },
           "position": {
@@ -97,457 +97,6 @@
         {
           "from": "explain",
           "fromPort": "main",
-          "to": "post",
-          "toPort": "main"
-        }
-      ]
-    }
-  },
-  {
-    "slug": "contract-numbers-by-email",
-    "title": "Contract Numbers by Email",
-    "summary": "Reads a number straight off a contract every morning and emails it to you. This one reads how much USDC exists; change the address and the function line to read anything else. Needs a Resend key named resend_key.",
-    "package": {
-      "name": "contract numbers by email",
-      "nodes": [
-        {
-          "id": "clock",
-          "type": "core.schedule",
-          "params": {
-            "mode": "every",
-            "every": 1,
-            "unit": "days"
-          },
-          "position": {
-            "x": 40,
-            "y": 170
-          }
-        },
-        {
-          "id": "read",
-          "type": "web3.read",
-          "params": {
-            "chain": "ethereum",
-            "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-            "signature": "function totalSupply() view returns (uint256)",
-            "args": [],
-            "rpc": ""
-          },
-          "position": {
-            "x": 300,
-            "y": 170
-          }
-        },
-        {
-          "id": "mail",
-          "type": "resend.send",
-          "params": {
-            "credential": "resend_key",
-            "to": "you@example.com",
-            "subject": "USDC supply today",
-            "html": "<p>{{ $json.result }}</p>",
-            "from": ""
-          },
-          "position": {
-            "x": 560,
-            "y": 170
-          }
-        }
-      ],
-      "edges": [
-        {
-          "from": "clock",
-          "fromPort": "main",
-          "to": "read",
-          "toPort": "main"
-        },
-        {
-          "from": "read",
-          "fromPort": "main",
-          "to": "mail",
-          "toPort": "main"
-        }
-      ]
-    }
-  },
-  {
-    "slug": "daily-digest-email",
-    "title": "Daily Digest Email",
-    "summary": "One mail a day. Needs a saved Gmail key named gmail_key — an app password, not your account password.",
-    "package": {
-      "name": "daily digest email",
-      "nodes": [
-        {
-          "id": "clock",
-          "type": "core.schedule",
-          "params": {
-            "mode": "every",
-            "every": 1,
-            "unit": "days"
-          },
-          "position": {
-            "x": 40,
-            "y": 170
-          }
-        },
-        {
-          "id": "price",
-          "type": "coingecko.price",
-          "params": {
-            "ids": "ethereum,bitcoin",
-            "currency": "usd"
-          },
-          "position": {
-            "x": 300,
-            "y": 170
-          }
-        },
-        {
-          "id": "gas",
-          "type": "web3.gas",
-          "params": {
-            "chain": "ethereum"
-          },
-          "position": {
-            "x": 300,
-            "y": 320
-          }
-        },
-        {
-          "id": "mail",
-          "type": "gmail.send",
-          "params": {
-            "credential": "gmail_key",
-            "to": "you@example.com",
-            "subject": "morning digest",
-            "html": "ETH {{ $json.ethereum.usd }} · BTC {{ $json.bitcoin.usd }}"
-          },
-          "position": {
-            "x": 820,
-            "y": 170
-          }
-        }
-      ],
-      "edges": [
-        {
-          "from": "clock",
-          "fromPort": "main",
-          "to": "price",
-          "toPort": "main"
-        },
-        {
-          "from": "clock",
-          "fromPort": "main",
-          "to": "gas",
-          "toPort": "main"
-        },
-        {
-          "from": "price",
-          "fromPort": "main",
-          "to": "mail",
-          "toPort": "main"
-        }
-      ]
-    }
-  },
-  {
-    "slug": "eth-price-to-discord",
-    "title": "ETH Price to Discord",
-    "summary": "Every 10 minutes. The channel is whichever one you made the webhook in, so a webhook made in #signals posts to #signals. Needs a key named discord_key.",
-    "package": {
-      "name": "eth price to discord",
-      "nodes": [
-        {
-          "id": "clock",
-          "type": "core.schedule",
-          "params": {
-            "mode": "every",
-            "every": 10,
-            "unit": "minutes"
-          },
-          "position": {
-            "x": 40,
-            "y": 170
-          }
-        },
-        {
-          "id": "price",
-          "type": "coingecko.price",
-          "params": {
-            "ids": "ethereum",
-            "currency": "usd"
-          },
-          "position": {
-            "x": 300,
-            "y": 170
-          }
-        },
-        {
-          "id": "post",
-          "type": "discord.post",
-          "params": {
-            "credential": "discord_key",
-            "content": "ETH ${{ $json.ethereum.usd }}",
-            "username": "zorilla"
-          },
-          "position": {
-            "x": 560,
-            "y": 170
-          }
-        }
-      ],
-      "edges": [
-        {
-          "from": "clock",
-          "fromPort": "main",
-          "to": "price",
-          "toPort": "main"
-        },
-        {
-          "from": "price",
-          "fromPort": "main",
-          "to": "post",
-          "toPort": "main"
-        }
-      ]
-    }
-  },
-  {
-    "slug": "eth-price-watch",
-    "title": "ETH Price Watch",
-    "summary": "The one to press run on first. It reads the ETH price and writes it in the run log every time, and only says something separate when the price has moved 5% since it last mentioned it. Needs no keys.",
-    "package": {
-      "name": "eth price watch",
-      "nodes": [
-        {
-          "id": "clock",
-          "type": "core.schedule",
-          "params": {
-            "mode": "every",
-            "every": 10,
-            "unit": "minutes"
-          },
-          "position": {
-            "x": 40,
-            "y": 170
-          }
-        },
-        {
-          "id": "price",
-          "type": "coingecko.price",
-          "params": {
-            "ids": "ethereum",
-            "currency": "usd"
-          },
-          "position": {
-            "x": 300,
-            "y": 170
-          }
-        },
-        {
-          "id": "now",
-          "type": "output.log",
-          "params": {
-            "message": "ETH is ${{ $json.ethereum.usd }}"
-          },
-          "position": {
-            "x": 560,
-            "y": 170
-          }
-        },
-        {
-          "id": "moved",
-          "type": "logic.moved",
-          "params": {
-            "value": "{{ $json.ethereum.usd }}",
-            "amount": 5,
-            "unit": "percent",
-            "direction": "either",
-            "key": ""
-          },
-          "position": {
-            "x": 560,
-            "y": 320
-          }
-        },
-        {
-          "id": "shout",
-          "type": "output.log",
-          "params": {
-            "message": "that is a {{ Math.round($json.moved.percent) }}% move, {{ $json.moved.direction }} from {{ $json.moved.from }}"
-          },
-          "position": {
-            "x": 1080,
-            "y": 170
-          }
-        }
-      ],
-      "edges": [
-        {
-          "from": "clock",
-          "fromPort": "main",
-          "to": "price",
-          "toPort": "main"
-        },
-        {
-          "from": "price",
-          "fromPort": "main",
-          "to": "now",
-          "toPort": "main"
-        },
-        {
-          "from": "price",
-          "fromPort": "main",
-          "to": "moved",
-          "toPort": "main"
-        },
-        {
-          "from": "moved",
-          "fromPort": "main",
-          "to": "shout",
-          "toPort": "main"
-        }
-      ]
-    }
-  },
-  {
-    "slug": "hourly-price-email",
-    "title": "Hourly Price Email",
-    "summary": "Every hour by email. Resend only delivers from a domain you have verified with them. Needs a key named resend_key.",
-    "package": {
-      "name": "hourly price email",
-      "nodes": [
-        {
-          "id": "clock",
-          "type": "core.schedule",
-          "params": {
-            "mode": "every",
-            "every": 1,
-            "unit": "hours"
-          },
-          "position": {
-            "x": 40,
-            "y": 170
-          }
-        },
-        {
-          "id": "price",
-          "type": "coingecko.price",
-          "params": {
-            "ids": "ethereum,bitcoin",
-            "currency": "usd"
-          },
-          "position": {
-            "x": 300,
-            "y": 170
-          }
-        },
-        {
-          "id": "mail",
-          "type": "resend.send",
-          "params": {
-            "credential": "resend_key",
-            "to": "you@example.com",
-            "subject": "ETH {{ $json.ethereum.usd }}",
-            "html": "<p>ETH {{ $json.ethereum.usd }}<br>BTC {{ $json.bitcoin.usd }}</p>",
-            "from": ""
-          },
-          "position": {
-            "x": 560,
-            "y": 170
-          }
-        }
-      ],
-      "edges": [
-        {
-          "from": "clock",
-          "fromPort": "main",
-          "to": "price",
-          "toPort": "main"
-        },
-        {
-          "from": "price",
-          "fromPort": "main",
-          "to": "mail",
-          "toPort": "main"
-        }
-      ]
-    }
-  },
-  {
-    "slug": "kol-post-to-telegram",
-    "title": "KOL Post to Telegram",
-    "summary": "Watches one account on X for posts about a subject you choose, and sends you the post on Telegram the moment it appears. Change the search on the second function: from:whoever, then the words you care about. Needs an X key named x_key and a Telegram key named telegram_key.",
-    "package": {
-      "name": "kol post to telegram",
-      "nodes": [
-        {
-          "id": "clock",
-          "type": "core.schedule",
-          "params": {
-            "mode": "every",
-            "every": 10,
-            "unit": "minutes"
-          },
-          "position": {
-            "x": 40,
-            "y": 170
-          }
-        },
-        {
-          "id": "posts",
-          "type": "x.search",
-          "params": {
-            "credential": "x_key",
-            "query": "from:VitalikButerin (rollup OR L2)",
-            "limit": 10
-          },
-          "position": {
-            "x": 310,
-            "y": 170
-          }
-        },
-        {
-          "id": "fresh",
-          "type": "logic.once",
-          "params": {
-            "key": "{{ $json.id }}"
-          },
-          "position": {
-            "x": 580,
-            "y": 170
-          }
-        },
-        {
-          "id": "tell",
-          "type": "telegram.send",
-          "params": {
-            "credential": "telegram_key",
-            "chatId": "",
-            "text": "New post:\n\n{{ $json.text }}"
-          },
-          "position": {
-            "x": 850,
-            "y": 170
-          }
-        }
-      ],
-      "edges": [
-        {
-          "from": "clock",
-          "fromPort": "main",
-          "to": "posts",
-          "toPort": "main"
-        },
-        {
-          "from": "posts",
-          "fromPort": "main",
-          "to": "fresh",
-          "toPort": "main"
-        },
-        {
-          "from": "fresh",
-          "fromPort": "main",
           "to": "tell",
           "toPort": "main"
         }
@@ -557,7 +106,7 @@
   {
     "slug": "news-to-x",
     "title": "News to X",
-    "summary": "Every 30 minutes it looks for new Hacker News stories about a subject you choose, has Claude draft a post about each one, and puts it on X. Change what it watches for in the About field on the search step — Robinhood Chain, stablecoins, whatever you follow. Needs a Claude key named claude_key and an X key named x_key with write permission. The news itself needs no key.",
+    "summary": "Finds new Hacker News stories about a subject you choose, has Claude draft a post, and puts it on X. Needs a Claude key named claude_key and an X key named x_key.",
     "package": {
       "name": "news to x",
       "nodes": [
@@ -658,7 +207,7 @@
   {
     "slug": "payment-to-slack-and-notion",
     "title": "Payment to Slack and Notion",
-    "summary": "Watches for new Stripe payments and puts each one in two places at once. Fires once per payment, even though it checks every five minutes. Needs keys named stripe_key, slack_key and notion_key, and your Notion database id.",
+    "summary": "Turns each new Stripe payment into a Slack message and a Notion row. Needs keys named stripe_key, slack_key and notion_key.",
     "package": {
       "name": "payment to slack and notion",
       "nodes": [
@@ -721,7 +270,7 @@
   {
     "slug": "prepare-transaction",
     "title": "Prepare a Transaction",
-    "summary": "Works out exactly what a transaction would do and what it would cost, on the Sepolia test network. Put your own address in \"send from\". It signs nothing and sends nothing.",
+    "summary": "Works out exactly what a transaction would do and cost, and signs nothing. Needs no keys.",
     "package": {
       "name": "prepare a transaction",
       "nodes": [
@@ -777,11 +326,11 @@
     }
   },
   {
-    "slug": "price-move-to-discord",
-    "title": "Price Move to Discord",
-    "summary": "Announces a price move to a Discord channel, and only when it actually moves. Checks every 10 minutes but stays quiet until SOL is 5% away from where it last told you. Needs a Discord webhook saved as announcements.",
+    "slug": "sol-price-moves-to-discord",
+    "title": "Sol Price Moves to Discord",
+    "summary": "Posts to Discord when SOL moves 5% from the last figure it announced, and stays quiet otherwise. Needs a Discord webhook saved as discord_key.",
     "package": {
-      "name": "price move to discord",
+      "name": "sol price moves to discord",
       "nodes": [
         {
           "id": "clock",
@@ -804,7 +353,7 @@
             "currency": "usd"
           },
           "position": {
-            "x": 300,
+            "x": 310,
             "y": 170
           }
         },
@@ -816,10 +365,10 @@
             "amount": 5,
             "unit": "percent",
             "direction": "either",
-            "key": ""
+            "key": "sol"
           },
           "position": {
-            "x": 560,
+            "x": 580,
             "y": 170
           }
         },
@@ -827,12 +376,12 @@
           "id": "say",
           "type": "discord.post",
           "params": {
-            "credential": "announcements",
-            "content": "@everyone ETH is {{ $json.moved.direction }} {{ Math.round($json.moved.percent) }}% to ${{ $json.moved.to }}",
-            "username": "zorilla"
+            "credential": "discord_key",
+            "content": "SOL is {{ $json.moved.direction }} {{ Math.round($json.moved.percent) }}% to ${{ $json.solana.usd }}",
+            "username": "Zorilla"
           },
           "position": {
-            "x": 820,
+            "x": 850,
             "y": 170
           }
         }
@@ -860,18 +409,18 @@
     }
   },
   {
-    "slug": "usdc-landing-in-a-wallet",
-    "title": "USDC Landing in a Wallet",
-    "summary": "Watches USDC landing in one wallet. It points at Circle's treasury so pressing run shows you something straight away: put your own address in \"only where\" instead. The endpoint does the filtering, so this stays cheap, and the same transaction is never reported twice.",
+    "slug": "telegram-post-to-group",
+    "title": "Telegram Post to Group",
+    "summary": "Puts new posts from one X account about a subject you choose into a Telegram group. Needs an X key named x_key and a Telegram key named telegram_key.",
     "package": {
-      "name": "usdc landing in a wallet",
+      "name": "telegram post to group",
       "nodes": [
         {
           "id": "clock",
           "type": "core.schedule",
           "params": {
             "mode": "every",
-            "every": 5,
+            "every": 10,
             "unit": "minutes"
           },
           "position": {
@@ -880,45 +429,39 @@
           }
         },
         {
-          "id": "events",
-          "type": "web3.logs",
+          "id": "posts",
+          "type": "x.search",
           "params": {
-            "chain": "ethereum",
-            "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-            "event": "event Transfer(address indexed from, address indexed to, uint256 value)",
-            "match": [
-              {
-                "name": "to",
-                "value": "0x55FE002aefF02F77364de339a1292923A15844B8"
-              }
-            ],
-            "blocks": 300,
-            "rpc": ""
+            "credential": "x_key",
+            "query": "from:VitalikButerin (rollup OR L2)",
+            "limit": 10
           },
           "position": {
-            "x": 300,
+            "x": 310,
             "y": 170
           }
         },
         {
-          "id": "once",
+          "id": "fresh",
           "type": "logic.once",
           "params": {
-            "key": "{{ $json.transactionHash }}"
+            "key": "{{ $json.id }}"
           },
           "position": {
-            "x": 560,
+            "x": 580,
             "y": 170
           }
         },
         {
-          "id": "say",
-          "type": "output.log",
+          "id": "tell",
+          "type": "telegram.send",
           "params": {
-            "message": "large transfer in {{ $json.transactionHash }}"
+            "credential": "telegram_key",
+            "chatId": "",
+            "text": "New post:\n\n{{ $json.text }}"
           },
           "position": {
-            "x": 820,
+            "x": 850,
             "y": 170
           }
         }
@@ -927,19 +470,19 @@
         {
           "from": "clock",
           "fromPort": "main",
-          "to": "events",
+          "to": "posts",
           "toPort": "main"
         },
         {
-          "from": "once",
+          "from": "posts",
           "fromPort": "main",
-          "to": "say",
+          "to": "fresh",
           "toPort": "main"
         },
         {
-          "from": "events",
+          "from": "fresh",
           "fromPort": "main",
-          "to": "once",
+          "to": "tell",
           "toPort": "main"
         }
       ]
@@ -948,7 +491,7 @@
   {
     "slug": "usdc-landing-to-telegram",
     "title": "USDC Landing to Telegram",
-    "summary": "Messages you on Telegram the moment USDC arrives in a wallet. Put your own address in \"only where\" on the events step. Never tells you about the same transaction twice. Needs a Telegram key named telegram_key.",
+    "summary": "Tells you on Telegram when USDC arrives in a wallet, once per transaction. Needs a Telegram key named telegram_key.",
     "package": {
       "name": "usdc landing to telegram",
       "nodes": [
@@ -1036,7 +579,7 @@
   {
     "slug": "wallet-balance-watch",
     "title": "Wallet Balance Watch",
-    "summary": "Reads a balance on Ethereum mainnet and only carries on when it drops below a threshold. Reads only; it cannot move funds.",
+    "summary": "Watches a wallet and says so when its balance drops below a figure you set. Needs no keys.",
     "package": {
       "name": "wallet balance watch",
       "nodes": [
@@ -1113,9 +656,109 @@
     }
   },
   {
+    "slug": "web3-digest-email",
+    "title": "Daily Web3 Digest Email",
+    "summary": "One email a day with new Hacker News stories about web3, blockchain and crypto. Needs a Resend key named resend_key.",
+    "package": {
+      "name": "daily web3 digest email",
+      "nodes": [
+        {
+          "id": "clock",
+          "type": "core.schedule",
+          "params": {
+            "mode": "every",
+            "every": 1,
+            "unit": "days"
+          },
+          "position": {
+            "x": 40,
+            "y": 170
+          }
+        },
+        {
+          "id": "news",
+          "type": "hackernews.search",
+          "params": {
+            "query": "web3 OR blockchain OR ethereum OR solana",
+            "tags": "story",
+            "minPoints": 5,
+            "limit": 25
+          },
+          "position": {
+            "x": 310,
+            "y": 170
+          }
+        },
+        {
+          "id": "fresh",
+          "type": "logic.once",
+          "params": {
+            "key": "{{ $json.id }}"
+          },
+          "position": {
+            "x": 580,
+            "y": 170
+          }
+        },
+        {
+          "id": "digest",
+          "type": "code.js",
+          "params": {
+            "code": "const rows = items.map((i) => i.json)\nif (!rows.length) return []\nconst html = rows\n  .sort((a, b) => (b.points ?? 0) - (a.points ?? 0))\n  .map((s) => `<p><a href=\"${s.url || 'https://news.ycombinator.com/item?id=' + s.id}\">${s.title}</a><br><small>${s.points ?? 0} points</small></p>`)\n  .join('')\nreturn [{ json: { count: rows.length, html } }]",
+            "timeout": 15
+          },
+          "position": {
+            "x": 850,
+            "y": 170
+          }
+        },
+        {
+          "id": "mail",
+          "type": "resend.send",
+          "params": {
+            "credential": "resend_key",
+            "to": "you@example.com",
+            "subject": "Web3 digest: {{ $json.count }} new stories",
+            "html": "{{ $json.html }}"
+          },
+          "position": {
+            "x": 1120,
+            "y": 170
+          }
+        }
+      ],
+      "edges": [
+        {
+          "from": "clock",
+          "fromPort": "main",
+          "to": "news",
+          "toPort": "main"
+        },
+        {
+          "from": "news",
+          "fromPort": "main",
+          "to": "fresh",
+          "toPort": "main"
+        },
+        {
+          "from": "fresh",
+          "fromPort": "main",
+          "to": "digest",
+          "toPort": "main"
+        },
+        {
+          "from": "digest",
+          "fromPort": "main",
+          "to": "mail",
+          "toPort": "main"
+        }
+      ]
+    }
+  },
+  {
     "slug": "webhook-to-slack",
     "title": "Webhook to Slack",
-    "summary": "Anything that sends a message to this automation's address gets posted to Slack. Press run to try it before wiring anything up: it stands in a line of its own. Needs a Slack key named slack_key.",
+    "summary": "Posts to Slack whenever something calls your webhook address. Needs a Slack key named slack_key and a public address.",
     "package": {
       "name": "webhook to slack",
       "nodes": [

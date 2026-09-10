@@ -136,7 +136,7 @@ Records in a base. Contacts: api.airtable.com.
   - `credential`, credential, a saved airtable key — Airtable key
   - `baseId`, text — Base id
   - `table`, text — Table
-  - `limit`, number, default 100 — How many at most. zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind.
+  - `limit`, number, default 100 — How many at most. Zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind.
 - **`airtable.newRecord`** (trigger, polls) — Fires when a record is added. One item per record.
   - `credential`, credential, a saved airtable key — Airtable key
   - `baseId`, text — Base id
@@ -151,7 +151,7 @@ Anthropic's models. Contacts: api.anthropic.com.
 - **`anthropic.ask`** (action) — Ask Claude
   - `credential`, credential, a saved anthropic key — Claude key
   - `prompt`, textarea — Prompt. Put {{ $json.field }} in here to feed it whatever the previous step produced.
-  - `model`, text, default "claude-sonnet-5" — Model. claude-opus-5, claude-sonnet-5, claude-haiku-4-5-20251001, claude-fable-5-1
+  - `model`, text, default "claude-sonnet-5" — Model. Claude-opus-5, claude-sonnet-5, claude-haiku-4-5-20251001, claude-fable-5-1
   - `system`, textarea — Instructions. Optional. How it should behave.
   - `maxTokens`, number, default 1024 — Longest reply
 
@@ -170,7 +170,7 @@ DeepSeek's models. Contacts: api.deepseek.com.
 - **`deepseek.ask`** (action) — Ask DeepSeek
   - `credential`, credential, a saved deepseek key — DeepSeek key
   - `prompt`, textarea — Prompt. Put {{ $json.field }} in here to feed it whatever the previous step produced.
-  - `model`, text, default "deepseek-chat" — Model. deepseek-chat, deepseek-reasoner
+  - `model`, text, default "deepseek-chat" — Model. Deepseek-chat, deepseek-reasoner
 
 ### Discord
 
@@ -189,7 +189,7 @@ Transaction history, which a node cannot give you. Contacts: api.etherscan.io.
   - `credential`, credential, a saved etherscan key — Etherscan key
   - `address`, text — Wallet address
   - `chainId`, select, default "1", one of: 1, 11155111 — Network
-  - `limit`, number, default 100 — How many at most. zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind.
+  - `limit`, number, default 100 — How many at most. Zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind.
 
 ### Gemini
 
@@ -198,7 +198,7 @@ Google's models. Contacts: generativelanguage.googleapis.com.
 - **`gemini.ask`** (action) — Ask Gemini
   - `credential`, credential, a saved gemini key — Gemini key
   - `prompt`, textarea — Prompt. Put {{ $json.field }} in here to feed it whatever the previous step produced.
-  - `model`, text, default "gemini-2.0-flash" — Model. gemini-2.0-flash, gemini-1.5-pro
+  - `model`, text, default "gemini-2.0-flash" — Model. Gemini-2.0-flash, gemini-1.5-pro
 
 ### Hacker News
 
@@ -255,7 +255,7 @@ Databases and pages. Contacts: api.notion.com.
 - **`notion.query`** (action) — One item per row.
   - `credential`, credential, a saved notion key — Notion key
   - `databaseId`, text — Database id
-  - `limit`, number, default 100 — How many at most. zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind.
+  - `limit`, number, default 100 — How many at most. Zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind.
 
 ### ChatGPT
 
@@ -264,7 +264,7 @@ OpenAI's models. Contacts: api.openai.com.
 - **`openai.ask`** (action) — Ask ChatGPT
   - `credential`, credential, a saved openai key — ChatGPT key
   - `prompt`, textarea — Prompt. Put {{ $json.field }} in here to feed it whatever the previous step produced.
-  - `model`, text, default "gpt-4o-mini" — Model. gpt-4o, gpt-4o-mini, o3-mini
+  - `model`, text, default "gpt-4o-mini" — Model. Gpt-4o, gpt-4o-mini, o3-mini
   - `maxTokens`, number, default 1024 — Longest reply
 
 ### output
@@ -303,10 +303,10 @@ Payments data. Contacts: api.stripe.com.
 
 - **`stripe.charges`** (action) — One item per payment.
   - `credential`, credential, a saved stripe key — Stripe key
-  - `limit`, number, default 100 — How many at most. zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind.
+  - `limit`, number, default 100 — How many at most. Zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind.
 - **`stripe.customers`** (action) — One item per customer.
   - `credential`, credential, a saved stripe key — Stripe key
-  - `limit`, number, default 100 — How many at most. zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind.
+  - `limit`, number, default 100 — How many at most. Zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind.
 - **`stripe.newCharge`** (trigger, polls) — Fires when a payment goes through. One item per payment.
   - `credential`, credential, a saved stripe key — Stripe key
   - `every`, number, default 5 — Check every
@@ -324,7 +324,7 @@ Read and write rows in your database. Contacts: a web address you provide (Proje
   - `credential`, credential, a saved supabase key — Supabase key
   - `table`, text — Table
   - `columns`, text, default "*" — Columns
-  - `limit`, number, default 100 — How many at most. zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind.
+  - `limit`, number, default 100 — How many at most. Zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind.
 
 ### Telegram
 
@@ -430,7 +430,7 @@ Post to X, and search what is being said. Contacts: api.x.com.
 - **`x.search`** (action) — Recent posts matching a search. One item per post.
   - `credential`, credential, a saved x key — X key
   - `query`, text — Search for
-  - `limit`, number, default 25 — How many at most. zorilla keeps asking for more pages until it has this many.
+  - `limit`, number, default 25 — How many at most. Zorilla keeps asking for more pages until it has this many.
 
 ## Keys you can save
 
@@ -458,9 +458,9 @@ Post to X, and search what is being said. Contacts: api.x.com.
 
 ## Working examples
 
-### demo15: contract event to slack
+### demo04: contract event to telegram
 
-Watches a contract for an event, has Claude say what it means in one line, and puts it in Slack. Point the address at your own contract and change the event line to one of yours. Needs a Claude key named claude_key and a Slack key named slack_key.
+Watches a contract for an event, has Claude say what it means in one line, and sends it to Telegram. Needs a Claude key named claude_key and a Telegram key named telegram_key.
 
 ```json
 {
@@ -521,11 +521,11 @@ Watches a contract for an event, has Claude say what it means in one line, and p
       }
     },
     {
-      "id": "post",
-      "type": "slack.post",
+      "id": "tell",
+      "type": "telegram.send",
       "params": {
-        "credential": "slack_key",
-        "channel": "#contracts",
+        "credential": "telegram_key",
+        "chatId": "",
         "text": "{{ $json.text }}"
       },
       "position": {
@@ -556,463 +556,6 @@ Watches a contract for an event, has Claude say what it means in one line, and p
     {
       "from": "explain",
       "fromPort": "main",
-      "to": "post",
-      "toPort": "main"
-    }
-  ]
-}
-```
-
-### demo02: contract numbers by email
-
-Reads a number straight off a contract every morning and emails it to you. This one reads how much USDC exists; change the address and the function line to read anything else. Needs a Resend key named resend_key.
-
-```json
-{
-  "nodes": [
-    {
-      "id": "clock",
-      "type": "core.schedule",
-      "params": {
-        "mode": "every",
-        "every": 1,
-        "unit": "days"
-      },
-      "position": {
-        "x": 40,
-        "y": 170
-      }
-    },
-    {
-      "id": "read",
-      "type": "web3.read",
-      "params": {
-        "chain": "ethereum",
-        "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-        "signature": "function totalSupply() view returns (uint256)",
-        "args": [],
-        "rpc": ""
-      },
-      "position": {
-        "x": 300,
-        "y": 170
-      }
-    },
-    {
-      "id": "mail",
-      "type": "resend.send",
-      "params": {
-        "credential": "resend_key",
-        "to": "you@example.com",
-        "subject": "USDC supply today",
-        "html": "<p>{{ $json.result }}</p>",
-        "from": ""
-      },
-      "position": {
-        "x": 560,
-        "y": 170
-      }
-    }
-  ],
-  "edges": [
-    {
-      "from": "clock",
-      "fromPort": "main",
-      "to": "read",
-      "toPort": "main"
-    },
-    {
-      "from": "read",
-      "fromPort": "main",
-      "to": "mail",
-      "toPort": "main"
-    }
-  ]
-}
-```
-
-### demo03: daily digest email
-
-One mail a day. Needs a saved Gmail key named gmail_key — an app password, not your account password.
-
-```json
-{
-  "nodes": [
-    {
-      "id": "clock",
-      "type": "core.schedule",
-      "params": {
-        "mode": "every",
-        "every": 1,
-        "unit": "days"
-      },
-      "position": {
-        "x": 40,
-        "y": 170
-      }
-    },
-    {
-      "id": "price",
-      "type": "coingecko.price",
-      "params": {
-        "ids": "ethereum,bitcoin",
-        "currency": "usd"
-      },
-      "position": {
-        "x": 300,
-        "y": 170
-      }
-    },
-    {
-      "id": "gas",
-      "type": "web3.gas",
-      "params": {
-        "chain": "ethereum"
-      },
-      "position": {
-        "x": 300,
-        "y": 320
-      }
-    },
-    {
-      "id": "mail",
-      "type": "gmail.send",
-      "params": {
-        "credential": "gmail_key",
-        "to": "you@example.com",
-        "subject": "morning digest",
-        "html": "ETH {{ $json.ethereum.usd }} · BTC {{ $json.bitcoin.usd }}"
-      },
-      "position": {
-        "x": 820,
-        "y": 170
-      }
-    }
-  ],
-  "edges": [
-    {
-      "from": "clock",
-      "fromPort": "main",
-      "to": "price",
-      "toPort": "main"
-    },
-    {
-      "from": "clock",
-      "fromPort": "main",
-      "to": "gas",
-      "toPort": "main"
-    },
-    {
-      "from": "price",
-      "fromPort": "main",
-      "to": "mail",
-      "toPort": "main"
-    }
-  ]
-}
-```
-
-### demo04: eth price to discord
-
-Every 10 minutes. The channel is whichever one you made the webhook in, so a webhook made in #signals posts to #signals. Needs a key named discord_key.
-
-```json
-{
-  "nodes": [
-    {
-      "id": "clock",
-      "type": "core.schedule",
-      "params": {
-        "mode": "every",
-        "every": 10,
-        "unit": "minutes"
-      },
-      "position": {
-        "x": 40,
-        "y": 170
-      }
-    },
-    {
-      "id": "price",
-      "type": "coingecko.price",
-      "params": {
-        "ids": "ethereum",
-        "currency": "usd"
-      },
-      "position": {
-        "x": 300,
-        "y": 170
-      }
-    },
-    {
-      "id": "post",
-      "type": "discord.post",
-      "params": {
-        "credential": "discord_key",
-        "content": "ETH ${{ $json.ethereum.usd }}",
-        "username": "zorilla"
-      },
-      "position": {
-        "x": 560,
-        "y": 170
-      }
-    }
-  ],
-  "edges": [
-    {
-      "from": "clock",
-      "fromPort": "main",
-      "to": "price",
-      "toPort": "main"
-    },
-    {
-      "from": "price",
-      "fromPort": "main",
-      "to": "post",
-      "toPort": "main"
-    }
-  ]
-}
-```
-
-### demo05: eth price watch
-
-The one to press run on first. It reads the ETH price and writes it in the run log every time, and only says something separate when the price has moved 5% since it last mentioned it. Needs no keys.
-
-```json
-{
-  "nodes": [
-    {
-      "id": "clock",
-      "type": "core.schedule",
-      "params": {
-        "mode": "every",
-        "every": 10,
-        "unit": "minutes"
-      },
-      "position": {
-        "x": 40,
-        "y": 170
-      }
-    },
-    {
-      "id": "price",
-      "type": "coingecko.price",
-      "params": {
-        "ids": "ethereum",
-        "currency": "usd"
-      },
-      "position": {
-        "x": 300,
-        "y": 170
-      }
-    },
-    {
-      "id": "now",
-      "type": "output.log",
-      "params": {
-        "message": "ETH is ${{ $json.ethereum.usd }}"
-      },
-      "position": {
-        "x": 560,
-        "y": 170
-      }
-    },
-    {
-      "id": "moved",
-      "type": "logic.moved",
-      "params": {
-        "value": "{{ $json.ethereum.usd }}",
-        "amount": 5,
-        "unit": "percent",
-        "direction": "either",
-        "key": ""
-      },
-      "position": {
-        "x": 560,
-        "y": 320
-      }
-    },
-    {
-      "id": "shout",
-      "type": "output.log",
-      "params": {
-        "message": "that is a {{ Math.round($json.moved.percent) }}% move, {{ $json.moved.direction }} from {{ $json.moved.from }}"
-      },
-      "position": {
-        "x": 1080,
-        "y": 170
-      }
-    }
-  ],
-  "edges": [
-    {
-      "from": "clock",
-      "fromPort": "main",
-      "to": "price",
-      "toPort": "main"
-    },
-    {
-      "from": "price",
-      "fromPort": "main",
-      "to": "now",
-      "toPort": "main"
-    },
-    {
-      "from": "price",
-      "fromPort": "main",
-      "to": "moved",
-      "toPort": "main"
-    },
-    {
-      "from": "moved",
-      "fromPort": "main",
-      "to": "shout",
-      "toPort": "main"
-    }
-  ]
-}
-```
-
-### demo06: hourly price email
-
-Every hour by email. Resend only delivers from a domain you have verified with them. Needs a key named resend_key.
-
-```json
-{
-  "nodes": [
-    {
-      "id": "clock",
-      "type": "core.schedule",
-      "params": {
-        "mode": "every",
-        "every": 1,
-        "unit": "hours"
-      },
-      "position": {
-        "x": 40,
-        "y": 170
-      }
-    },
-    {
-      "id": "price",
-      "type": "coingecko.price",
-      "params": {
-        "ids": "ethereum,bitcoin",
-        "currency": "usd"
-      },
-      "position": {
-        "x": 300,
-        "y": 170
-      }
-    },
-    {
-      "id": "mail",
-      "type": "resend.send",
-      "params": {
-        "credential": "resend_key",
-        "to": "you@example.com",
-        "subject": "ETH {{ $json.ethereum.usd }}",
-        "html": "<p>ETH {{ $json.ethereum.usd }}<br>BTC {{ $json.bitcoin.usd }}</p>",
-        "from": ""
-      },
-      "position": {
-        "x": 560,
-        "y": 170
-      }
-    }
-  ],
-  "edges": [
-    {
-      "from": "clock",
-      "fromPort": "main",
-      "to": "price",
-      "toPort": "main"
-    },
-    {
-      "from": "price",
-      "fromPort": "main",
-      "to": "mail",
-      "toPort": "main"
-    }
-  ]
-}
-```
-
-### demo14: kol post to telegram
-
-Watches one account on X for posts about a subject you choose, and sends you the post on Telegram the moment it appears. Change the search on the second function: from:whoever, then the words you care about. Needs an X key named x_key and a Telegram key named telegram_key.
-
-```json
-{
-  "nodes": [
-    {
-      "id": "clock",
-      "type": "core.schedule",
-      "params": {
-        "mode": "every",
-        "every": 10,
-        "unit": "minutes"
-      },
-      "position": {
-        "x": 40,
-        "y": 170
-      }
-    },
-    {
-      "id": "posts",
-      "type": "x.search",
-      "params": {
-        "credential": "x_key",
-        "query": "from:VitalikButerin (rollup OR L2)",
-        "limit": 10
-      },
-      "position": {
-        "x": 310,
-        "y": 170
-      }
-    },
-    {
-      "id": "fresh",
-      "type": "logic.once",
-      "params": {
-        "key": "{{ $json.id }}"
-      },
-      "position": {
-        "x": 580,
-        "y": 170
-      }
-    },
-    {
-      "id": "tell",
-      "type": "telegram.send",
-      "params": {
-        "credential": "telegram_key",
-        "chatId": "",
-        "text": "New post:\n\n{{ $json.text }}"
-      },
-      "position": {
-        "x": 850,
-        "y": 170
-      }
-    }
-  ],
-  "edges": [
-    {
-      "from": "clock",
-      "fromPort": "main",
-      "to": "posts",
-      "toPort": "main"
-    },
-    {
-      "from": "posts",
-      "fromPort": "main",
-      "to": "fresh",
-      "toPort": "main"
-    },
-    {
-      "from": "fresh",
-      "fromPort": "main",
       "to": "tell",
       "toPort": "main"
     }
@@ -1020,9 +563,9 @@ Watches one account on X for posts about a subject you choose, and sends you the
 }
 ```
 
-### demo01: news to x
+### demo05: news to x
 
-Every 30 minutes it looks for new Hacker News stories about a subject you choose, has Claude draft a post about each one, and puts it on X. Change what it watches for in the About field on the search step — Robinhood Chain, stablecoins, whatever you follow. Needs a Claude key named claude_key and an X key named x_key with write permission. The news itself needs no key.
+Finds new Hacker News stories about a subject you choose, has Claude draft a post, and puts it on X. Needs a Claude key named claude_key and an X key named x_key.
 
 ```json
 {
@@ -1122,9 +665,9 @@ Every 30 minutes it looks for new Hacker News stories about a subject you choose
 }
 ```
 
-### demo07: payment to slack and notion
+### demo06: payment to slack and notion
 
-Watches for new Stripe payments and puts each one in two places at once. Fires once per payment, even though it checks every five minutes. Needs keys named stripe_key, slack_key and notion_key, and your Notion database id.
+Turns each new Stripe payment into a Slack message and a Notion row. Needs keys named stripe_key, slack_key and notion_key.
 
 ```json
 {
@@ -1186,9 +729,9 @@ Watches for new Stripe payments and puts each one in two places at once. Fires o
 }
 ```
 
-### demo08: prepare a transaction
+### demo07: prepare a transaction
 
-Works out exactly what a transaction would do and what it would cost, on the Sepolia test network. Put your own address in "send from". It signs nothing and sends nothing.
+Works out exactly what a transaction would do and cost, and signs nothing. Needs no keys.
 
 ```json
 {
@@ -1245,9 +788,9 @@ Works out exactly what a transaction would do and what it would cost, on the Sep
 }
 ```
 
-### demo09: price move to discord
+### demo02: sol price moves to discord
 
-Announces a price move to a Discord channel, and only when it actually moves. Checks every 10 minutes but stays quiet until SOL is 5% away from where it last told you. Needs a Discord webhook saved as announcements.
+Posts to Discord when SOL moves 5% from the last figure it announced, and stays quiet otherwise. Needs a Discord webhook saved as discord_key.
 
 ```json
 {
@@ -1273,7 +816,7 @@ Announces a price move to a Discord channel, and only when it actually moves. Ch
         "currency": "usd"
       },
       "position": {
-        "x": 300,
+        "x": 310,
         "y": 170
       }
     },
@@ -1285,10 +828,10 @@ Announces a price move to a Discord channel, and only when it actually moves. Ch
         "amount": 5,
         "unit": "percent",
         "direction": "either",
-        "key": ""
+        "key": "sol"
       },
       "position": {
-        "x": 560,
+        "x": 580,
         "y": 170
       }
     },
@@ -1296,12 +839,12 @@ Announces a price move to a Discord channel, and only when it actually moves. Ch
       "id": "say",
       "type": "discord.post",
       "params": {
-        "credential": "announcements",
-        "content": "@everyone ETH is {{ $json.moved.direction }} {{ Math.round($json.moved.percent) }}% to ${{ $json.moved.to }}",
-        "username": "zorilla"
+        "credential": "discord_key",
+        "content": "SOL is {{ $json.moved.direction }} {{ Math.round($json.moved.percent) }}% to ${{ $json.solana.usd }}",
+        "username": "Zorilla"
       },
       "position": {
-        "x": 820,
+        "x": 850,
         "y": 170
       }
     }
@@ -1329,9 +872,9 @@ Announces a price move to a Discord channel, and only when it actually moves. Ch
 }
 ```
 
-### demo10: usdc landing in a wallet
+### demo03: telegram post to group
 
-Watches USDC landing in one wallet. It points at Circle's treasury so pressing run shows you something straight away: put your own address in "only where" instead. The endpoint does the filtering, so this stays cheap, and the same transaction is never reported twice.
+Puts new posts from one X account about a subject you choose into a Telegram group. Needs an X key named x_key and a Telegram key named telegram_key.
 
 ```json
 {
@@ -1341,7 +884,7 @@ Watches USDC landing in one wallet. It points at Circle's treasury so pressing r
       "type": "core.schedule",
       "params": {
         "mode": "every",
-        "every": 5,
+        "every": 10,
         "unit": "minutes"
       },
       "position": {
@@ -1350,45 +893,39 @@ Watches USDC landing in one wallet. It points at Circle's treasury so pressing r
       }
     },
     {
-      "id": "events",
-      "type": "web3.logs",
+      "id": "posts",
+      "type": "x.search",
       "params": {
-        "chain": "ethereum",
-        "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-        "event": "event Transfer(address indexed from, address indexed to, uint256 value)",
-        "match": [
-          {
-            "name": "to",
-            "value": "0x55FE002aefF02F77364de339a1292923A15844B8"
-          }
-        ],
-        "blocks": 300,
-        "rpc": ""
+        "credential": "x_key",
+        "query": "from:VitalikButerin (rollup OR L2)",
+        "limit": 10
       },
       "position": {
-        "x": 300,
+        "x": 310,
         "y": 170
       }
     },
     {
-      "id": "once",
+      "id": "fresh",
       "type": "logic.once",
       "params": {
-        "key": "{{ $json.transactionHash }}"
+        "key": "{{ $json.id }}"
       },
       "position": {
-        "x": 560,
+        "x": 580,
         "y": 170
       }
     },
     {
-      "id": "say",
-      "type": "output.log",
+      "id": "tell",
+      "type": "telegram.send",
       "params": {
-        "message": "large transfer in {{ $json.transactionHash }}"
+        "credential": "telegram_key",
+        "chatId": "",
+        "text": "New post:\n\n{{ $json.text }}"
       },
       "position": {
-        "x": 820,
+        "x": 850,
         "y": 170
       }
     }
@@ -1397,28 +934,28 @@ Watches USDC landing in one wallet. It points at Circle's treasury so pressing r
     {
       "from": "clock",
       "fromPort": "main",
-      "to": "events",
+      "to": "posts",
       "toPort": "main"
     },
     {
-      "from": "once",
+      "from": "posts",
       "fromPort": "main",
-      "to": "say",
+      "to": "fresh",
       "toPort": "main"
     },
     {
-      "from": "events",
+      "from": "fresh",
       "fromPort": "main",
-      "to": "once",
+      "to": "tell",
       "toPort": "main"
     }
   ]
 }
 ```
 
-### demo11: usdc landing to telegram
+### demo08: usdc landing to telegram
 
-Messages you on Telegram the moment USDC arrives in a wallet. Put your own address in "only where" on the events step. Never tells you about the same transaction twice. Needs a Telegram key named telegram_key.
+Tells you on Telegram when USDC arrives in a wallet, once per transaction. Needs a Telegram key named telegram_key.
 
 ```json
 {
@@ -1505,9 +1042,9 @@ Messages you on Telegram the moment USDC arrives in a wallet. Put your own addre
 }
 ```
 
-### demo12: wallet balance watch
+### demo09: wallet balance watch
 
-Reads a balance on Ethereum mainnet and only carries on when it drops below a threshold. Reads only; it cannot move funds.
+Watches a wallet and says so when its balance drops below a figure you set. Needs no keys.
 
 ```json
 {
@@ -1585,9 +1122,110 @@ Reads a balance on Ethereum mainnet and only carries on when it drops below a th
 }
 ```
 
-### demo13: webhook to slack
+### demo01: daily web3 digest email
 
-Anything that sends a message to this automation's address gets posted to Slack. Press run to try it before wiring anything up: it stands in a line of its own. Needs a Slack key named slack_key.
+One email a day with new Hacker News stories about web3, blockchain and crypto. Needs a Resend key named resend_key.
+
+```json
+{
+  "nodes": [
+    {
+      "id": "clock",
+      "type": "core.schedule",
+      "params": {
+        "mode": "every",
+        "every": 1,
+        "unit": "days"
+      },
+      "position": {
+        "x": 40,
+        "y": 170
+      }
+    },
+    {
+      "id": "news",
+      "type": "hackernews.search",
+      "params": {
+        "query": "web3 OR blockchain OR ethereum OR solana",
+        "tags": "story",
+        "minPoints": 5,
+        "limit": 25
+      },
+      "position": {
+        "x": 310,
+        "y": 170
+      }
+    },
+    {
+      "id": "fresh",
+      "type": "logic.once",
+      "params": {
+        "key": "{{ $json.id }}"
+      },
+      "position": {
+        "x": 580,
+        "y": 170
+      }
+    },
+    {
+      "id": "digest",
+      "type": "code.js",
+      "params": {
+        "code": "const rows = items.map((i) => i.json)\nif (!rows.length) return []\nconst html = rows\n  .sort((a, b) => (b.points ?? 0) - (a.points ?? 0))\n  .map((s) => `<p><a href=\"${s.url || 'https://news.ycombinator.com/item?id=' + s.id}\">${s.title}</a><br><small>${s.points ?? 0} points</small></p>`)\n  .join('')\nreturn [{ json: { count: rows.length, html } }]",
+        "timeout": 15
+      },
+      "position": {
+        "x": 850,
+        "y": 170
+      }
+    },
+    {
+      "id": "mail",
+      "type": "resend.send",
+      "params": {
+        "credential": "resend_key",
+        "to": "you@example.com",
+        "subject": "Web3 digest: {{ $json.count }} new stories",
+        "html": "{{ $json.html }}"
+      },
+      "position": {
+        "x": 1120,
+        "y": 170
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "clock",
+      "fromPort": "main",
+      "to": "news",
+      "toPort": "main"
+    },
+    {
+      "from": "news",
+      "fromPort": "main",
+      "to": "fresh",
+      "toPort": "main"
+    },
+    {
+      "from": "fresh",
+      "fromPort": "main",
+      "to": "digest",
+      "toPort": "main"
+    },
+    {
+      "from": "digest",
+      "fromPort": "main",
+      "to": "mail",
+      "toPort": "main"
+    }
+  ]
+}
+```
+
+### demo10: webhook to slack
+
+Posts to Slack whenever something calls your webhook address. Needs a Slack key named slack_key and a public address.
 
 ```json
 {
