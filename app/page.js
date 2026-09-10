@@ -174,7 +174,8 @@ export default async function Home() {
         <h2>Themes</h2>
         <p className="sub">
           13 color themes I ripped off of VS Code, plus you can build your own, or
-          share and download others.
+          share and download from the{' '}
+          <Link href="/marketplace/themes" className="inline-link">marketplace</Link>.
         </p>
         <div className="theme-grid">
           {(catalog.themes ?? []).slice(0, 4).map((theme) => (

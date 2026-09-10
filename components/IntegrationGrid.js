@@ -20,11 +20,11 @@ function Logo({ id, size = 26 }) {
 // would say it rather than as a list of field names.
 function needs(spec) {
   const fields = (spec.fields ?? []).filter((f) => f.required !== false)
-  if (!fields.length) return 'nothing to set up'
+  if (!fields.length) return 'Nothing to set up'
   // a label that already says "your" should not get another one
   const labels = fields.map((f) => f.label.toLowerCase().replace(/^your /, ''))
-  if (labels.length === 1) return `you need your ${labels[0]}`
-  return `you need your ${labels.slice(0, -1).join(', ')} and ${labels.at(-1)}`
+  if (labels.length === 1) return `You need your ${labels[0]}`
+  return `You need your ${labels.slice(0, -1).join(', ')} and ${labels.at(-1)}`
 }
 
 export default function IntegrationGrid({ integrations, steps }) {
@@ -53,7 +53,7 @@ export default function IntegrationGrid({ integrations, steps }) {
         className="int-search"
         value={term}
         onChange={(e) => setTerm(e.target.value)}
-        placeholder="search: email, chat, database, chain…"
+        placeholder="Search: email, chat, database, chain…"
       />
       <p className="dimmer" style={{ fontSize: 12.5, margin: '0 0 18px' }}>
         {shown.length} of {integrations.length}
@@ -77,14 +77,14 @@ export default function IntegrationGrid({ integrations, steps }) {
                   <li key={action.type}>
                     <span>
                       <code>{action.type}</code>
-                      {action.poll && <em>waits</em>}
+                      {action.poll && <em>Waits</em>}
                       <small>{action.description || action.label}</small>
                     </span>
                     <button
                       className="btn quiet"
                       onClick={() => copy(action.type, Object.fromEntries((action.params ?? []).map((p) => [p.key, p.default ?? ''])))}
                     >
-                      {copied === action.type ? 'copied' : 'copy'}
+                      {copied === action.type ? 'Copied' : 'Copy'}
                     </button>
                   </li>
                 ))}
@@ -95,7 +95,7 @@ export default function IntegrationGrid({ integrations, steps }) {
                 <span>
                   Sends requests to{' '}
                   {(spec.hosts ?? [])
-                    .map((h) => h.replace(/^a web address you provide.*/, 'an address you provide'))
+                    .map((h) => h.replace(/^a web address you provide.*/, 'An address you provide'))
                     .join(', ')}
                 </span>
               </div>

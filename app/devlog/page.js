@@ -29,7 +29,7 @@ export default async function Devlog() {
             <div>
               <div className="post-title">
                 {post.title}
-                {post.draft && <span className="tag" style={{ marginLeft: 8 }}>draft</span>}
+                {post.draft && <span className="tag" style={{ marginLeft: 8 }}>Draft</span>}
               </div>
               {post.summary && <p className="dim" style={{ margin: '3px 0 0', fontSize: 13.5 }}>{post.summary}</p>}
             </div>

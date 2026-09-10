@@ -29,7 +29,7 @@ export default function ThemeCard({ theme, href }) {
         <span>{theme.appearance}</span>
       </div>
       <div className="theme-actions">
-        <a className="btn" href={href ?? `/api/themes/${theme.id}`} download={`${theme.id}.theme.json`}>download</a>
+        <a className="btn" href={href ?? `/api/themes/${theme.id}`} download={`${theme.id}.theme.json`}>Download</a>
         {theme.author && <span className="dim" style={{ fontSize: 12, alignSelf: 'center' }}>{theme.author}</span>}
       </div>
     </div>

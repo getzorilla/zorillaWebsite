@@ -82,7 +82,7 @@ export default function ProfileForm({ profile, claiming }) {
           <input
             value={form.handle}
             onChange={set('handle')}
-            placeholder="yourname"
+            placeholder="Yourname"
             spellCheck={false}
             autoCapitalize="none"
           />
@@ -118,11 +118,11 @@ export default function ProfileForm({ profile, claiming }) {
       </div>
       <div className="field">
         <label>X</label>
-        <input value={form.x} onChange={set('x')} placeholder="username or link" spellCheck={false} />
+        <input value={form.x} onChange={set('x')} placeholder="Username or link" spellCheck={false} />
       </div>
       <div className="field">
         <label>GitHub</label>
-        <input value={form.github} onChange={set('github')} placeholder="username or link" spellCheck={false} />
+        <input value={form.github} onChange={set('github')} placeholder="Username or link" spellCheck={false} />
       </div>
       <div className="field">
         <label>Website</label>
@@ -130,7 +130,7 @@ export default function ProfileForm({ profile, claiming }) {
       </div>
       <div className="row">
         <button className="btn primary" onClick={submit}>{claiming ? 'Create account' : 'Save'}</button>
-        {saved && <span className="dim" style={{ fontSize: 13 }}>saved</span>}
+        {saved && <span className="dim" style={{ fontSize: 13 }}>Saved</span>}
       </div>
       {problem && <p style={{ color: 'var(--bad)', fontSize: 13 }}>{problem}</p>}
     </div>

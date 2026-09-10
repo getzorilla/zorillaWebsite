@@ -26,7 +26,7 @@ export default function SessionMenu({ user }) {
           router.refresh()
         }}
       >
-        sign out
+        Sign out
       </button>
     </span>
   )

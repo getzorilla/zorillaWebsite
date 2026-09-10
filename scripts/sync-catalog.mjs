@@ -48,6 +48,26 @@ const catalog = {
 
 await writeFile(path.join(here, '../public/catalog.json'), JSON.stringify(catalog, null, 2))
 
+// Demo names are written lowercase for the app's own list. On the marketplace
+// they are headings, so: capitals, except the small words that never take one,
+// and the names that are spelled a particular way.
+const SMALL = new Set(['a', 'an', 'and', 'by', 'for', 'in', 'of', 'on', 'per', 'the', 'to'])
+const SPELLED = {
+  eth: 'ETH', usdc: 'USDC', x: 'X', kol: 'KOL', sms: 'SMS', api: 'API',
+  slack: 'Slack', discord: 'Discord', telegram: 'Telegram', notion: 'Notion',
+  stripe: 'Stripe', gmail: 'Gmail', resend: 'Resend', claude: 'Claude',
+}
+const prettyTitle = (name) => name
+  .replace(/^demo\d+:\s*/, '')
+  .split(' ')
+  .map((word, i) => {
+    const low = word.toLowerCase()
+    if (SPELLED[low]) return SPELLED[low]
+    if (i > 0 && SMALL.has(low)) return low
+    return low.charAt(0).toUpperCase() + low.slice(1)
+  })
+  .join(' ')
+
 // The automations that ship with the app are also the marketplace's first
 // listings. An empty marketplace reads as abandoned, and these are the same
 // files a new install already has, so nothing here is a mock-up.
@@ -58,9 +78,11 @@ for (const file of (await readdir(exampleDir)).filter((f) => f.endsWith('.json')
   const wf = JSON.parse(await readFile(path.join(exampleDir, file), 'utf8'))
   starters.push({
     slug: file.replace(/\.json$/, ''),
-    title: wf.name,
+    // the demoNN prefix orders them in the app's own list; nobody browsing the
+    // marketplace needs to see it
+    title: prettyTitle(wf.name),
     summary: wf.notes ?? '',
-    package: { name: wf.name, nodes: wf.nodes, edges: wf.edges },
+    package: { name: wf.name.replace(/^demo\d+:\s*/, ''), nodes: wf.nodes, edges: wf.edges },
   })
 }
 await writeFile(path.join(here, '../public/starters.json'), JSON.stringify(starters, null, 2))

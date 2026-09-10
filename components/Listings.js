@@ -26,7 +26,7 @@ export function ListingRow({ listing, signedIn = false }) {
         <div style={{ marginTop: 6 }}>
           {(derived.hosts ?? []).slice(0, 3).map((host) => <span key={host} className="tag">{host}</span>)}
           {(derived.credentials ?? []).map((name) => <span key={name} className="tag">key: {name}</span>)}
-          {derived.runsCode && <span className="tag warn">runs custom code</span>}
+          {derived.runsCode && <span className="tag warn">Runs custom code</span>}
         </div>
       </div>
       {isAutomation && (

@@ -27,10 +27,10 @@ export default async function Marketplace({ searchParams }) {
     <main className="page section" style={{ borderTop: 0 }}>
       <h2>Marketplace</h2>
       <div className="row wrap" style={{ marginBottom: 18 }}>
-        {tab('everything', null)}
-        {tab('automations', 'automation')}
-        {tab('integrations', 'integration')}
-        {tab('themes', 'theme')}
+        {tab('Everything', null)}
+        {tab('Automations', 'automation')}
+        {tab('Integrations', 'integration')}
+        {tab('Themes', 'theme')}
         <span className="spacer" />
         <Link href="/publish" className="btn">Publish</Link>
       </div>
@@ -39,7 +39,7 @@ export default async function Marketplace({ searchParams }) {
 
       <form className="row" style={{ marginBottom: 18 }}>
         {kind && <input type="hidden" name="kind" value={kind} />}
-        <input name="q" defaultValue={query} placeholder="search" />
+        <input name="q" defaultValue={query} placeholder="Search" />
         <button className="btn icon-btn" type="submit" aria-label="search" title="search">
           <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
             <circle cx="11" cy="11" r="6.5" />

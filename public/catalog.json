@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-10T22:39:38.026Z",
+  "generatedAt": "2026-09-10T22:57:45.804Z",
   "logos": [
     "airtable",
     "anthropic",
@@ -1240,7 +1240,7 @@
           "type": "number",
           "default": 100,
           "min": 1,
-          "description": "zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind."
+          "description": "Zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind."
         }
       ]
     },
@@ -1367,7 +1367,7 @@
           "label": "Model",
           "type": "text",
           "default": "claude-sonnet-5",
-          "description": "claude-opus-5, claude-sonnet-5, claude-haiku-4-5-20251001, claude-fable-5-1"
+          "description": "Claude-opus-5, claude-sonnet-5, claude-haiku-4-5-20251001, claude-fable-5-1"
         },
         {
           "key": "system",
@@ -1438,7 +1438,7 @@
           "label": "Model",
           "type": "text",
           "default": "deepseek-chat",
-          "description": "deepseek-chat, deepseek-reasoner"
+          "description": "Deepseek-chat, deepseek-reasoner"
         }
       ]
     },
@@ -1518,7 +1518,7 @@
           "type": "number",
           "default": 100,
           "min": 1,
-          "description": "zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind."
+          "description": "Zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind."
         }
       ]
     },
@@ -1551,7 +1551,7 @@
           "label": "Model",
           "type": "text",
           "default": "gemini-2.0-flash",
-          "description": "gemini-2.0-flash, gemini-1.5-pro"
+          "description": "Gemini-2.0-flash, gemini-1.5-pro"
         }
       ]
     },
@@ -1693,7 +1693,7 @@
           "type": "number",
           "default": 100,
           "min": 1,
-          "description": "zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind."
+          "description": "Zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind."
         }
       ]
     },
@@ -1810,7 +1810,7 @@
           "label": "Model",
           "type": "text",
           "default": "gpt-4o-mini",
-          "description": "gpt-4o, gpt-4o-mini, o3-mini"
+          "description": "Gpt-4o, gpt-4o-mini, o3-mini"
         },
         {
           "key": "maxTokens",
@@ -1917,7 +1917,7 @@
           "type": "number",
           "default": 100,
           "min": 1,
-          "description": "zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind."
+          "description": "Zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind."
         }
       ]
     },
@@ -1945,7 +1945,7 @@
           "type": "number",
           "default": 100,
           "min": 1,
-          "description": "zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind."
+          "description": "Zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind."
         }
       ]
     },
@@ -2031,7 +2031,7 @@
           "type": "number",
           "default": 100,
           "min": 1,
-          "description": "zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind."
+          "description": "Zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind."
         }
       ]
     },
@@ -2231,7 +2231,7 @@
           "type": "number",
           "default": 25,
           "min": 10,
-          "description": "zorilla keeps asking for more pages until it has this many."
+          "description": "Zorilla keeps asking for more pages until it has this many."
         }
       ]
     }

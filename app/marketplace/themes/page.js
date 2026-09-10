@@ -15,19 +15,19 @@ export default async function Themes() {
     <main className="page section" style={{ borderTop: 0 }}>
       <h2>Themes</h2>
       <p className="sub">
-        Drop a file into <code>~/.zorilla/themes/</code> and hit refresh in the themes panel.
+        Drop a file into <code>~/.zorilla/themes/</code> and press Refresh in the Themes panel.
       </p>
 
-      <p className="dim" style={{ fontSize: 13, marginTop: 26 }}>{shipped.length} already installed</p>
+      <p className="dim" style={{ fontSize: 13, marginTop: 26 }}>Already installed: {shipped.length}</p>
       <div className="theme-grid">
         {shipped.map((theme) => <ThemeCard key={theme.id} theme={theme} />)}
       </div>
 
-      <h2 style={{ marginTop: 44 }}>shared by people</h2>
+      <h2 style={{ marginTop: 44 }}>Shared by people</h2>
       {published.length === 0 ? (
         <p className="sub">
           Nothing yet. Copy one in the app, change the hex values,{' '}
-          <Link href="/publish" style={{ color: 'var(--link)' }}>publish it</Link>.
+          <Link href="/publish" style={{ color: 'var(--link)' }}>Publish it</Link>.
         </p>
       ) : (
         <div className="list">

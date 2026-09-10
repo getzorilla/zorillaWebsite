@@ -43,11 +43,11 @@ export default function PublishForm() {
       </div>
       <div className="field">
         <label>Name</label>
-        <input value={form.title} onChange={set('title')} placeholder="eth price alert" />
+        <input value={form.title} onChange={set('title')} placeholder="ETH price alert" />
       </div>
       <div className="field">
         <label>One line about it</label>
-        <input value={form.summary} onChange={set('summary')} placeholder="emails you when eth crosses a price you pick" />
+        <input value={form.summary} onChange={set('summary')} placeholder="Emails you when ETH crosses a price you pick" />
       </div>
       <div className="field">
         <label>The exported file</label>
