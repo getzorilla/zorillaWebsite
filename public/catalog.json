@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-10T00:09:42.087Z",
+  "generatedAt": "2026-09-10T00:32:17.759Z",
   "nodes": [
     {
       "outputs": [
@@ -2147,6 +2147,7 @@
           "placeholder": "pat…"
         }
       ],
+      "identity": null,
       "fromIntegration": true,
       "hosts": [
         "api.airtable.com"
@@ -2168,6 +2169,7 @@
           "placeholder": "sk-ant-…"
         }
       ],
+      "identity": null,
       "fromIntegration": true,
       "hosts": [
         "api.anthropic.com"
@@ -2189,6 +2191,7 @@
           "placeholder": "sk-…"
         }
       ],
+      "identity": null,
       "fromIntegration": true,
       "hosts": [
         "api.deepseek.com"
@@ -2210,6 +2213,10 @@
           "placeholder": "https://discord.com/api/webhooks/…"
         }
       ],
+      "identity": {
+        "webhook": "name",
+        "in channel": "channel_id"
+      },
       "fromIntegration": true,
       "hosts": [
         "a web address you provide (Webhook URL)"
@@ -2230,6 +2237,7 @@
           "required": true
         }
       ],
+      "identity": null,
       "fromIntegration": true,
       "hosts": [
         "api.etherscan.io"
@@ -2253,6 +2261,7 @@
           "placeholder": "AIza…"
         }
       ],
+      "identity": null,
       "fromIntegration": true,
       "hosts": [
         "generativelanguage.googleapis.com"
@@ -2274,6 +2283,9 @@
           "placeholder": "ntn_…"
         }
       ],
+      "identity": {
+        "as": "bot.owner.user.name"
+      },
       "fromIntegration": true,
       "hosts": [
         "api.notion.com"
@@ -2295,6 +2307,7 @@
           "placeholder": "sk-…"
         }
       ],
+      "identity": null,
       "fromIntegration": true,
       "hosts": [
         "api.openai.com"
@@ -2323,6 +2336,7 @@
           "description": "Optional. Steps use this unless they set their own."
         }
       ],
+      "identity": null,
       "fromIntegration": true,
       "hosts": [
         "api.resend.com"
@@ -2344,6 +2358,10 @@
           "placeholder": "xoxb-…"
         }
       ],
+      "identity": {
+        "workspace": "team",
+        "as": "user"
+      },
       "fromIntegration": true,
       "hosts": [
         "slack.com"
@@ -2365,6 +2383,10 @@
           "placeholder": "sk_live_… or sk_test_…"
         }
       ],
+      "identity": {
+        "": "business_profile.name",
+        "account": "id"
+      },
       "fromIntegration": true,
       "hosts": [
         "api.stripe.com"
@@ -2391,6 +2413,7 @@
           "required": true
         }
       ],
+      "identity": null,
       "fromIntegration": true,
       "hosts": [
         "a web address you provide (Project URL)"
@@ -2418,6 +2441,9 @@
           "placeholder": "123456789"
         }
       ],
+      "identity": {
+        "bot": "result.username"
+      },
       "fromIntegration": true,
       "hosts": [
         "api.telegram.org"
@@ -2450,6 +2476,7 @@
           "placeholder": "+15551234567"
         }
       ],
+      "identity": null,
       "fromIntegration": true,
       "hosts": [
         "api.twilio.com"

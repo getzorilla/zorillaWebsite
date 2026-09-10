@@ -346,7 +346,7 @@ function renderKeysInto(host) {
     for (const cred of state.credentials) {
       const meta = el('div', { class: 'meta' },
         el('div', { class: 'row-inline' }, logoEl(cred.type, 20), el('code', { text: cred.name })),
-        el('div', { class: 'hint', text: typeLabel(cred.type) }))
+        el('div', { class: 'hint', text: cred.points ? `${typeLabel(cred.type)} · ${cred.points}` : typeLabel(cred.type) }))
       const actions = el('div', { class: 'actions' })
 
       if (state.credentialTypes.get(cred.type)?.checkable) {
@@ -1151,8 +1151,9 @@ function renderCanvas() {
     const credParam = (def?.params ?? []).find((p) => p.type === 'credential' && p.key === 'credential')
     if (credParam) {
       const chosen = node.params[credParam.key]
+      const points = state.credentials.find((c) => c.name === chosen)?.points
       box.append(chosen
-        ? el('div', { class: 'node-key', text: `as ${chosen}` })
+        ? el('div', { class: 'node-key', text: points ? `${chosen} · ${points}` : `as ${chosen}` })
         : el('div', { class: 'node-key missing', text: 'no key chosen' }))
     }
 
@@ -1573,7 +1574,9 @@ function renderInspector() {
       control = el('select')
       control.append(new Option('— pick a saved key —', ''))
       const matching = state.credentials.filter((c) => !param.credentialType || c.type === param.credentialType)
-      for (const cred of matching) control.append(new Option(`${cred.name} · ${typeLabel(cred.type)}`, cred.name))
+      for (const cred of matching) {
+        control.append(new Option(cred.points ? `${cred.name} · ${cred.points}` : `${cred.name} · ${typeLabel(cred.type)}`, cred.name))
+      }
       control.value = value ?? ''
       control.onchange = () => { set(control.value); renderCanvas(); selectNode(node.id) }
 

@@ -1,0 +1,1006 @@
+# zorilla, for agents
+
+zorilla runs automations on one person's own machine. An automation is a JSON file:
+steps, and wires between them. This file lists every step, what it takes, and the rules
+the engine enforces. It is generated from the running catalogue.
+
+Steps: 48. Integrations: 15. Generated 2026-09-10.
+
+## The file
+
+```json
+{
+  "name": "eth price to discord",
+  "folder": "examples",
+  "active": false,
+  "nodes": [
+    {
+      "id": "clock",
+      "type": "core.schedule",
+      "params": {
+        "mode": "every",
+        "every": 10,
+        "unit": "minutes"
+      },
+      "position": {
+        "x": 60,
+        "y": 200
+      }
+    },
+    {
+      "id": "price",
+      "type": "coingecko.price",
+      "params": {
+        "ids": "ethereum",
+        "currency": "usd"
+      },
+      "position": {
+        "x": 330,
+        "y": 200
+      }
+    },
+    {
+      "id": "post",
+      "type": "discord.post",
+      "params": {
+        "credential": "signals_webhook",
+        "content": "ETH ${{ $json.ethereum.usd }}"
+      },
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "clock",
+      "fromPort": "main",
+      "to": "price",
+      "toPort": "main"
+    },
+    {
+      "from": "price",
+      "fromPort": "main",
+      "to": "post",
+      "toPort": "main"
+    }
+  ]
+}
+```
+
+## Rules
+
+- Every step takes a list of items and returns a list of items. An item is `{ "json": { ... } }`, and may also carry `binary` for files.
+- A step returning nothing passes its input through.
+- Cycles are refused before a run starts. There is no loop step.
+- Exactly one step should have category `trigger`. Without one, nothing starts.
+- `{{ ... }}` in any parameter is JavaScript over `$json` (this item), `$items`, `$index`, `$now`, `$creds`.
+- A parameter that is only an expression keeps its type: `{{ $json.n * 2 }}` stays a number.
+- A step receives only the keys named on it. `$creds` holds nothing else.
+- Amounts from chain steps are integers, handed on as strings. Do not put them through a float.
+- Every step may set `retries` (0-5), `retryWait` (milliseconds) and `onError`: `stop`, `continue`, or `errorOutput`. With `errorOutput` the step grows a second port named `error` carrying `{ error, step, at }`.
+- Steps that read a list keep asking for pages until they have `limit` items, and say in the log whether more were left.
+- Steps whose category is `trigger` and which poll (marked below) fire on their own timer and pass on only what they have not seen before.
+
+## Keys
+
+A step names a key; it never carries the value. The person installing it binds that name
+to their own saved key. Use plain names like `my_slack`, `signals_webhook`.
+
+## Steps
+
+### action
+
+- **`gmail.send`** (action) — From your Gmail, with an app password.
+  - `credential`, credential, a saved gmail key — Gmail key
+  - `to`, text — To
+  - `subject`, text — Subject
+  - `html`, textarea — Message
+- **`net.http`** (action) — Calls a URL, passes the response on.
+  - `method`, select, default "GET", one of: GET, POST, PUT, PATCH, DELETE — Method
+  - `url`, text — URL
+  - `credential`, credential — Use a saved key. Adds what the service needs to authenticate. No header to write.
+  - `headers`, keyvalue — Extra headers
+  - `sendBody`, boolean, default false — Send a body
+  - `bodyType`, select, default "json", one of: json, text, form — Body format
+  - `body`, textarea — Body
+  - `timeout`, number, default 30 — Timeout (seconds)
+  - `failOnError`, boolean, default true — Stop on an error status
+
+### Airtable
+
+Records in a base. Contacts: api.airtable.com.
+
+- **`airtable.create`** (action) — Add an Airtable record
+  - `credential`, credential, a saved airtable key — Airtable key
+  - `baseId`, text — Base id
+  - `table`, text — Table
+  - `fields`, keyvalue — Fields
+- **`airtable.list`** (action) — One item per record.
+  - `credential`, credential, a saved airtable key — Airtable key
+  - `baseId`, text — Base id
+  - `table`, text — Table
+  - `limit`, number, default 100 — How many at most. zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind.
+- **`airtable.newRecord`** (trigger, polls) — Fires when a record is added. One item per record.
+  - `credential`, credential, a saved airtable key — Airtable key
+  - `baseId`, text — Base id
+  - `table`, text — Table
+  - `every`, number, default 5 — Check every
+  - `unit`, select, default "minutes", one of: minutes, hours, days — Unit
+
+### Claude
+
+Anthropic's models. Contacts: api.anthropic.com.
+
+- **`anthropic.ask`** (action) — Ask Claude
+  - `credential`, credential, a saved anthropic key — Claude key
+  - `prompt`, textarea — Prompt. Put {{ $json.field }} in here to feed it whatever the previous step produced.
+  - `model`, text, default "claude-sonnet-5" — Model. claude-opus-5, claude-sonnet-5, claude-haiku-4-5-20251001, claude-fable-5-1
+  - `system`, textarea — Instructions. Optional. How it should behave.
+  - `maxTokens`, number, default 1024 — Longest reply
+
+### CoinGecko
+
+Coin prices. Needs no key. Contacts: api.coingecko.com.
+
+- **`coingecko.price`** (action) — Current price of one or more coins.
+  - `ids`, text, default "ethereum" — Coins. CoinGecko ids, comma separated. ethereum, bitcoin, solana.
+  - `currency`, text, default "usd" — In
+
+### DeepSeek
+
+DeepSeek's models. Contacts: api.deepseek.com.
+
+- **`deepseek.ask`** (action) — Ask DeepSeek
+  - `credential`, credential, a saved deepseek key — DeepSeek key
+  - `prompt`, textarea — Prompt. Put {{ $json.field }} in here to feed it whatever the previous step produced.
+  - `model`, text, default "deepseek-chat" — Model. deepseek-chat, deepseek-reasoner
+
+### Discord
+
+Post through a channel webhook. Contacts: a web address you provide (Webhook URL).
+
+- **`discord.post`** (action) — Post to Discord
+  - `credential`, credential, a saved discord key — Discord key
+  - `content`, textarea — Message
+  - `username`, text — Show as. Optional. Overrides the webhook's name.
+
+### Etherscan
+
+Transaction history, which a node cannot give you. Contacts: api.etherscan.io.
+
+- **`etherscan.transactions`** (web3) — One item per transaction, newest first.
+  - `credential`, credential, a saved etherscan key — Etherscan key
+  - `address`, text — Wallet address
+  - `chainId`, select, default "1", one of: 1, 11155111 — Network
+  - `limit`, number, default 100 — How many at most. zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind.
+
+### Gemini
+
+Google's models. Contacts: generativelanguage.googleapis.com.
+
+- **`gemini.ask`** (action) — Ask Gemini
+  - `credential`, credential, a saved gemini key — Gemini key
+  - `prompt`, textarea — Prompt. Put {{ $json.field }} in here to feed it whatever the previous step produced.
+  - `model`, text, default "gemini-2.0-flash" — Model. gemini-2.0-flash, gemini-1.5-pro
+
+### logic
+
+- **`flow.forget`** (logic) — Resets what first time only and when this changes remember.
+  - `key`, text — Which memory. Blank clears the default. Otherwise match the key that step used.
+- **`logic.changed`** (logic) — Skips repeats. Only passes on when the value moves.
+  - `value`, text — Watch this
+  - `direction`, select, default "becomesTrue", one of: becomesTrue, becomesFalse, changes — Pass it on when
+  - `key`, text — Track separately by. Optional. {{ $json.address }} tracks each wallet on its own.
+- **`logic.filter`** (logic) — Keeps the items that match.
+  - `value`, text — Value
+  - `operation`, select, default "isNotEmpty", one of: equals, notEquals, contains, notContains, greater, less, isEmpty, isNotEmpty, isTrue — Condition
+  - `compare`, text — Compared with
+- **`logic.if`** (logic) — Two paths: true and false.
+  - ports: true, false
+  - `value`, text — Value
+  - `operation`, select, default "equals", one of: equals, notEquals, contains, notContains, greater, less, isEmpty, isNotEmpty, isTrue — Condition
+  - `compare`, text — Compared with
+- **`logic.moved`** (logic) — Passes on when a number has moved by enough since last time.
+  - `value`, text — Watch this
+  - `amount`, number, default 5 — Moved by at least
+  - `unit`, select, default "percent", one of: percent, absolute — Measured in
+  - `direction`, select, default "either", one of: either, up, down — Which way
+  - `key`, text — Track separately by. Optional. {{ $json.symbol }} follows each coin on its own.
+- **`logic.once`** (logic) — Passes once, never again.
+  - `key`, text — Same thing means. Optional. {{ $json.transactionHash }} = once per transaction, not once ever.
+
+### Notion
+
+Databases and pages. Contacts: api.notion.com.
+
+- **`notion.createPage`** (action) — Add a Notion page
+  - `credential`, credential, a saved notion key — Notion key
+  - `databaseId`, text — Database id
+  - `properties`, code, default "{\n  \"Name\": { \"title\": [{ \"text\": { \"content\": \"Hello\" } }] }\n}" — Properties. Notion's own property shape. Copy one from their docs and edit it.
+- **`notion.newRow`** (trigger, polls) — Fires when a row is added to a database. One item per row.
+  - `credential`, credential, a saved notion key — Notion key
+  - `databaseId`, text — Database id
+  - `every`, number, default 5 — Check every
+  - `unit`, select, default "minutes", one of: minutes, hours, days — Unit
+- **`notion.query`** (action) — One item per row.
+  - `credential`, credential, a saved notion key — Notion key
+  - `databaseId`, text — Database id
+  - `limit`, number, default 100 — How many at most. zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind.
+
+### ChatGPT
+
+OpenAI's models. Contacts: api.openai.com.
+
+- **`openai.ask`** (action) — Ask ChatGPT
+  - `credential`, credential, a saved openai key — ChatGPT key
+  - `prompt`, textarea — Prompt. Put {{ $json.field }} in here to feed it whatever the previous step produced.
+  - `model`, text, default "gpt-4o-mini" — Model. gpt-4o, gpt-4o-mini, o3-mini
+  - `maxTokens`, number, default 1024 — Longest reply
+
+### output
+
+- **`file.save`** (output) — Writes a file the run is carrying into your zorilla files folder.
+  - `which`, text, default "file" — Which file. The name it travels under. Downloads arrive as "file".
+  - `name`, text — Save it as. Leave blank to keep its own name.
+- **`flow.stop`** (output) — Stops a repeating workflow once it is done.
+  - `reason`, text — Why
+- **`output.log`** (output) — Writes a line to the run log.
+  - `message`, text, default "{{ $json }}" — Message
+
+### Resend
+
+Email built for automations. Contacts: api.resend.com.
+
+- **`resend.send`** (action) — Sends one email per item, with any files the item is carrying.
+  - `credential`, credential, a saved resend key — Resend key
+  - `to`, text — To
+  - `subject`, text — Subject
+  - `html`, textarea — Message
+  - `from`, text — From. Leave blank to use the sender saved with the key.
+
+### Slack
+
+Post into a channel. Contacts: slack.com.
+
+- **`slack.post`** (action) — Posts one message per item.
+  - `credential`, credential, a saved slack key — Slack key
+  - `channel`, text — Channel
+  - `text`, textarea — Message
+
+### Stripe
+
+Payments data. Contacts: api.stripe.com.
+
+- **`stripe.charges`** (action) — One item per payment.
+  - `credential`, credential, a saved stripe key — Stripe key
+  - `limit`, number, default 100 — How many at most. zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind.
+- **`stripe.customers`** (action) — One item per customer.
+  - `credential`, credential, a saved stripe key — Stripe key
+  - `limit`, number, default 100 — How many at most. zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind.
+- **`stripe.newCharge`** (trigger, polls) — Fires when a payment goes through. One item per payment.
+  - `credential`, credential, a saved stripe key — Stripe key
+  - `every`, number, default 5 — Check every
+  - `unit`, select, default "minutes", one of: minutes, hours, days — Unit
+
+### Supabase
+
+Read and write rows in your database. Contacts: a web address you provide (Project URL).
+
+- **`supabase.insert`** (action) — Add a row (Supabase)
+  - `credential`, credential, a saved supabase key — Supabase key
+  - `table`, text — Table
+  - `row`, keyvalue — Fields
+- **`supabase.select`** (action) — One item per row.
+  - `credential`, credential, a saved supabase key — Supabase key
+  - `table`, text — Table
+  - `columns`, text, default "*" — Columns
+  - `limit`, number, default 100 — How many at most. zorilla keeps asking for more pages until it has this many, and says in the log whether any were left behind.
+
+### Telegram
+
+Send messages from a bot, and hear back. Contacts: api.telegram.org.
+
+- **`telegram.messages`** (trigger, polls) — Fires when somebody messages your bot. One item per message.
+  - `credential`, credential, a saved telegram key — Telegram key
+  - `every`, number, default 5 — Check every
+  - `unit`, select, default "minutes", one of: minutes, hours, days — Unit
+- **`telegram.send`** (action) — Send a Telegram message
+  - `credential`, credential, a saved telegram key — Telegram key
+  - `text`, textarea — Message
+  - `chatId`, text — Chat id. Leave blank to use the one saved with the key.
+
+### transform
+
+- **`code.js`** (transform) — Your own JavaScript over the items, in a process of its own.
+  - `code`, code, default "return items.map(item => ({ json: { ...item.json } }))" — Code. Gets items, $creds, log. Return [{ json }], or nothing to pass through.
+  - `credential`, credential — Key it may use. Optional. Only the key you pick here is handed across.
+  - `timeout`, number, default 15 — Stop it after (seconds)
+- **`file.fromText`** (transform) — Turns text into a file, so a spreadsheet or report can be attached to an email.
+  - `text`, textarea — Contents
+  - `name`, text, default "report.csv" — File name
+  - `as`, text, default "file" — Carry it as
+- **`file.read`** (transform) — Picks up a file from your zorilla files folder so a later step can send it.
+  - `name`, text — File name
+  - `as`, text, default "file" — Carry it as
+  - `asText`, boolean, default false — Also read it as text
+- **`transform.set`** (transform) — Adds or replaces fields on every item.
+  - `fields`, keyvalue — Fields. A bare expression keeps its type: {{ $json.n * 2 }} stays a number.
+  - `keepOnly`, boolean, default false — Drop the other fields
+
+### trigger
+
+- **`core.manual`** (trigger) — Runs when you press run.
+- **`core.schedule`** (trigger) — Runs on a repeat, or once at a set time.
+  - `mode`, select, default "every", one of: every, once — When
+  - `every`, number, default 15 — Run every
+  - `unit`, select, default "minutes", one of: minutes, hours, days — Unit
+  - `at`, datetime — Date and time. Runs once when this time passes, then never again. A time already gone runs at the next start.
+- **`core.webhook`** (trigger) — Runs when something calls a URL on this machine.
+  - `path`, text, default "my-hook" — Path. The address ends /hook/<path>. Local only until you put a tunnel in front of it.
+  - `secret`, text — Secret. Optional, and worth setting the moment this is reachable from the internet. The caller has to send it as ?secret=… or an X-Zorilla-Secret header.
+  - `method`, select, default "POST", one of: GET, POST, PUT, DELETE — Method
+
+### Twilio
+
+Text messages. Contacts: api.twilio.com.
+
+- **`twilio.sendSms`** (action) — Sends one text message per item.
+  - `credential`, credential, a saved twilio key — Twilio key
+  - `to`, text — To. Include the country code. Trial accounts can only text verified numbers.
+  - `body`, textarea — Message
+
+### web3
+
+- **`web3.balance`** (web3) — How much ETH a wallet holds.
+  - `chain`, select, default "ethereum", one of: ethereum, sepolia — Network
+  - `address`, text — Wallet or ENS name
+  - `rpc`, credential, a saved evmRpc key — RPC endpoint. Optional. Public endpoints rate limit.
+- **`web3.ens`** (web3) — Name to address, or back.
+  - `direction`, select, default "resolve", one of: resolve, reverse — Direction
+  - `value`, text — Name or address
+  - `rpc`, credential, a saved evmRpc key — RPC endpoint. Optional. Public endpoints rate limit.
+- **`web3.erc20Balance`** (web3) — How much of one token a wallet holds.
+  - `chain`, select, default "ethereum", one of: ethereum, sepolia — Network
+  - `token`, text — Token contract
+  - `address`, text — Wallet or ENS name
+  - `rpc`, credential, a saved evmRpc key — RPC endpoint. Optional. Public endpoints rate limit.
+- **`web3.gas`** (web3) — What a transaction costs to send right now.
+  - `chain`, select, default "ethereum", one of: ethereum, sepolia — Network
+  - `rpc`, credential, a saved evmRpc key — RPC endpoint. Optional. Public endpoints rate limit.
+- **`web3.logs`** (web3) — Recent events from a contract. One item each.
+  - `chain`, select, default "ethereum", one of: ethereum, sepolia — Network
+  - `address`, text — Contract address
+  - `event`, text — Event
+  - `match`, keyvalue — Only where. An indexed argument and the value to match. to = your wallet gives you only transfers that landed there. Without this a busy token returns every transfer on the network.
+  - `blocks`, number, default 1000 — Recent blocks. Public endpoints cap this. A few thousand is the ceiling.
+  - `rpc`, credential, a saved evmRpc key — RPC endpoint. Optional. Public endpoints rate limit.
+- **`web3.prepare`** (web3) — What a transaction would do and cost. Sends nothing.
+  - `chain`, select, default "ethereum", one of: ethereum, sepolia — Network
+  - `from`, text — Send from
+  - `to`, text — Send to
+  - `value`, text, default "0" — ETH to send
+  - `signature`, text — Contract function. Leave blank to send plain ETH.
+  - `args`, list — Values
+  - `reason`, text — What it is for. Shown before anyone approves it.
+  - `rpc`, credential, a saved evmRpc key — RPC endpoint. Optional. Public endpoints rate limit.
+- **`web3.read`** (web3) — Asks a contract a question. Costs nothing.
+  - `chain`, select, default "ethereum", one of: ethereum, sepolia — Network
+  - `address`, text — Contract address
+  - `signature`, text — Function
+  - `args`, list — Values. In the order the function takes them.
+  - `rpc`, credential, a saved evmRpc key — RPC endpoint. Optional. Public endpoints rate limit.
+
+## Keys you can save
+
+- `airtable` — Airtable: token
+- `anthropic` — Claude: apiKey
+- `apiHeader` — API key in a header: name, value
+- `bearer` — Bearer token: token
+- `deepseek` — DeepSeek: apiKey
+- `discord` — Discord: webhookUrl
+- `etherscan` — Etherscan: apiKey
+- `evmRpc` — Ethereum RPC endpoint: url
+- `gemini` — Gemini: apiKey
+- `generic` — Anything else
+- `github` — GitHub: token
+- `gmail` — Gmail: user, appPassword
+- `notion` — Notion: token
+- `openai` — ChatGPT: apiKey
+- `resend` — Resend: apiKey, from (optional)
+- `slack` — Slack: botToken
+- `stripe` — Stripe: secretKey
+- `supabase` — Supabase: url, serviceKey
+- `telegram` — Telegram: botToken, chatId (optional)
+- `twilio` — Twilio: accountSid, authToken, fromNumber
+
+## Working examples
+
+### daily digest email
+
+One mail a day. Needs a saved Gmail key named my_gmail — an app password, not your account password.
+
+```json
+{
+  "nodes": [
+    {
+      "id": "clock",
+      "type": "core.schedule",
+      "params": {
+        "mode": "every",
+        "every": 1,
+        "unit": "days"
+      },
+      "position": {
+        "x": 60,
+        "y": 200
+      }
+    },
+    {
+      "id": "price",
+      "type": "coingecko.price",
+      "params": {
+        "ids": "ethereum,bitcoin",
+        "currency": "usd"
+      },
+      "position": {
+        "x": 320,
+        "y": 200
+      }
+    },
+    {
+      "id": "gas",
+      "type": "web3.gas",
+      "params": {
+        "chain": "ethereum"
+      },
+      "position": {
+        "x": 320,
+        "y": 340
+      }
+    },
+    {
+      "id": "mail",
+      "type": "gmail.send",
+      "params": {
+        "credential": "my_gmail",
+        "to": "you@example.com",
+        "subject": "morning digest",
+        "html": "ETH {{ $json.ethereum.usd }} · BTC {{ $json.bitcoin.usd }}"
+      },
+      "position": {
+        "x": 640,
+        "y": 260
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "clock",
+      "fromPort": "main",
+      "to": "price",
+      "toPort": "main"
+    },
+    {
+      "from": "clock",
+      "fromPort": "main",
+      "to": "gas",
+      "toPort": "main"
+    },
+    {
+      "from": "price",
+      "fromPort": "main",
+      "to": "mail",
+      "toPort": "main"
+    }
+  ]
+}
+```
+
+### eth price to discord
+
+Every 10 minutes. The channel is whichever one you made the webhook in, so a webhook made in #signals posts to #signals.
+
+```json
+{
+  "nodes": [
+    {
+      "id": "clock",
+      "type": "core.schedule",
+      "params": {
+        "mode": "every",
+        "every": 10,
+        "unit": "minutes"
+      },
+      "position": {
+        "x": 60,
+        "y": 200
+      }
+    },
+    {
+      "id": "price",
+      "type": "coingecko.price",
+      "params": {
+        "ids": "ethereum",
+        "currency": "usd"
+      },
+      "position": {
+        "x": 330,
+        "y": 200
+      }
+    },
+    {
+      "id": "post",
+      "type": "discord.post",
+      "params": {
+        "credential": "signals_webhook",
+        "content": "ETH ${{ $json.ethereum.usd }}",
+        "username": "zorilla"
+      },
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "clock",
+      "fromPort": "main",
+      "to": "price",
+      "toPort": "main"
+    },
+    {
+      "from": "price",
+      "fromPort": "main",
+      "to": "post",
+      "toPort": "main"
+    }
+  ]
+}
+```
+
+### eth price watch
+
+Runs with no keys at all. Reads a public price feed and stays quiet until the price crosses a line.
+
+```json
+{
+  "nodes": [
+    {
+      "id": "clock",
+      "type": "core.schedule",
+      "params": {
+        "mode": "every",
+        "every": 15,
+        "unit": "minutes"
+      },
+      "position": {
+        "x": 60,
+        "y": 200
+      }
+    },
+    {
+      "id": "price",
+      "type": "coingecko.price",
+      "params": {
+        "ids": "ethereum",
+        "currency": "usd"
+      },
+      "position": {
+        "x": 320,
+        "y": 200
+      }
+    },
+    {
+      "id": "cross",
+      "type": "logic.changed",
+      "params": {
+        "value": "{{ $json.ethereum.usd > 4000 }}",
+        "direction": "becomesTrue",
+        "key": ""
+      },
+      "position": {
+        "x": 580,
+        "y": 200
+      }
+    },
+    {
+      "id": "say",
+      "type": "output.log",
+      "params": {
+        "message": "ETH is {{ $json.ethereum.usd }} — swap this step for an email or a text"
+      },
+      "position": {
+        "x": 840,
+        "y": 200
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "clock",
+      "fromPort": "main",
+      "to": "price",
+      "toPort": "main"
+    },
+    {
+      "from": "price",
+      "fromPort": "main",
+      "to": "cross",
+      "toPort": "main"
+    },
+    {
+      "from": "cross",
+      "fromPort": "main",
+      "to": "say",
+      "toPort": "main"
+    }
+  ]
+}
+```
+
+### hourly price email
+
+Every hour by email. Resend only delivers from a domain you have verified with them.
+
+```json
+{
+  "nodes": [
+    {
+      "id": "clock",
+      "type": "core.schedule",
+      "params": {
+        "mode": "every",
+        "every": 1,
+        "unit": "hours"
+      },
+      "position": {
+        "x": 60,
+        "y": 200
+      }
+    },
+    {
+      "id": "price",
+      "type": "coingecko.price",
+      "params": {
+        "ids": "ethereum,bitcoin",
+        "currency": "usd"
+      },
+      "position": {
+        "x": 330,
+        "y": 200
+      }
+    },
+    {
+      "id": "mail",
+      "type": "resend.send",
+      "params": {
+        "credential": "my_resend",
+        "to": "you@example.com",
+        "subject": "ETH {{ $json.ethereum.usd }}",
+        "html": "<p>ETH {{ $json.ethereum.usd }}<br>BTC {{ $json.bitcoin.usd }}</p>",
+        "from": ""
+      },
+      "position": {
+        "x": 600,
+        "y": 200
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "clock",
+      "fromPort": "main",
+      "to": "price",
+      "toPort": "main"
+    },
+    {
+      "from": "price",
+      "fromPort": "main",
+      "to": "mail",
+      "toPort": "main"
+    }
+  ]
+}
+```
+
+### prepare a transaction
+
+Works out exactly what a transaction would do and what it would cost. It signs nothing and sends nothing.
+
+```json
+{
+  "nodes": [
+    {
+      "id": "start",
+      "type": "core.manual",
+      "params": {},
+      "position": {
+        "x": 60,
+        "y": 200
+      }
+    },
+    {
+      "id": "prep",
+      "type": "web3.prepare",
+      "params": {
+        "chain": "sepolia",
+        "to": "vitalik.eth",
+        "value": "0.001"
+      },
+      "position": {
+        "x": 340,
+        "y": 200
+      }
+    },
+    {
+      "id": "say",
+      "type": "output.log",
+      "params": {
+        "message": "would cost {{ $json.estimatedFeeEth }} ETH in fees; signed: {{ $json.signed }}"
+      },
+      "position": {
+        "x": 640,
+        "y": 200
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "start",
+      "fromPort": "main",
+      "to": "prep",
+      "toPort": "main"
+    },
+    {
+      "from": "prep",
+      "fromPort": "main",
+      "to": "say",
+      "toPort": "main"
+    }
+  ]
+}
+```
+
+### usdc landing in a wallet
+
+Watches USDC landing in one wallet. Put your own address in "only where": the endpoint filters, so this stays cheap. Never reports the same transaction twice.
+
+```json
+{
+  "nodes": [
+    {
+      "id": "clock",
+      "type": "core.schedule",
+      "params": {
+        "mode": "every",
+        "every": 5,
+        "unit": "minutes"
+      },
+      "position": {
+        "x": 60,
+        "y": 200
+      }
+    },
+    {
+      "id": "events",
+      "type": "web3.logs",
+      "params": {
+        "chain": "ethereum",
+        "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "event": "event Transfer(address indexed from, address indexed to, uint256 value)",
+        "match": [
+          {
+            "name": "to",
+            "value": "0x28C6c06298d514Db089934071355E5743bf21d60"
+          }
+        ],
+        "blocks": 300,
+        "rpc": ""
+      },
+      "position": {
+        "x": 320,
+        "y": 200
+      }
+    },
+    {
+      "id": "once",
+      "type": "logic.once",
+      "params": {
+        "key": "{{ $json.transactionHash }}"
+      },
+      "position": {
+        "x": 860,
+        "y": 200
+      }
+    },
+    {
+      "id": "say",
+      "type": "output.log",
+      "params": {
+        "message": "large transfer in {{ $json.transactionHash }}"
+      },
+      "position": {
+        "x": 1120,
+        "y": 200
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "clock",
+      "fromPort": "main",
+      "to": "events",
+      "toPort": "main"
+    },
+    {
+      "from": "once",
+      "fromPort": "main",
+      "to": "say",
+      "toPort": "main"
+    },
+    {
+      "from": "events",
+      "fromPort": "main",
+      "to": "once",
+      "toPort": "main"
+    }
+  ]
+}
+```
+
+### wallet balance watch
+
+Reads a balance on Ethereum mainnet and only carries on when it drops below a threshold. Reads only; it cannot move funds.
+
+```json
+{
+  "nodes": [
+    {
+      "id": "clock",
+      "type": "core.schedule",
+      "params": {
+        "mode": "every",
+        "every": 1,
+        "unit": "hours"
+      },
+      "position": {
+        "x": 60,
+        "y": 200
+      }
+    },
+    {
+      "id": "bal",
+      "type": "web3.balance",
+      "params": {
+        "chain": "ethereum",
+        "address": "vitalik.eth"
+      },
+      "position": {
+        "x": 320,
+        "y": 200
+      }
+    },
+    {
+      "id": "low",
+      "type": "logic.if",
+      "params": {
+        "value": "{{ Number($json.eth) }}",
+        "operation": "less",
+        "compare": "100"
+      },
+      "position": {
+        "x": 580,
+        "y": 200
+      }
+    },
+    {
+      "id": "note",
+      "type": "output.log",
+      "params": {
+        "message": "Balance is {{ $json.eth }} ETH — below the line"
+      },
+      "position": {
+        "x": 860,
+        "y": 140
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "clock",
+      "fromPort": "main",
+      "to": "bal",
+      "toPort": "main"
+    },
+    {
+      "from": "bal",
+      "fromPort": "main",
+      "to": "low",
+      "toPort": "main"
+    },
+    {
+      "from": "low",
+      "fromPort": "true",
+      "to": "note",
+      "toPort": "main"
+    }
+  ]
+}
+```
+
+### webhook to slack
+
+POST to http://127.0.0.1:5177/hook/alert and it posts to Slack. Needs a saved Slack key named my_slack.
+
+```json
+{
+  "nodes": [
+    {
+      "id": "hook",
+      "type": "core.webhook",
+      "params": {
+        "path": "alert",
+        "method": "POST"
+      },
+      "position": {
+        "x": 60,
+        "y": 200
+      }
+    },
+    {
+      "id": "shape",
+      "type": "transform.set",
+      "params": {
+        "fields": [
+          {
+            "key": "text",
+            "value": "{{ $json.body.message }}"
+          }
+        ],
+        "keepOnly": true
+      },
+      "position": {
+        "x": 340,
+        "y": 200
+      }
+    },
+    {
+      "id": "slack",
+      "type": "slack.post",
+      "params": {
+        "credential": "my_slack",
+        "channel": "#alerts",
+        "text": "{{ $json.text }}"
+      },
+      "position": {
+        "x": 620,
+        "y": 200
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "hook",
+      "fromPort": "main",
+      "to": "shape",
+      "toPort": "main"
+    },
+    {
+      "from": "shape",
+      "fromPort": "main",
+      "to": "slack",
+      "toPort": "main"
+    }
+  ]
+}
+```
+
+## What it cannot do
+
+- Sign or send a transaction. `web3.prepare` simulates and reports the fee; a person signs.
+- Loop or repeat a step. Lists page themselves; nothing else repeats.
+- Receive a webhook from the internet without a tunnel, which the app opens on request.
+- Cron expressions. Schedules are every N minutes, hours or days, or once at a set time.

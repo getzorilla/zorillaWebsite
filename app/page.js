@@ -3,6 +3,7 @@ import catalog from '@/public/catalog.json'
 import { stats } from '@/lib/store'
 import { ThemePreview } from '@/components/ThemeCard'
 import { GithubMark } from '@/components/Icons'
+import Shot from '@/components/Shot'
 
 export default async function Home() {
   const counts = await stats()
@@ -11,27 +12,36 @@ export default async function Home() {
   return (
     <main>
       <section className="page hero">
-        <img className="mark" src="/logo.svg" alt="" width="62" height="62" />
-        <h1>automations that run on your machine</h1>
-        <p className="lede">
-          Fully local automation, no strings attached. Reads smart contracts, with web3
-          steps built in. 15 API integrations ship with it, or build your own.
-        </p>
-        <div className="cta">
-          <Link href="/try" className="btn primary">try the editor</Link>
-          <Link href="/marketplace" className="btn">browse the marketplace</Link>
-          <a
-            className="btn quiet"
-            href="https://github.com/zorilla-oss/zorillaApp"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <GithubMark size={15} /> source
-          </a>
-        </div>
-        <div className="install">
-          <b>git clone https://github.com/zorilla-oss/zorillaApp</b>
-          <span>then npm i && npm start</span>
+        <div className="hero-split">
+          <div>
+            <img className="mark" src="/logo.svg" alt="" width="62" height="62" />
+            <h1>automations that run on your machine</h1>
+            <p className="lede">
+              Fully local automation, no strings attached. Reads smart contracts, with web3
+              steps built in. 15 API integrations ship with it, or build your own.
+            </p>
+            <div className="cta">
+              <Link href="/guide" className="btn primary">build your first one</Link>
+              <Link href="/try" className="btn">try the editor</Link>
+              <a
+                className="btn quiet"
+                href="https://github.com/zorilla-oss/zorillaApp"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <GithubMark size={15} /> source
+              </a>
+            </div>
+            <div className="install">
+              <b>git clone https://github.com/zorilla-oss/zorillaApp</b>
+              <span>then npm i && npm start</span>
+            </div>
+          </div>
+          <Shot
+            src="/guide/editor-run.png"
+            alt="the zorilla editor: a schedule, a price check, and a post to Discord"
+            tilt
+          />
         </div>
       </section>
 

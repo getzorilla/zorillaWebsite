@@ -371,6 +371,7 @@ textarea { resize: vertical; font-family: var(--mono); font-size: 12px; }
 .node-head { display: flex; align-items: center; gap: 6px; }
 .node-key {
   margin-top: 4px; font-family: var(--mono); font-size: 10.5px; color: var(--dim);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .node-key.missing { color: var(--warn); }
 

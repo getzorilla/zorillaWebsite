@@ -6,9 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "sync": "node scripts/sync-catalog.mjs && node scripts/sync-editor.mjs",
+    "sync": "node scripts/sync-catalog.mjs && node scripts/sync-editor.mjs && node scripts/build-agent-doc.mjs",
     "sync:catalog": "node scripts/sync-catalog.mjs",
-    "sync:editor": "node scripts/sync-editor.mjs"
+    "sync:editor": "node scripts/sync-editor.mjs",
+    "sync:docs": "node scripts/build-agent-doc.mjs"
   },
   "dependencies": {
     "@noble/curves": "^2.4.0",
