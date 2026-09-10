@@ -892,3 +892,13 @@ table.ref td.type { font-family: var(--mono); color: var(--dimmer); white-space:
   border-radius: 8px; border: 1px solid var(--line); display: block; margin-bottom: 6px;
 }
 .post-thumb .btn { padding: 3px 8px; font-size: 12px; }
+
+.prompt-cta {
+  display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+  box-shadow: var(--surface-lit), var(--lift);
+  padding: 16px 18px; margin-bottom: var(--s3);
+  color: var(--dim); font-size: 13.5px;
+}
+.prompt-cta .grow { flex: 1; min-width: 240px; }
+.prompt-cta b { color: var(--text); font-family: var(--mono); font-weight: 500; }
