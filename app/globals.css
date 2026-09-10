@@ -144,17 +144,17 @@ textarea { font-family: var(--mono); font-size: 12.5px; resize: vertical; }
 
 /* hero */
 
-.hero { padding: 46px 0 56px; }
+.hero { padding-top: 64px; padding-bottom: 76px; }
 .hero-grid {
   display: grid; grid-template-columns: minmax(0, 0.86fr) minmax(0, 1.14fr);
-  gap: 52px; align-items: start;
+  gap: 76px; align-items: start;
 }
-.hero-name { display: flex; align-items: center; gap: 18px; margin-bottom: 38px; }
+.hero-name { display: flex; align-items: center; gap: 18px; margin-bottom: 44px; }
 .hero-name h1 {
   margin: 0; font-size: clamp(2.4rem, 4.6vw, 3.2rem);
   line-height: 1; font-weight: 500; letter-spacing: -0.05em;
 }
-.hero-points { list-style: none; margin: 0 0 38px; padding: 0; display: grid; gap: 18px; }
+.hero-points { list-style: none; margin: 0 0 44px; padding: 0; display: grid; gap: 20px; }
 .hero-points li {
   position: relative; padding-left: 17px; color: var(--dim);
   font-family: var(--sans); font-size: 14.5px; line-height: 1.5; letter-spacing: -0.005em;
@@ -259,11 +259,10 @@ textarea { font-family: var(--mono); font-size: 12.5px; resize: vertical; }
 }
 .notice b { color: var(--text); font-weight: 600; }
 
-@media (max-width: 760px) {
-  .hero { padding: 34px 0 44px; }
-  .hero-name h1 { font-size: 34px; }
-  .grid.three, .grid.two { grid-template-columns: 1fr; }
-}
+/* A safety net against sideways scroll, using clip rather than hidden: hidden
+   makes this a scroll container, which silently stops the sticky nav sticking. */
+html, body { overflow-x: clip; }
+.page { width: 100%; }
 
 /* the mark, used at size */
 
@@ -902,3 +901,86 @@ table.ref td.type { font-family: var(--mono); color: var(--dimmer); white-space:
 }
 .prompt-cta .grow { flex: 1; min-width: 240px; }
 .prompt-cta b { color: var(--text); font-family: var(--mono); font-weight: 500; }
+
+/* the links become a panel on a phone, because five of them wrapped onto three
+   rows and pushed the page down */
+.nav-burger { display: none; }
+@media (max-width: 760px) {
+  .nav-inner { grid-template-columns: auto 1fr; height: 54px; }
+  .nav-links { display: none; }
+  .nav-end { gap: 8px; }
+  .nav-burger {
+    display: grid; place-items: center; width: 34px; height: 34px;
+    background: transparent; border: 1px solid var(--line); border-radius: 8px;
+    color: var(--dim); cursor: pointer; padding: 0;
+  }
+  .nav-burger .bars { display: grid; gap: 4px; width: 15px; }
+  .nav-burger i {
+    display: block; height: 1.5px; background: currentColor; border-radius: 2px;
+    transition: transform .16s, opacity .16s;
+  }
+  .nav-burger .bars.on i:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+  .nav-burger .bars.on i:nth-child(2) { opacity: 0; }
+  .nav-burger .bars.on i:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+}
+
+.nav-sheet {
+  position: fixed; inset: 54px 0 0; z-index: 30;
+  background: rgba(10, 12, 17, .6);
+  backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px);
+}
+.nav-sheet-panel {
+  display: flex; flex-direction: column;
+  background: var(--raise); border-bottom: 1px solid var(--line);
+  box-shadow: 0 24px 50px -20px rgba(0, 0, 0, .8);
+  padding: 6px 0 10px;
+}
+.nav-sheet-panel a {
+  padding: 13px 24px; color: var(--dim);
+  font-family: var(--mono); font-size: 14.5px; letter-spacing: -.02em;
+}
+.nav-sheet-panel a:active, .nav-sheet-panel a:hover { color: var(--text); background: var(--sunk); }
+
+/* Phone layout last, so a later rule at the same specificity cannot quietly
+   undo it the way .case-tabs was doing. */
+@media (max-width: 760px) {
+  .hero { padding-top: 28px; padding-bottom: 36px; }
+  .hero-name { gap: 12px; margin-bottom: 24px; }
+  .hero-name h1 { font-size: 34px; }
+  .hero-name .mark { width: 40px; height: 40px; }
+  .grid.three, .grid.two { grid-template-columns: 1fr; }
+
+  /* the hero kept two columns all the way down, which is what squeezed the
+     copy into a gutter and pushed the panel off the side */
+  .hero-grid { grid-template-columns: 1fr; gap: 32px; }
+  .hero-points { gap: 13px; margin-bottom: 26px; }
+  .hero-points li { font-size: 14px; }
+  .install { width: 100%; }
+  .install code { overflow-x: auto; }
+
+  /* a diagram is two columns of fixed things; stack them and let the wide
+     parts scroll inside themselves rather than widening the page */
+  .chain { grid-template-columns: 1fr; gap: 14px; }
+  .chain-card, .cell, .panel { min-width: 0; }
+  .diagram { grid-template-columns: 1fr; gap: 22px; }
+  .out { padding: 0; }
+  .out-arrow, .out-blocked { max-width: 220px; }
+
+  .section { padding: var(--s4) 0; }
+  .section .sub { font-size: 15px; }
+  .tall-head { margin-bottom: 20px; }
+
+  /* tabs ran onto a second line and left an orphan; one row that scrolls */
+  .case-tabs {
+    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
+    margin: 0 -20px; padding: 0 20px 2px;
+  }
+  .case-tabs::-webkit-scrollbar { display: none; }
+  .case-tab { flex: none; }
+  .case-line { font-size: 14.5px; }
+  .case-steps li { flex-wrap: wrap; gap: 6px; }
+
+  table.ref { display: block; overflow-x: auto; }
+  .preview-text, .doc-block { font-size: 11.5px; }
+  .prompt-cta { flex-direction: column; align-items: flex-start; gap: 12px; }
+}

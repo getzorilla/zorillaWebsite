@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { currentUser } from '@/lib/auth'
 import SessionMenu from './SessionMenu'
 import { GithubMark } from './Icons'
+import MobileNav from './MobileNav'
 
 export default async function Nav() {
   const user = await currentUser()
@@ -30,6 +31,7 @@ export default async function Nav() {
             <GithubMark size={16} />
           </a>
           <SessionMenu user={user ? { handle: user.handle, avatar: user.profile?.avatar ?? null } : null} />
+          <MobileNav />
         </span>
       </div>
     </nav>

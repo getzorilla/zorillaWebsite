@@ -413,7 +413,7 @@ Text messages. Contacts: api.twilio.com.
   - `args`, list — Values
   - `reason`, text — What it is for. Shown before anyone approves it.
   - `rpc`, credential, a saved evmRpc key — RPC endpoint. Optional. Public endpoints rate limit.
-- **`web3.read`** (web3) — Asks a contract a question. Costs nothing.
+- **`web3.read`** (web3) — Asks a contract a question.
   - `chain`, select, default "ethereum", one of: ethereum, sepolia — Network
   - `address`, text — Contract address
   - `signature`, text — Function
