@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 
 // The tabs. Each panel's picture is drawn on the server from the same file the
 // app installs, so it can never drift from what somebody actually gets.
@@ -22,10 +21,6 @@ export default function UseCases({ cases }) {
             <span>{c.line}</span>
           </button>
         ))}
-        <Link href="/marketplace" className="case-tab quiet">
-          <b>You can</b>
-          <span>Take any of these off the marketplace and change it</span>
-        </Link>
       </div>
 
       <div className="case-panel">

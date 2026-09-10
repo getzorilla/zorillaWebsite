@@ -4,7 +4,7 @@ zorilla runs automations on one person's own machine. An automation is a JSON fi
 steps, and wires between them. This file lists every step, what it takes, and the rules
 the engine enforces. It is generated from the running catalogue.
 
-Steps: 50. Integrations: 16. Generated 2026-09-10.
+Steps: 49. Integrations: 16. Generated 2026-09-10.
 
 ## The file
 
@@ -187,9 +187,7 @@ Google's models. Contacts: generativelanguage.googleapis.com.
 
 ### logic
 
-- **`flow.forget`** (logic) — Resets what first time only and when this changes remember.
-  - `key`, text — Which memory. Blank clears the default. Otherwise match the key that step used.
-- **`logic.changed`** (logic) — Skips repeats. Only passes on when the value moves.
+- **`logic.changed`** (logic) — Passes an item on only when this value is different from last time. Without it, a check every ten minutes tells you the same thing every ten minutes.
   - `value`, text — Watch this
   - `direction`, select, default "becomesTrue", one of: becomesTrue, becomesFalse, changes — Pass it on when
   - `key`, text — Track separately by. Optional. {{ $json.address }} tracks each wallet on its own.
@@ -202,13 +200,13 @@ Google's models. Contacts: generativelanguage.googleapis.com.
   - `value`, text — Value
   - `operation`, select, default "equals", one of: equals, notEquals, contains, notContains, greater, less, isEmpty, isNotEmpty, isTrue — Condition
   - `compare`, text — Compared with
-- **`logic.moved`** (logic) — Passes on when a number has moved by enough since last time.
+- **`logic.moved`** (logic) — Passes on when a number has moved far enough since the last time it said so. 5 percent, or 100 of whatever the number counts.
   - `value`, text — Watch this
   - `amount`, number, default 5 — Moved by at least
   - `unit`, select, default "percent", one of: percent, absolute — Measured in
   - `direction`, select, default "either", one of: either, up, down — Which way
   - `key`, text — Track separately by. Optional. {{ $json.symbol }} follows each coin on its own.
-- **`logic.once`** (logic) — Passes once, never again.
+- **`logic.once`** (logic) — Passes something on once and never again. Keyed on whatever makes two things the same, like a transaction hash.
   - `key`, text — Same thing means. Optional. {{ $json.transactionHash }} = once per transaction, not once ever.
 
 ### Notion
@@ -244,7 +242,7 @@ OpenAI's models. Contacts: api.openai.com.
 - **`file.save`** (output) — Writes a file the run is carrying into your zorilla files folder.
   - `which`, text, default "file" — Which file. The name it travels under. Downloads arrive as "file".
   - `name`, text — Save it as. Leave blank to keep its own name.
-- **`flow.stop`** (output) — Stops a repeating workflow once it is done.
+- **`flow.stop`** (output) — Switches the automation off from inside, once it has done what it was for. A one-shot alert that should not fire twice ends here.
   - `reason`, text — Why
 - **`output.log`** (output) — Writes a line to the run log.
   - `message`, text, default "{{ $json }}" — Message

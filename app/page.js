@@ -6,6 +6,7 @@ import { GithubMark } from '@/components/Icons'
 import Shot from '@/components/Shot'
 import UseCases from '@/components/UseCases'
 import CanvasPreview from '@/components/CanvasPreview'
+import CopyCommand from '@/components/CopyCommand'
 import starters from '@/public/starters.json'
 
 const CASES = [
@@ -84,12 +85,9 @@ export default async function Home() {
           Fully local automation, no strings attached. Reads smart contracts, with web3
           steps built in. 16 API integrations ship with it, or build your own.
         </p>
-        <div className="install" style={{ marginBottom: 22 }}>
-          <b>npx github:zorilla-oss/zorillaApp</b>
-          <span>one command, no clone</span>
-        </div>
+        <CopyCommand command="npx github:zorilla-oss/zorillaApp" />
         <div className="cta">
-          <Link href="/docs#first-automation" className="btn primary">build your first one</Link>
+          <Link href="/docs" className="btn primary">docs</Link>
           <Link href="/try" className="btn">try the editor</Link>
           <a
             className="btn quiet"
@@ -241,7 +239,7 @@ export default async function Home() {
           ))}
         </div>
         <div className="cta" style={{ marginTop: 20 }}>
-          <Link href="/marketplace/themes" className="btn">all themes</Link>
+          <Link href="/marketplace/themes" className="btn">themes</Link>
         </div>
       </section>
 
@@ -269,8 +267,8 @@ export default async function Home() {
           </div>
         </div>
         <div className="cta" style={{ marginTop: 22 }}>
-          <Link href="/marketplace" className="btn">open the marketplace</Link>
-          <Link href="/publish" className="btn quiet">publish something</Link>
+          <Link href="/marketplace" className="btn">marketplace</Link>
+          <Link href="/publish" className="btn quiet">publish</Link>
         </div>
       </section>
     </main>

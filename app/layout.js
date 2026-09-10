@@ -1,4 +1,12 @@
+import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
+
+// Geist Mono carries everything structural: the nav, every heading, labels,
+// tables, step names, code. Geist Sans is only for running paragraphs, which
+// are the one thing a monospace makes harder rather than clearer. The mono is
+// the same face andrewjungminkim.com is set in.
+const sans = Geist({ subsets: ['latin'], variable: '--font-sans', display: 'swap' })
+const mono = Geist_Mono({ subsets: ['latin'], variable: '--font-mono', display: 'swap' })
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 
@@ -29,7 +37,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${sans.variable} ${mono.variable}`}>
       <body>
         <Nav />
         {children}

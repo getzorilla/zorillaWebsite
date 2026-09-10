@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-10T08:21:56.822Z",
+  "generatedAt": "2026-09-10T08:33:36.586Z",
   "nodes": [
     {
       "outputs": [
@@ -169,9 +169,9 @@
         }
       ],
       "mode": "perItem",
-      "description": "Skips repeats. Only passes on when the value moves.",
+      "description": "Passes an item on only when this value is different from last time. Without it, a check every ten minutes tells you the same thing every ten minutes.",
       "type": "logic.changed",
-      "label": "When this changes",
+      "label": "Only when it changes",
       "category": "logic",
       "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
     },
@@ -189,9 +189,9 @@
         }
       ],
       "mode": "perItem",
-      "description": "Passes once, never again.",
+      "description": "Passes something on once and never again. Keyed on whatever makes two things the same, like a transaction hash.",
       "type": "logic.once",
-      "label": "First time only",
+      "label": "Only the first time",
       "category": "logic",
       "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
     },
@@ -209,30 +209,10 @@
         }
       ],
       "mode": "perItem",
-      "description": "Stops a repeating workflow once it is done.",
+      "description": "Switches the automation off from inside, once it has done what it was for. A one-shot alert that should not fire twice ends here.",
       "type": "flow.stop",
-      "label": "Switch off",
+      "label": "Switch this off",
       "category": "output",
-      "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
-    },
-    {
-      "outputs": [
-        "main"
-      ],
-      "params": [
-        {
-          "key": "key",
-          "label": "Which memory",
-          "type": "text",
-          "default": "",
-          "description": "Blank clears the default. Otherwise match the key that step used."
-        }
-      ],
-      "mode": "perItem",
-      "description": "Resets what first time only and when this changes remember.",
-      "type": "flow.forget",
-      "label": "Clear memory",
-      "category": "logic",
       "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
     },
     {
@@ -299,9 +279,9 @@
         }
       ],
       "mode": "perItem",
-      "description": "Passes on when a number has moved by enough since last time.",
+      "description": "Passes on when a number has moved far enough since the last time it said so. 5 percent, or 100 of whatever the number counts.",
       "type": "logic.moved",
-      "label": "When this moves",
+      "label": "Only when it moves by",
       "category": "logic",
       "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
     },

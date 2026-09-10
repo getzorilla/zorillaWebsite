@@ -155,7 +155,7 @@ function renderHome() {
   renderCrumbs()
   if (state.panel === 'automations') return renderAutomations()
   if (state.panel === 'keys') return renderKeysHome()
-  if (state.panel === 'themes') return renderThemes()
+  if (state.panel === 'settings') return renderSettings()
   return renderIntegrationsHome()
 }
 
@@ -893,7 +893,7 @@ async function useTheme(id) {
   if (!theme) return
   applyTheme(theme)
   state.workspace = await api('/api/workspace', { method: 'PUT', body: { theme: id } })
-  if (state.view === 'home' && state.panel === 'themes') renderThemes()
+  if (state.view === 'home' && state.panel === 'settings') renderSettings()
 }
 
 async function reloadThemes() {
@@ -916,27 +916,40 @@ function themeSwatch(theme) {
       el('span', { style: `background:${c.dim}` })))
 }
 
-function renderThemes() {
+function renderSettings() {
   const side = $('home-side')
   const sheet = $('home-sheet')
   side.textContent = ''
   sheet.textContent = ''
 
-  side.append(el('p', { class: 'side-title', text: 'in this workspace' }))
-  for (const kind of ['dark', 'light']) {
-    const count = state.themes.filter((t) => t.appearance === kind).length
-    side.append(el('div', { class: 'side-item' }, el('span', { text: kind }), el('span', { class: 'count', text: `${count}` })))
-  }
-  side.append(el('p', { class: 'side-title spaced', text: 'your own' }))
-  side.append(el('div', { class: 'hint', style: 'padding:0 9px' },
-    `drop a .json file into ~/.zorilla/themes, then refresh`))
+  side.append(el('p', { class: 'side-title', text: 'this workspace' }))
+  side.append(el('div', { class: 'side-item' },
+    el('span', { text: 'name' }), el('span', { class: 'count', text: state.workspace.name })))
+  side.append(el('div', { class: 'side-item' },
+    el('span', { text: 'automations' }), el('span', { class: 'count', text: String(state.workflows.length) })))
+  side.append(el('div', { class: 'side-item' },
+    el('span', { text: 'keys' }), el('span', { class: 'count', text: String(state.credentials.length) })))
+
+  side.append(el('p', { class: 'side-title spaced', text: 'kept in' }))
+  side.append(el('div', { class: 'hint', style: 'padding:0 9px; overflow-wrap:anywhere' }, state.home.path))
 
   sheet.append(el('div', { class: 'sheet-head' },
-    el('h1', { text: 'themes' }),
-    el('p', { text: 'colours the workspace, the editor and the run log.' })))
+    el('h1', { text: 'settings' }),
+    el('p', { text: 'the look of the app, and where it keeps things.' })))
+
+  sheet.append(el('div', { class: 'panel-title', text: 'workspace' }))
+  const name = el('input', { type: 'text', value: state.workspace.name, style: 'max-width:320px' })
+  name.onchange = async () => {
+    state.workspace = await api('/api/workspace', { method: 'PUT', body: { name: name.value } })
+    renderCrumbs()
+    toast('renamed')
+  }
+  sheet.append(field('what this workspace is called', name))
+
+  sheet.append(el('div', { class: 'panel-title', style: 'margin-top:22px', text: 'theme' })) 
 
   sheet.append(el('div', { class: 'sheet-actions' },
-    el('button', { class: 'ghost', text: 'refresh', onclick: async () => { await reloadThemes(); renderThemes(); toast('themes reloaded') } }),
+    el('button', { class: 'ghost', text: 'refresh', onclick: async () => { await reloadThemes(); renderSettings(); toast('themes reloaded') } }),
     el('button', { class: 'ghost', text: 'add from json', onclick: showThemeEditor }),
     el('button', { class: 'ghost', text: 'copy this one', onclick: async () => {
       const theme = currentTheme()
@@ -966,7 +979,7 @@ function renderThemes() {
             await api(`/api/themes/${theme.id}`, { method: 'DELETE' })
             await reloadThemes()
             if (!state.themes.some((t) => t.id === state.workspace.theme)) await useTheme('zorilla-dark')
-            renderThemes()
+            renderSettings()
           },
         })))
     }
@@ -1002,11 +1015,11 @@ function showThemeEditor() {
           await reloadThemes()
           await useTheme(saved.theme.id)
           toast(`${saved.theme.label} added`)
-          renderThemes()
+          renderSettings()
         } catch (err) { problem.textContent = err.message }
       },
     }),
-    el('button', { class: 'ghost', text: 'back', onclick: renderThemes })))
+    el('button', { class: 'ghost', text: 'back', onclick: renderSettings })))
 }
 
 // ---------------------------------------------------------------- editor state
@@ -1867,6 +1880,21 @@ function renderInspector() {
       control.oninput = () => set(control.value)
     }
     host.append(field(param.label, control, param.description))
+  }
+
+  // the steps that keep something between runs can be made to forget it
+  if (['logic.once', 'logic.changed', 'logic.moved'].includes(node.type)) {
+    host.append(el('div', { class: 'panel-title', style: 'margin-top:18px', text: 'what it remembers' }))
+    const note = el('p', { class: 'hint', text: 'this step remembers between runs, which is how it knows what it has already told you.' })
+    const forget = el('button', {
+      class: 'ghost', text: 'make it forget',
+      onclick: async () => {
+        if (!state.wf?.id) return toast('save this automation first', true)
+        await api(`/api/workflows/${state.wf.id}/memory/${node.id}`, { method: 'DELETE' })
+        toast('forgotten. the next run starts fresh')
+      },
+    })
+    host.append(note, el('div', { class: 'row-inline', style: 'margin-bottom:6px' }, forget))
   }
 
   host.append(el('div', { class: 'panel-title', style: 'margin-top:18px', text: 'when it fails' }))
