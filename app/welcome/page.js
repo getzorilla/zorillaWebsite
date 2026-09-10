@@ -13,7 +13,7 @@ export default async function Welcome() {
     <main className="page section" style={{ borderTop: 0 }}>
       <h2>pick a handle</h2>
       <p className="sub">
-        Signed in with {user.method === 'wallet' ? `the wallet ${user.wallet.slice(0, 6)}…${user.wallet.slice(-4)}` : user.email}.
+        Signed in with {user.wallet ? `the wallet ${user.wallet.slice(0, 6)}…${user.wallet.slice(-4)}` : user.email}.
       </p>
       <ProfileForm claiming profile={null} />
     </main>

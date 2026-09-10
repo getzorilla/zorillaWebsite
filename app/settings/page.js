@@ -13,7 +13,7 @@ export default async function Settings() {
     <main className="page section" style={{ borderTop: 0 }}>
       <h2>your profile</h2>
       <p className="sub mono">
-        {user.method === 'wallet' ? `${user.wallet.slice(0, 6)}…${user.wallet.slice(-4)}` : user.email}
+        {user.wallet ? `${user.wallet.slice(0, 6)}…${user.wallet.slice(-4)}` : user.email}
       </p>
       <ProfileForm profile={user.profile} />
     </main>

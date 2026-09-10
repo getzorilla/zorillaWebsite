@@ -37,28 +37,35 @@ export default async function Home() {
 
       <section className="page section">
         <h2>what you need</h2>
-        <p className="sub">The last one only if something has to call you.</p>
+        <p className="sub">
+          Node 20 and a terminal to start it once. After that it is a page in your browser.
+        </p>
         <div className="grid three">
           <div className="cell">
-            <h3>a computer you leave on</h3>
+            <h3>a computer that stays on</h3>
             <p>
-              A laptop is fine. It runs while the laptop is awake and catches up on what it
-              missed when you open it again.
+              zorilla runs on your machine, so an automation set to check every ten minutes
+              only checks while that machine is awake. Shut the laptop and it stops. Open it
+              and it runs whatever it missed, once, and tells you how many it skipped.
             </p>
           </div>
           <div className="cell">
-            <h3>an account with the services you use</h3>
+            <h3>a key for each service you use</h3>
             <p>
-              A Discord webhook, a Resend key, a Slack token. Paste each one in once and press
-              Test. Every automation says which keys it is waiting on.
+              To post to Discord you make a webhook in the channel and paste the address in
+              once. To send email through Resend you paste an API key. Each one is saved under
+              a name you choose, and every automation lists the names it is waiting for, like
+              &quot;needs a saved key called my_resend&quot;.
             </p>
           </div>
           <div className="cell">
-            <h3>one button, if something calls you</h3>
+            <h3>a public address, only for webhooks</h3>
             <p>
-              Stripe and Shopify call you when something happens. Press <b>let the internet
-              reach this</b> on a webhook step and zorilla opens an address for it. Nothing
-              else on your computer becomes reachable.
+              Stripe, Shopify and GitHub do not sit and wait to be asked. They send a message
+              to an address when a sale or a push happens, and your machine has no address
+              they can reach. Pressing <b>let the internet reach this</b> on a webhook step
+              gets you one to paste into Stripe. Nothing else on your computer becomes
+              reachable, and the address stops working when you stop it.
             </p>
           </div>
         </div>

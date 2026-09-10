@@ -11,6 +11,8 @@
     "sync:editor": "node scripts/sync-editor.mjs"
   },
   "dependencies": {
+    "@noble/curves": "^2.4.0",
+    "bs58": "^6.0.0",
     "jose": "^6.2.12",
     "next": "16.3.4",
     "react": "19.2.8",

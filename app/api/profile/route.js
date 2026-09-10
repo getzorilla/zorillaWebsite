@@ -6,7 +6,8 @@ export async function POST(request) {
   if (!session) return Response.json({ error: 'Sign in first.' }, { status: 401 })
 
   const body = await request.json().catch(() => ({}))
-  const identity = session.method === 'wallet' ? { wallet: session.wallet } : { email: session.email }
+  // a wallet session is a wallet session whether it came from metamask or phantom
+  const identity = session.wallet ? { wallet: session.wallet } : { email: session.email }
 
   try {
     if (!session.handle) {
