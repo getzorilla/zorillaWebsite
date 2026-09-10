@@ -1,7 +1,7 @@
 // Copies the real editor out of the app repo so the demo on the website is the
 // same page, not a rebuilt lookalike. Only the asset paths change, plus the
 // mock API that stands in for the engine.
-import { readFile, writeFile, mkdir, readdir, cp } from 'node:fs/promises'
+import { readFile, writeFile, mkdir, readdir, cp, rm } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -14,6 +14,8 @@ await mkdir(to, { recursive: true })
 const entries = (await readdir(from, { withFileTypes: true })).filter((e) => e.name !== 'mock-api.js')
 
 for (const entry of entries.filter((e) => e.isDirectory())) {
+  // replace the folder rather than copying into it, or a renamed file lingers
+  await rm(path.join(to, entry.name), { recursive: true, force: true })
   await cp(path.join(from, entry.name), path.join(to, entry.name), { recursive: true })
 }
 
