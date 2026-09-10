@@ -2,6 +2,7 @@
 
 import catalog from '@/public/catalog.json'
 import { useState } from 'react'
+import Preview from './Preview'
 
 // which marks exist is decided by the app's logo folder, copied here on sync
 const LOGOS = new Set(catalog.logos ?? [])
@@ -27,8 +28,9 @@ function needs(spec) {
   return `You need your ${labels.slice(0, -1).join(', ')} and ${labels.at(-1)}`
 }
 
-export default function IntegrationGrid({ integrations, steps }) {
+export default function IntegrationGrid({ integrations, steps, prompt }) {
   const [copied, setCopied] = useState('')
+  const [showPrompt, setShowPrompt] = useState(false)
   const [term, setTerm] = useState('')
 
   const copy = async (type, params) => {
@@ -49,15 +51,35 @@ export default function IntegrationGrid({ integrations, steps }) {
 
   return (
     <>
-      <input
-        className="int-search"
-        value={term}
-        onChange={(e) => setTerm(e.target.value)}
-        placeholder="Search: email, chat, database, chain…"
-      />
+      <div className="int-searchrow">
+        <input
+          className="int-search"
+          value={term}
+          onChange={(e) => setTerm(e.target.value)}
+          placeholder="Search: email, chat, database, chain…"
+        />
+        {prompt && (
+          <button className="btn" onClick={() => setShowPrompt(true)}>Agent Prompt</button>
+        )}
+      </div>
       <p className="dimmer" style={{ fontSize: 12.5, margin: '0 0 18px' }}>
         {shown.length} of {integrations.length}
       </p>
+
+      {showPrompt && (
+        <div className="prompt-over" onClick={(e) => { if (e.target === e.currentTarget) setShowPrompt(false) }}>
+          <div className="prompt-card">
+            <div className="prompt-head">
+              <div>
+                <strong>Build your own</strong>
+                <p>Copy this, name the service, and paste back the JSON you get.</p>
+              </div>
+              <button className="btn quiet" onClick={() => setShowPrompt(false)}>Close</button>
+            </div>
+            <Preview title="zorilla-integration-prompt.md" text={prompt} filename="zorilla-integration-prompt.md" />
+          </div>
+        </div>
+      )}
 
       <div className="int-grid">
         {shown.map((spec) => {

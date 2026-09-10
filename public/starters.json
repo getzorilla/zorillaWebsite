@@ -327,7 +327,7 @@
   },
   {
     "slug": "sol-price-moves-to-discord",
-    "title": "Sol Price Moves to Discord",
+    "title": "SOL Price Moves to Discord",
     "summary": "Posts to Discord when SOL moves 5% from the last figure it announced, and stays quiet otherwise. Needs a Discord webhook saved as discord_key.",
     "package": {
       "name": "sol price moves to discord",

@@ -1,8 +1,6 @@
 import Link from 'next/link'
 import catalog from '@/public/catalog.json'
 import IntegrationGrid from '@/components/IntegrationGrid'
-import IntegrationPrompt from '@/components/IntegrationPrompt'
-import PromptCta from '@/components/PromptCta'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 
@@ -20,13 +18,7 @@ export default async function Integrations() {
         it, and it contains no code.
       </p>
 
-      <PromptCta text={prompt} filename="zorilla-integration-prompt.md" />
-
-      <IntegrationGrid integrations={catalog.integrations} steps={steps} />
-
-      <div id="prompt" style={{ marginTop: 34, scrollMarginTop: 80 }}>
-        <IntegrationPrompt prompt={prompt} />
-      </div>
+      <IntegrationGrid integrations={catalog.integrations} steps={steps} prompt={prompt} />
 
       <div className="row wrap" style={{ marginTop: 20 }}>
         <Link href="/docs#integrations" className="btn quiet">The file format, if you would rather write it</Link>

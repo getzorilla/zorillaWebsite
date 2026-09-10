@@ -53,7 +53,7 @@ await writeFile(path.join(here, '../public/catalog.json'), JSON.stringify(catalo
 // and the names that are spelled a particular way.
 const SMALL = new Set(['a', 'an', 'and', 'by', 'for', 'in', 'of', 'on', 'per', 'the', 'to'])
 const SPELLED = {
-  eth: 'ETH', usdc: 'USDC', x: 'X', kol: 'KOL', sms: 'SMS', api: 'API',
+  eth: 'ETH', sol: 'SOL', usdc: 'USDC', x: 'X', kol: 'KOL', sms: 'SMS', api: 'API',
   slack: 'Slack', discord: 'Discord', telegram: 'Telegram', notion: 'Notion',
   stripe: 'Stripe', gmail: 'Gmail', resend: 'Resend', claude: 'Claude',
 }
