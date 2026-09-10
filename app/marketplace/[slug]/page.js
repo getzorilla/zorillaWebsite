@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { getListing } from '@/lib/store'
 import InstallButton from '@/components/InstallButton'
 import { ThemePreview } from '@/components/ThemeCard'
+import CanvasPreview from '@/components/CanvasPreview'
 
 export const dynamic = 'force-dynamic'
 
@@ -32,6 +33,13 @@ export default async function ListingPage({ params }) {
             <strong>{listing.package.label}</strong>
             <span>{listing.package.appearance}</span>
           </div>
+        </div>
+      )}
+
+      {isAutomation && (
+        <div style={{ marginBottom: 16 }}>
+          <CanvasPreview workflow={listing.package} height={190} />
+          <p className="preview-note">{listing.package.nodes?.length ?? 0} steps, drawn from the file</p>
         </div>
       )}
 

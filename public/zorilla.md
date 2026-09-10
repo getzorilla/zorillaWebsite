@@ -447,7 +447,7 @@ Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has
       },
       "position": {
         "x": 40,
-        "y": 110
+        "y": 170
       }
     },
     {
@@ -463,8 +463,8 @@ Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has
         "failOnError": true
       },
       "position": {
-        "x": 290,
-        "y": 110
+        "x": 300,
+        "y": 170
       }
     },
     {
@@ -476,8 +476,8 @@ Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has
         "timeout": 15
       },
       "position": {
-        "x": 540,
-        "y": 110
+        "x": 560,
+        "y": 170
       }
     },
     {
@@ -489,8 +489,8 @@ Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has
         "compare": "Robinhood"
       },
       "position": {
-        "x": 790,
-        "y": 110
+        "x": 820,
+        "y": 170
       }
     },
     {
@@ -500,8 +500,8 @@ Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has
         "key": "{{ $json.id }}"
       },
       "position": {
-        "x": 40,
-        "y": 330
+        "x": 1080,
+        "y": 170
       }
     },
     {
@@ -515,8 +515,8 @@ Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has
         "maxTokens": 300
       },
       "position": {
-        "x": 290,
-        "y": 330
+        "x": 1340,
+        "y": 170
       }
     },
     {
@@ -527,8 +527,8 @@ Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has
         "text": "{{ $json.text }}"
       },
       "position": {
-        "x": 540,
-        "y": 330
+        "x": 1600,
+        "y": 170
       }
     }
   ],
@@ -590,7 +590,7 @@ Reads a number straight off a contract every morning and emails it to you. This 
       },
       "position": {
         "x": 40,
-        "y": 150
+        "y": 170
       }
     },
     {
@@ -605,7 +605,7 @@ Reads a number straight off a contract every morning and emails it to you. This 
       },
       "position": {
         "x": 300,
-        "y": 150
+        "y": 170
       }
     },
     {
@@ -620,7 +620,7 @@ Reads a number straight off a contract every morning and emails it to you. This 
       },
       "position": {
         "x": 560,
-        "y": 150
+        "y": 170
       }
     }
   ],
@@ -658,7 +658,7 @@ One mail a day. Needs a saved Gmail key named my_gmail — an app password, not 
       },
       "position": {
         "x": 40,
-        "y": 120
+        "y": 170
       }
     },
     {
@@ -670,7 +670,7 @@ One mail a day. Needs a saved Gmail key named my_gmail — an app password, not 
       },
       "position": {
         "x": 300,
-        "y": 60
+        "y": 170
       }
     },
     {
@@ -681,7 +681,7 @@ One mail a day. Needs a saved Gmail key named my_gmail — an app password, not 
       },
       "position": {
         "x": 300,
-        "y": 240
+        "y": 320
       }
     },
     {
@@ -694,8 +694,8 @@ One mail a day. Needs a saved Gmail key named my_gmail — an app password, not 
         "html": "ETH {{ $json.ethereum.usd }} · BTC {{ $json.bitcoin.usd }}"
       },
       "position": {
-        "x": 560,
-        "y": 120
+        "x": 820,
+        "y": 170
       }
     }
   ],
@@ -738,8 +738,8 @@ Every 10 minutes. The channel is whichever one you made the webhook in, so a web
         "unit": "minutes"
       },
       "position": {
-        "x": 60,
-        "y": 200
+        "x": 40,
+        "y": 170
       }
     },
     {
@@ -750,8 +750,8 @@ Every 10 minutes. The channel is whichever one you made the webhook in, so a web
         "currency": "usd"
       },
       "position": {
-        "x": 330,
-        "y": 200
+        "x": 300,
+        "y": 170
       }
     },
     {
@@ -763,8 +763,8 @@ Every 10 minutes. The channel is whichever one you made the webhook in, so a web
         "username": "zorilla"
       },
       "position": {
-        "x": 600,
-        "y": 200
+        "x": 560,
+        "y": 170
       }
     }
   ],
@@ -824,8 +824,8 @@ The one to press run on first. It reads the ETH price and writes it in the run l
         "message": "ETH is ${{ $json.ethereum.usd }}"
       },
       "position": {
-        "x": 570,
-        "y": 80
+        "x": 560,
+        "y": 170
       }
     },
     {
@@ -839,8 +839,8 @@ The one to press run on first. It reads the ETH price and writes it in the run l
         "key": ""
       },
       "position": {
-        "x": 570,
-        "y": 260
+        "x": 560,
+        "y": 320
       }
     },
     {
@@ -850,8 +850,8 @@ The one to press run on first. It reads the ETH price and writes it in the run l
         "message": "that is a {{ Math.round($json.moved.percent) }}% move, {{ $json.moved.direction }} from {{ $json.moved.from }}"
       },
       "position": {
-        "x": 830,
-        "y": 260
+        "x": 1080,
+        "y": 170
       }
     }
   ],
@@ -900,8 +900,8 @@ Every hour by email. Resend only delivers from a domain you have verified with t
         "unit": "hours"
       },
       "position": {
-        "x": 60,
-        "y": 200
+        "x": 40,
+        "y": 170
       }
     },
     {
@@ -912,8 +912,8 @@ Every hour by email. Resend only delivers from a domain you have verified with t
         "currency": "usd"
       },
       "position": {
-        "x": 330,
-        "y": 200
+        "x": 300,
+        "y": 170
       }
     },
     {
@@ -927,8 +927,8 @@ Every hour by email. Resend only delivers from a domain you have verified with t
         "from": ""
       },
       "position": {
-        "x": 600,
-        "y": 200
+        "x": 560,
+        "y": 170
       }
     }
   ],
@@ -966,7 +966,7 @@ Watches for new Stripe payments and puts each one in two places at once. Fires o
       },
       "position": {
         "x": 40,
-        "y": 150
+        "y": 170
       }
     },
     {
@@ -978,8 +978,8 @@ Watches for new Stripe payments and puts each one in two places at once. Fires o
         "text": "${{ ($json.amount / 100).toFixed(2) }} from {{ $json.billing_details.email }}"
       },
       "position": {
-        "x": 340,
-        "y": 60
+        "x": 300,
+        "y": 170
       }
     },
     {
@@ -991,8 +991,8 @@ Watches for new Stripe payments and puts each one in two places at once. Fires o
         "properties": "{\"Name\":{\"title\":[{\"text\":{\"content\":\"{{ $json.id }}\"}}]}}"
       },
       "position": {
-        "x": 340,
-        "y": 250
+        "x": 300,
+        "y": 320
       }
     }
   ],
@@ -1025,8 +1025,8 @@ Works out exactly what a transaction would do and what it would cost, on the Sep
       "type": "core.manual",
       "params": {},
       "position": {
-        "x": 60,
-        "y": 200
+        "x": 40,
+        "y": 170
       }
     },
     {
@@ -1039,8 +1039,8 @@ Works out exactly what a transaction would do and what it would cost, on the Sep
         "from": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
       },
       "position": {
-        "x": 340,
-        "y": 200
+        "x": 300,
+        "y": 170
       }
     },
     {
@@ -1050,8 +1050,8 @@ Works out exactly what a transaction would do and what it would cost, on the Sep
         "message": "would cost {{ $json.estimatedFeeEth }} ETH in fees; signed: {{ $json.signed }}"
       },
       "position": {
-        "x": 640,
-        "y": 200
+        "x": 560,
+        "y": 170
       }
     }
   ],
@@ -1089,7 +1089,7 @@ Announces a price move to a Discord channel, and only when it actually moves. Ch
       },
       "position": {
         "x": 40,
-        "y": 150
+        "y": 170
       }
     },
     {
@@ -1101,7 +1101,7 @@ Announces a price move to a Discord channel, and only when it actually moves. Ch
       },
       "position": {
         "x": 300,
-        "y": 150
+        "y": 170
       }
     },
     {
@@ -1116,7 +1116,7 @@ Announces a price move to a Discord channel, and only when it actually moves. Ch
       },
       "position": {
         "x": 560,
-        "y": 150
+        "y": 170
       }
     },
     {
@@ -1129,7 +1129,7 @@ Announces a price move to a Discord channel, and only when it actually moves. Ch
       },
       "position": {
         "x": 820,
-        "y": 150
+        "y": 170
       }
     }
   ],
@@ -1173,7 +1173,7 @@ Watches USDC landing in one wallet. It points at Circle's treasury so pressing r
       },
       "position": {
         "x": 40,
-        "y": 120
+        "y": 170
       }
     },
     {
@@ -1194,7 +1194,7 @@ Watches USDC landing in one wallet. It points at Circle's treasury so pressing r
       },
       "position": {
         "x": 300,
-        "y": 120
+        "y": 170
       }
     },
     {
@@ -1205,7 +1205,7 @@ Watches USDC landing in one wallet. It points at Circle's treasury so pressing r
       },
       "position": {
         "x": 560,
-        "y": 120
+        "y": 170
       }
     },
     {
@@ -1216,7 +1216,7 @@ Watches USDC landing in one wallet. It points at Circle's treasury so pressing r
       },
       "position": {
         "x": 820,
-        "y": 120
+        "y": 170
       }
     }
   ],
@@ -1260,7 +1260,7 @@ Messages you on Telegram the moment USDC arrives in a wallet. Put your own addre
       },
       "position": {
         "x": 40,
-        "y": 120
+        "y": 170
       }
     },
     {
@@ -1281,7 +1281,7 @@ Messages you on Telegram the moment USDC arrives in a wallet. Put your own addre
       },
       "position": {
         "x": 300,
-        "y": 120
+        "y": 170
       }
     },
     {
@@ -1292,7 +1292,7 @@ Messages you on Telegram the moment USDC arrives in a wallet. Put your own addre
       },
       "position": {
         "x": 560,
-        "y": 120
+        "y": 170
       }
     },
     {
@@ -1305,7 +1305,7 @@ Messages you on Telegram the moment USDC arrives in a wallet. Put your own addre
       },
       "position": {
         "x": 820,
-        "y": 120
+        "y": 170
       }
     }
   ],
@@ -1348,8 +1348,8 @@ Reads a balance on Ethereum mainnet and only carries on when it drops below a th
         "unit": "hours"
       },
       "position": {
-        "x": 60,
-        "y": 200
+        "x": 40,
+        "y": 170
       }
     },
     {
@@ -1360,8 +1360,8 @@ Reads a balance on Ethereum mainnet and only carries on when it drops below a th
         "address": "vitalik.eth"
       },
       "position": {
-        "x": 320,
-        "y": 200
+        "x": 300,
+        "y": 170
       }
     },
     {
@@ -1373,8 +1373,8 @@ Reads a balance on Ethereum mainnet and only carries on when it drops below a th
         "compare": "100"
       },
       "position": {
-        "x": 580,
-        "y": 200
+        "x": 560,
+        "y": 170
       }
     },
     {
@@ -1384,8 +1384,8 @@ Reads a balance on Ethereum mainnet and only carries on when it drops below a th
         "message": "Balance is {{ $json.eth }} ETH — below the line"
       },
       "position": {
-        "x": 860,
-        "y": 140
+        "x": 820,
+        "y": 170
       }
     }
   ],
@@ -1427,8 +1427,8 @@ Anything that sends a message to this automation's address gets posted to Slack.
         "method": "POST"
       },
       "position": {
-        "x": 60,
-        "y": 200
+        "x": 40,
+        "y": 170
       }
     },
     {
@@ -1444,8 +1444,8 @@ Anything that sends a message to this automation's address gets posted to Slack.
         "keepOnly": true
       },
       "position": {
-        "x": 340,
-        "y": 200
+        "x": 300,
+        "y": 170
       }
     },
     {
@@ -1457,8 +1457,8 @@ Anything that sends a message to this automation's address gets posted to Slack.
         "text": "{{ $json.text }}"
       },
       "position": {
-        "x": 620,
-        "y": 200
+        "x": 560,
+        "y": 170
       }
     }
   ],

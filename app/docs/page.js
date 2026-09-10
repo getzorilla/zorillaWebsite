@@ -97,7 +97,7 @@ export default async function Docs({ searchParams }) {
               deliberately call, and it is MIT licensed, so you can do what you like with it.
             </p>
             <p>
-              It ships with 15 service integrations, {catalog.nodes.length} steps, and reads
+              It ships with 16 service integrations, {catalog.nodes.length} steps, and reads
               Ethereum (Solidity). It cannot sign a transaction, and there are other limits worth
               knowing before you start, listed at the end.
             </p>
@@ -121,9 +121,9 @@ npm install
 npm start`}</code></pre>
             <p>
               Either way it opens at <code>http://127.0.0.1:5177</code>. There is no build step
-              and no configuration file. The first time it starts it copies thirteen example
-              automations into your workspace, all switched off, and four of them run with no
-              keys at all.
+              and no configuration file. Your workspace starts empty: nothing is installed on
+              your behalf. Thirteen examples come with it, four of which run with no keys at
+              all, and the empty workspace offers them.
             </p>
             <h3>Where your things live</h3>
             <p>
@@ -155,16 +155,19 @@ npm start`}</code></pre>
 
             <h3>1. Open the workspace</h3>
             <p>
-              Starting zorilla opens on your workspace: every automation you have, whether each
-              is running, when it last ran, and what any of them are still waiting for.
+              Starting zorilla opens on your workspace. It is empty to begin with, and offers
+              the thirteen automations that came with it. Take any of them, or start from
+              scratch. Once you have some, each row says whether it is running, when it last
+              ran, and what it is still waiting for.
             </p>
             <Shot
               src="/guide/home.png"
               alt="the zorilla workspace, listing automations"
               spots={[
                 { n: 1, ...pct(0, 44, 150, 629), say: 'automations, keys, integrations, themes' },
-                { n: 2, ...pct(416, 145, 121, 33), say: 'start a new one' },
-                { n: 3, ...pct(446, 249, 300, 18), say: 'what this one is waiting for' },
+                { n: 2, ...pct(416, 145, 262, 33), say: 'start one, or add one somebody sent you' },
+                { n: 3, ...pct(576, 207, 65, 20), say: 'runs with no setup' },
+                { n: 4, ...pct(446, 711, 500, 18), say: 'what this one is waiting for' },
               ]}
             />
 
@@ -185,7 +188,7 @@ npm start`}</code></pre>
               alt="the keys panel, with a saved Discord webhook"
               spots={[
                 { n: 1, ...pct(8, 91, 133, 33), say: 'keys' },
-                { n: 2, ...pct(416, 407, 75, 90), say: 'pick the service' },
+                { n: 2, ...pct(416, 349, 75, 90), say: 'pick the service' },
                 { n: 3, ...pct(416, 145, 560, 53), say: 'where it points' },
               ]}
             />
@@ -206,7 +209,7 @@ npm start`}</code></pre>
               alt="the step list with Discord open"
               spots={[
                 { n: 1, ...pct(10, 170, 193, 36), say: 'a service' },
-                { n: 2, ...pct(40, 402, 163, 35), say: 'what it can do' },
+                { n: 2, ...pct(40, 384, 163, 35), say: 'what it can do' },
               ]}
             />
 
@@ -229,9 +232,9 @@ npm start`}</code></pre>
               src="/guide/editor-step.png"
               alt="the settings panel for a Discord step"
               spots={[
-                { n: 1, ...pct(999, 219, 271, 75), say: 'which key' },
-                { n: 2, ...pct(999, 307, 271, 118), say: 'the message' },
-                { n: 3, ...pct(999, 469, 271, 53), say: 'if it breaks' },
+                { n: 1, ...pct(999, 222, 271, 75), say: 'which key' },
+                { n: 2, ...pct(999, 309, 271, 118), say: 'the message' },
+                { n: 3, ...pct(999, 562, 271, 53), say: 'if it breaks' },
               ]}
             />
 
@@ -251,8 +254,9 @@ npm start`}</code></pre>
               alt="the editor with the automation switched live"
               spots={[
                 { n: 1, ...pct(1227, 5, 41, 33), say: 'run it now' },
-                { n: 2, ...pct(1091, 7, 55, 29), say: 'live or not' },
-                { n: 3, ...pct(0, 618, 240, 43), say: 'the run log' },
+                { n: 2, ...pct(1007, 7, 77, 29), say: 'live or not' },
+                { n: 3, ...pct(1165, 5, 53, 33), say: 'send it to somebody' },
+                { n: 4, ...pct(0, 618, 240, 43), say: 'the run log' },
               ]}
             />
           </section>

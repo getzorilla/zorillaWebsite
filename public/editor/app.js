@@ -159,6 +159,58 @@ function renderHome() {
   return renderIntegrationsHome()
 }
 
+// ---------------------------------------------------------------- examples
+
+// The automations that came with zorilla. Offered, never installed on somebody's
+// behalf, and each one says what it does and what it would need first.
+async function showExamples() {
+  const side = $('home-side')
+  const sheet = $('home-sheet')
+  side.textContent = ''
+  sheet.textContent = ''
+
+  sheet.append(el('div', { class: 'sheet-head' },
+    el('h1', { text: 'automations that came with zorilla' }),
+    el('p', { text: 'take any of these into your workspace. they arrive switched off, and you can change anything about them afterwards.' })))
+  sheet.append(el('div', { class: 'sheet-actions' },
+    el('button', { class: 'ghost', text: 'back', onclick: renderAutomations })))
+
+  let examples = []
+  try {
+    examples = await api('/api/examples')
+  } catch (err) {
+    sheet.append(el('p', { class: 'error', text: err.message }))
+    return
+  }
+
+  const saved = new Set(state.credentials.map((c) => c.name))
+  const list = el('div', { class: 'row-list' })
+  for (const example of examples.sort((a, b) => a.derived.credentials.length - b.derived.credentials.length)) {
+    const missing = example.derived.credentials.filter((name) => !saved.has(name))
+    const row = el('div', { class: 'row' },
+      el('div', { class: 'grow' },
+        el('div', { class: 'row-inline', style: 'gap:8px' },
+          el('div', { class: 'name', text: example.name }),
+          missing.length ? null : el('span', { class: 'tag on', text: 'runs now' })),
+        el('div', { class: 'note', text: example.notes }),
+        el('div', { class: 'meta', text: [
+          `${example.nodes.length} steps`,
+          example.derived.hosts.length ? `contacts ${example.derived.hosts.join(', ')}` : 'contacts nothing',
+        ].join('  ·  ') }),
+        missing.length ? el('div', { class: 'needs', text: `you would need a key called ${missing.join(', ')}` }) : null),
+      el('div', { class: 'row-actions' },
+        el('button', { class: 'ghost', text: 'add it', onclick: async (event) => {
+          event.stopPropagation()
+          const added = await api('/api/workflows/import', { method: 'POST', body: { package: example, folder: 'examples' } })
+          state.workflows = await api('/api/workflows')
+          toast(`${added.name} added`)
+          openWorkflow(added.id)
+        } })))
+    list.append(row)
+  }
+  sheet.append(list)
+}
+
 // ---------------------------------------------------------------- installing
 
 // What somebody sees before an automation somebody else wrote goes anywhere
@@ -368,6 +420,7 @@ function renderAutomations() {
 
   sheet.append(el('div', { class: 'sheet-actions' },
     el('button', { class: 'primary', text: 'new automation', onclick: () => newAutomation() }),
+    el('button', { class: 'ghost', text: 'examples', onclick: () => showExamples() }),
     el('button', { class: 'ghost', text: 'add one from a file', onclick: () => showImport() }),
     el('button', { class: 'ghost', text: 'open editor', onclick: () => {
       const first = shown[0] ?? state.workflows[0]
@@ -375,7 +428,12 @@ function renderAutomations() {
     } })))
 
   if (!shown.length) {
-    sheet.append(el('div', { class: 'empty', text: 'nothing here yet' }))
+    sheet.append(el('div', { class: 'empty' },
+      el('h3', { text: 'nothing here yet' }),
+      el('p', { text: 'zorilla came with thirteen automations you can take, four of which run with no keys at all. Or start from an empty canvas.' }),
+      el('div', { class: 'row-inline', style: 'justify-content:center' },
+        el('button', { class: 'primary', text: 'see what came with it', onclick: () => showExamples() }),
+        el('button', { class: 'ghost', text: 'start from scratch', onclick: () => newAutomation() }))))
     return
   }
 
@@ -1693,6 +1751,7 @@ function renderInspector() {
     // with nothing selected, the panel is free to say what the whole thing
     // still needs before it could run
     if (state.wf) {
+      if (state.wf.notes) host.append(el('p', { class: 'hint', style: 'margin-bottom:12px', text: state.wf.notes }))
       const needs = whatItNeeds(state.wf)
       if (needs.length) {
         const list = el('ul')

@@ -457,3 +457,18 @@ table.ref td.type { font-family: var(--mono); color: var(--dimmer); white-space:
   padding-top: 8px; border-top: 1px solid var(--line-soft);
   color: var(--dimmer); font-size: 11.5px; font-family: var(--mono);
 }
+
+/* the automation, drawn */
+
+.preview {
+  display: block; width: 100%; max-width: 100%;
+  background:
+    radial-gradient(circle at 1px 1px, var(--line) 1px, transparent 0) 0 0 / 22px 22px,
+    var(--sunk);
+  border: 1px solid var(--line); border-radius: 10px;
+}
+.preview + .preview-note { color: var(--dimmer); font-size: 11.5px; margin: 6px 0 0; }
+
+.item.listing { align-items: flex-start; gap: 20px; }
+.listing-preview { width: 300px; flex: none; }
+@media (max-width: 760px) { .listing-preview { display: none; } }

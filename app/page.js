@@ -5,10 +5,75 @@ import { ThemePreview } from '@/components/ThemeCard'
 import { GithubMark } from '@/components/Icons'
 import Shot from '@/components/Shot'
 import UseCases from '@/components/UseCases'
+import CanvasPreview from '@/components/CanvasPreview'
+import starters from '@/public/starters.json'
+
+const CASES = [
+  {
+    id: 'traders', slug: 'usdc-landing-to-telegram', who: 'Traders',
+    line: 'Get a Telegram message the moment USDC lands in a wallet',
+    why: 'Checks every five minutes, tells you once per transaction, and never repeats itself after a restart.',
+    steps: [
+      'every 5 minutes',
+      'contract events  USDC · Transfer · only where to = your address',
+      'first time only  by transaction hash',
+      'telegram  "USDC in: {{ $json.args.value }}"',
+    ],
+    needs: 'a Telegram bot token',
+  },
+  {
+    id: 'influencers', slug: 'chain-news-to-x', who: 'Influencers',
+    line: 'Check chain news, have Claude draft a post, put it on X',
+    why: 'Half-hourly. Keeps only the headlines you care about, and never drafts the same one twice.',
+    steps: [
+      'every 30 minutes',
+      'http request  a news feed',
+      'filter  title contains "Robinhood"',
+      'first time only  by article id',
+      'ask claude  "write one post, under 240 characters"',
+      'post to x  {{ $json.text }}',
+    ],
+    needs: 'a Claude key and an X access token',
+  },
+  {
+    id: 'community', slug: 'price-move-to-discord', who: 'Community leaders',
+    line: 'Announce a price move to Discord with @everyone, once',
+    why: 'Checks every ten minutes but stays quiet until the price is 5% away from the last thing it told you.',
+    steps: [
+      'every 10 minutes',
+      'coin price  ethereum in usd',
+      'when this moves  by 5 percent, up or down',
+      'discord  "@everyone ETH is up 6% to $4,310"',
+    ],
+    needs: 'a Discord webhook',
+  },
+  {
+    id: 'selling', slug: 'payment-to-slack-and-notion', who: 'Anyone selling something',
+    line: 'Turn a Stripe payment into a Slack message and a Notion row',
+    why: 'One step feeding two, so both happen from the same payment. Fires once per payment.',
+    steps: ['new stripe payment', 'slack  "$49.00 from buyer@example.com"', 'notion  add a row'],
+    needs: 'Stripe, Slack and Notion keys',
+  },
+  {
+    id: 'builders', slug: 'contract-numbers-by-email', who: 'Builders',
+    line: 'Read any contract on a schedule and email yourself the numbers',
+    why: 'Paste a Solidity function line and it reads it. Amounts stay whole numbers the whole way.',
+    steps: [
+      'every day',
+      'read from a contract  function totalSupply() view returns (uint256)',
+      'resend  email it to you',
+    ],
+    needs: 'a Resend key',
+  },
+]
 
 export default async function Home() {
   const counts = await stats()
   const integrations = catalog.integrations.map((i) => i.label)
+  const cases = CASES.map((c) => ({
+    ...c,
+    preview: <CanvasPreview workflow={starters.find((s) => s.slug === c.slug)?.package} height={150} />,
+  }))
 
   return (
     <main>
@@ -17,7 +82,7 @@ export default async function Home() {
         <h1>automations that run on your machine</h1>
         <p className="lede">
           Fully local automation, no strings attached. Reads smart contracts, with web3
-          steps built in. 15 API integrations ship with it, or build your own.
+          steps built in. 16 API integrations ship with it, or build your own.
         </p>
         <div className="install" style={{ marginBottom: 22 }}>
           <b>npx github:zorilla-oss/zorillaApp</b>
@@ -36,7 +101,7 @@ export default async function Home() {
           </a>
         </div>
 
-        <UseCases />
+        <UseCases cases={cases} />
       </section>
 
       <section className="page section">
