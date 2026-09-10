@@ -414,8 +414,8 @@ function renderAutomations() {
     const ready = state.workflows.filter((w) => !whatItNeeds(w).length).length
     sheet.append(el('div', { class: 'welcome' },
       el('h4', { text: 'new here?' }),
-      el('p', {}, `These came with zorilla. ${ready} of them run right now with no setup at all: open one, press run, and watch the log at the bottom. `,
-        el('a', { href: '#', text: 'The rest need a key first.', onclick: (e) => { e.preventDefault(); state.panel = 'keys'; for (const item of document.querySelectorAll('.rail-item')) item.classList.toggle('active', item.dataset.panel === 'keys'); renderHome() } }))))
+      el('p', {}, `${ready} of these run right now with no setup at all: open one, press run, and watch the log at the bottom. `,
+        el('a', { href: '#', text: 'the rest need a key first.', onclick: (e) => { e.preventDefault(); state.panel = 'keys'; for (const item of document.querySelectorAll('.rail-item')) item.classList.toggle('active', item.dataset.panel === 'keys'); renderHome() } }))))
   }
 
   sheet.append(el('div', { class: 'sheet-actions' },
@@ -430,7 +430,7 @@ function renderAutomations() {
   if (!shown.length) {
     sheet.append(el('div', { class: 'empty' },
       el('h3', { text: 'nothing here yet' }),
-      el('p', { text: 'zorilla came with thirteen automations you can take, four of which run with no keys at all. Or start from an empty canvas.' }),
+      el('p', { text: 'automations came with zorilla and are waiting to be taken, several of which run with no keys at all. or start from an empty canvas.' }),
       el('div', { class: 'row-inline', style: 'justify-content:center' },
         el('button', { class: 'primary', text: 'see what came with it', onclick: () => showExamples() }),
         el('button', { class: 'ghost', text: 'start from scratch', onclick: () => newAutomation() }))))
