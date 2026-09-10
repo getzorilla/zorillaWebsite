@@ -104,10 +104,7 @@ export default async function Home() {
                 <GithubMark size={15} /> Source
               </a>
             </div>
-            <p className="hero-note">
-              Node 20 or newer. Elastic License 2.0: read it, run it, change it, use it at
-              work.
-            </p>
+            <p className="hero-note">Node 20 or newer.</p>
           </div>
 
           <UseCases cases={cases} />
