@@ -12,36 +12,105 @@ export default async function Home() {
   return (
     <main>
       <section className="page hero">
-        <div className="hero-split">
-          <div>
-            <img className="mark" src="/logo.svg" alt="" width="62" height="62" />
-            <h1>automations that run on your machine</h1>
-            <p className="lede">
-              Fully local automation, no strings attached. Reads smart contracts, with web3
-              steps built in. 15 API integrations ship with it, or build your own.
-            </p>
-            <div className="cta">
-              <Link href="/guide" className="btn primary">build your first one</Link>
-              <Link href="/try" className="btn">try the editor</Link>
-              <a
-                className="btn quiet"
-                href="https://github.com/zorilla-oss/zorillaApp"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <GithubMark size={15} /> source
-              </a>
-            </div>
-            <div className="install">
-              <b>git clone https://github.com/zorilla-oss/zorillaApp</b>
-              <span>then npm i && npm start</span>
-            </div>
+        <img className="mark" src="/logo.svg" alt="" width="62" height="62" />
+        <h1>automations that run on your machine</h1>
+        <p className="lede">
+          Fully local automation, no strings attached. Reads smart contracts, with web3
+          steps built in. 15 API integrations ship with it, or build your own.
+        </p>
+        <div className="cta">
+          <Link href="/docs#first-automation" className="btn primary">build your first one</Link>
+          <Link href="/try" className="btn">try the editor</Link>
+          <a
+            className="btn quiet"
+            href="https://github.com/zorilla-oss/zorillaApp"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <GithubMark size={15} /> source
+          </a>
+        </div>
+
+        <div className="audience">
+          <div className="audience-row">
+            <span className="who">Traders can</span>
+            <span className="can">
+              Watch a wallet and get a Telegram message the moment USDC lands in it
+              <small>contract events → only new ones → telegram</small>
+            </span>
           </div>
-          <Shot
-            src="/guide/editor-run.png"
-            alt="the zorilla editor: a schedule, a price check, and a post to Discord"
-            tilt
-          />
+          <div className="audience-row">
+            <span className="who">Influencers can</span>
+            <span className="can">
+              Check chain news every half hour, have Claude draft a post, put it on X
+              <small>schedule → news → claude → x</small>
+            </span>
+          </div>
+          <div className="audience-row">
+            <span className="who">Community leaders can</span>
+            <span className="can">
+              Announce a price move to Discord with @everyone, once, not every ten minutes
+              <small>price → moved 5% → discord #announcements</small>
+            </span>
+          </div>
+          <div className="audience-row">
+            <span className="who">Anyone selling something can</span>
+            <span className="can">
+              Turn a Stripe payment into a Slack message and a row in Notion
+              <small>new payment → slack + notion</small>
+            </span>
+          </div>
+          <div className="audience-row">
+            <span className="who">Builders can</span>
+            <span className="can">
+              Read any contract on a schedule and email themselves the numbers
+              <small>schedule → contract read → resend</small>
+            </span>
+          </div>
+          <div className="audience-row">
+            <span className="who">You can</span>
+            <span className="can">
+              Take one of these off the marketplace and change it
+              <small><Link href="/marketplace" style={{ color: 'var(--link)' }}>have a look</Link></small>
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <section className="page section">
+        <div className="feature wide">
+          <div>
+            <h3>build it by dragging</h3>
+            <p>
+              Services on the left, one row each. Drop a step on the canvas, drag a wire to the
+              next one, and each step tells you what it still needs before it can run. This one
+              checks a news feed, filters it, has Claude write a post and puts it on X.
+            </p>
+          </div>
+          <Shot src="/guide/hero-x.png" alt="the zorilla editor building a news to X automation" tilt />
+        </div>
+
+        <div className="feature wide">
+          <div>
+            <h3>keys are saved once, and say where they point</h3>
+            <p>
+              Paste a Discord webhook or a Resend key in, name it, and every step that uses it
+              shows which channel or account it goes to. Keys are encrypted on your machine, and
+              a shared automation carries the name, never the value.
+            </p>
+          </div>
+          <Shot src="/guide/keys.png" alt="the keys panel showing where a saved key points" />
+        </div>
+
+        <div className="feature wide">
+          <div>
+            <h3>run it, watch what happened</h3>
+            <p>
+              Press run and the log shows every step, what it received, what it sent, and why
+              anything failed. When it looks right, switch it live and it runs on its own.
+            </p>
+          </div>
+          <Shot src="/guide/editor-run.png" alt="an automation switched live, with the run log" />
         </div>
       </section>
 
@@ -92,7 +161,7 @@ export default async function Home() {
             </p>
           </div>
           <div className="cell">
-            <h3>reads any contract</h3>
+            <h3>reads Ethereum (Solidity)</h3>
             <p>
               Call any read function on any contract. Balances, ERC-20 balances at the
               token&apos;s own decimals, events, gas, ENS. Amounts stay integers end to end.

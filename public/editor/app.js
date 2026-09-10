@@ -181,9 +181,8 @@ function whatItNeeds(workflow) {
     for (const param of def.params ?? []) {
       if (param.type !== 'credential') continue
       const chosen = node.params?.[param.key]
-      const optional = param.key !== 'credential'
       if (!chosen) {
-        if (!optional) needs.push(`a key for ${def.label}`)
+        if (param.required !== false) needs.push(`a key for ${def.label}`)
         continue
       }
       if (!state.credentials.some((c) => c.name === chosen)) {

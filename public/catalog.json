@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-10T00:32:17.759Z",
+  "generatedAt": "2026-09-10T00:50:41.734Z",
   "nodes": [
     {
       "outputs": [
@@ -18,6 +18,7 @@
           "label": "Key it may use",
           "type": "credential",
           "default": "",
+          "required": false,
           "description": "Optional. Only the key you pick here is handed across."
         },
         {
@@ -388,6 +389,7 @@
           "label": "Use a saved key",
           "type": "credential",
           "default": "",
+          "required": false,
           "description": "Adds what the service needs to authenticate. No header to write."
         },
         {
@@ -831,6 +833,7 @@
           "type": "credential",
           "credentialType": "evmRpc",
           "default": "",
+          "required": false,
           "description": "Optional. Public endpoints rate limit."
         }
       ],
@@ -882,6 +885,7 @@
           "type": "credential",
           "credentialType": "evmRpc",
           "default": "",
+          "required": false,
           "description": "Optional. Public endpoints rate limit."
         }
       ],
@@ -939,6 +943,7 @@
           "type": "credential",
           "credentialType": "evmRpc",
           "default": "",
+          "required": false,
           "description": "Optional. Public endpoints rate limit."
         }
       ],
@@ -1004,6 +1009,7 @@
           "type": "credential",
           "credentialType": "evmRpc",
           "default": "",
+          "required": false,
           "description": "Optional. Public endpoints rate limit."
         }
       ],
@@ -1041,6 +1047,7 @@
           "type": "credential",
           "credentialType": "evmRpc",
           "default": "",
+          "required": false,
           "description": "Optional. Public endpoints rate limit."
         }
       ],
@@ -1085,6 +1092,7 @@
           "type": "credential",
           "credentialType": "evmRpc",
           "default": "",
+          "required": false,
           "description": "Optional. Public endpoints rate limit."
         }
       ],
@@ -1163,6 +1171,7 @@
           "type": "credential",
           "credentialType": "evmRpc",
           "default": "",
+          "required": false,
           "description": "Optional. Public endpoints rate limit."
         }
       ],
@@ -2034,6 +2043,65 @@
           "type": "textarea"
         }
       ]
+    },
+    {
+      "type": "x.post",
+      "label": "Post to X",
+      "category": "action",
+      "description": "Posts one message per item. 280 characters.",
+      "outputs": [
+        "main"
+      ],
+      "integration": "x",
+      "poll": false,
+      "params": [
+        {
+          "key": "credential",
+          "label": "X key",
+          "type": "credential",
+          "credentialType": "x",
+          "default": ""
+        },
+        {
+          "key": "text",
+          "label": "Message",
+          "type": "textarea"
+        }
+      ]
+    },
+    {
+      "type": "x.search",
+      "label": "Search X",
+      "category": "action",
+      "description": "Recent posts matching a search. One item per post.",
+      "outputs": [
+        "main"
+      ],
+      "integration": "x",
+      "poll": false,
+      "params": [
+        {
+          "key": "credential",
+          "label": "X key",
+          "type": "credential",
+          "credentialType": "x",
+          "default": ""
+        },
+        {
+          "key": "query",
+          "label": "Search for",
+          "type": "text",
+          "placeholder": "robinhood chain -is:retweet"
+        },
+        {
+          "key": "limit",
+          "label": "How many at most",
+          "type": "number",
+          "default": 25,
+          "min": 10,
+          "description": "zorilla keeps asking for more pages until it has this many."
+        }
+      ]
     }
   ],
   "credentialTypes": [
@@ -2480,6 +2548,30 @@
       "fromIntegration": true,
       "hosts": [
         "api.twilio.com"
+      ],
+      "warnings": [],
+      "checkable": true
+    },
+    {
+      "type": "x",
+      "label": "X",
+      "description": "From the X developer portal. Posting needs a user access token, not the app-only bearer: open your project, Keys and tokens, and generate an access token with write permission.",
+      "docs": "https://developer.x.com/en/portal/dashboard",
+      "fields": [
+        {
+          "key": "accessToken",
+          "label": "Access token",
+          "secret": true,
+          "required": true,
+          "placeholder": "AAAA…"
+        }
+      ],
+      "identity": {
+        "as": "data.username"
+      },
+      "fromIntegration": true,
+      "hosts": [
+        "api.x.com"
       ],
       "warnings": [],
       "checkable": true
@@ -2980,6 +3072,40 @@
           "key": "sendSms",
           "label": "Send a text",
           "description": "Sends one text message per item."
+        }
+      ]
+    },
+    {
+      "id": "x",
+      "label": "X",
+      "icon": null,
+      "description": "Post to X, and search what is being said.",
+      "docs": "https://developer.x.com/en/portal/dashboard",
+      "category": "action",
+      "editable": false,
+      "fields": [
+        {
+          "key": "accessToken",
+          "label": "Access token",
+          "secret": true,
+          "required": true,
+          "placeholder": "AAAA…"
+        }
+      ],
+      "hosts": [
+        "api.x.com"
+      ],
+      "warnings": [],
+      "actions": [
+        {
+          "key": "post",
+          "label": "Post to X",
+          "description": "Posts one message per item. 280 characters."
+        },
+        {
+          "key": "search",
+          "label": "Search X",
+          "description": "Recent posts matching a search. One item per post."
         }
       ]
     }

@@ -4,7 +4,7 @@ zorilla runs automations on one person's own machine. An automation is a JSON fi
 steps, and wires between them. This file lists every step, what it takes, and the rules
 the engine enforces. It is generated from the running catalogue.
 
-Steps: 48. Integrations: 15. Generated 2026-09-10.
+Steps: 50. Integrations: 16. Generated 2026-09-10.
 
 ## The file
 
@@ -392,6 +392,18 @@ Text messages. Contacts: api.twilio.com.
   - `args`, list — Values. In the order the function takes them.
   - `rpc`, credential, a saved evmRpc key — RPC endpoint. Optional. Public endpoints rate limit.
 
+### X
+
+Post to X, and search what is being said. Contacts: api.x.com.
+
+- **`x.post`** (action) — Posts one message per item. 280 characters.
+  - `credential`, credential, a saved x key — X key
+  - `text`, textarea — Message
+- **`x.search`** (action) — Recent posts matching a search. One item per post.
+  - `credential`, credential, a saved x key — X key
+  - `query`, text — Search for
+  - `limit`, number, default 25 — How many at most. zorilla keeps asking for more pages until it has this many.
+
 ## Keys you can save
 
 - `airtable` — Airtable: token
@@ -414,8 +426,152 @@ Text messages. Contacts: api.twilio.com.
 - `supabase` — Supabase: url, serviceKey
 - `telegram` — Telegram: botToken, chatId (optional)
 - `twilio` — Twilio: accountSid, authToken, fromNumber
+- `x` — X: accessToken
 
 ## Working examples
+
+### chain news to x
+
+Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has Claude draft a post about it, and puts it on X. Needs a news feed you can read as JSON, a Claude key, and an X access token with write permission.
+
+```json
+{
+  "nodes": [
+    {
+      "id": "clock",
+      "type": "core.schedule",
+      "params": {
+        "mode": "every",
+        "every": 30,
+        "unit": "minutes"
+      },
+      "position": {
+        "x": 40,
+        "y": 150
+      }
+    },
+    {
+      "id": "news",
+      "type": "net.http",
+      "params": {
+        "method": "GET",
+        "url": "https://api.cryptopanic.com/v1/posts/",
+        "credential": "",
+        "headers": [],
+        "sendBody": false,
+        "timeout": 30,
+        "failOnError": true
+      },
+      "position": {
+        "x": 260,
+        "y": 150
+      }
+    },
+    {
+      "id": "each",
+      "type": "code.js",
+      "params": {
+        "code": "return items.flatMap(i => (i.json.body.results ?? []).map(post => ({ json: post })))",
+        "credential": "",
+        "timeout": 15
+      },
+      "position": {
+        "x": 480,
+        "y": 150
+      }
+    },
+    {
+      "id": "about",
+      "type": "logic.filter",
+      "params": {
+        "value": "{{ $json.title }}",
+        "operation": "contains",
+        "compare": "Robinhood"
+      },
+      "position": {
+        "x": 700,
+        "y": 150
+      }
+    },
+    {
+      "id": "fresh",
+      "type": "logic.once",
+      "params": {
+        "key": "{{ $json.id }}"
+      },
+      "position": {
+        "x": 920,
+        "y": 150
+      }
+    },
+    {
+      "id": "draft",
+      "type": "anthropic.ask",
+      "params": {
+        "credential": "my_claude",
+        "prompt": "Write one post for X about this headline. Under 240 characters, no hashtags, no emoji, say what happened and why it matters.\n\n{{ $json.title }}",
+        "model": "claude-sonnet-5",
+        "system": "You write for a crypto audience that dislikes hype.",
+        "maxTokens": 300
+      },
+      "position": {
+        "x": 1140,
+        "y": 150
+      }
+    },
+    {
+      "id": "post",
+      "type": "x.post",
+      "params": {
+        "credential": "my_x",
+        "text": "{{ $json.text }}"
+      },
+      "position": {
+        "x": 1360,
+        "y": 150
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "clock",
+      "fromPort": "main",
+      "to": "news",
+      "toPort": "main"
+    },
+    {
+      "from": "news",
+      "fromPort": "main",
+      "to": "each",
+      "toPort": "main"
+    },
+    {
+      "from": "each",
+      "fromPort": "main",
+      "to": "about",
+      "toPort": "main"
+    },
+    {
+      "from": "about",
+      "fromPort": "main",
+      "to": "fresh",
+      "toPort": "main"
+    },
+    {
+      "from": "fresh",
+      "fromPort": "main",
+      "to": "draft",
+      "toPort": "main"
+    },
+    {
+      "from": "draft",
+      "fromPort": "main",
+      "to": "post",
+      "toPort": "main"
+    }
+  ]
+}
+```
 
 ### daily digest email
 
