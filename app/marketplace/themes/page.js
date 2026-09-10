@@ -4,7 +4,7 @@ import { listListings } from '@/lib/store'
 import ThemeCard from '@/components/ThemeCard'
 import { ListingRow } from '@/components/Listings'
 
-export const metadata = { title: 'themes · zorilla' }
+export const metadata = { title: 'Themes · Zorilla' }
 export const dynamic = 'force-dynamic'
 
 export default async function Themes() {
@@ -13,7 +13,7 @@ export default async function Themes() {
 
   return (
     <main className="page section" style={{ borderTop: 0 }}>
-      <h2>themes</h2>
+      <h2>Themes</h2>
       <p className="sub">
         Drop a file into <code>~/.zorilla/themes/</code> and hit refresh in the themes panel.
       </p>

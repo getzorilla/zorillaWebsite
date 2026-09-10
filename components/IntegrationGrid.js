@@ -16,7 +16,7 @@ function Logo({ id, size = 26 }) {
 }
 
 // Everything a service can do, with the line to paste for each one. Somebody
-// deciding whether zorilla covers what they use should be able to answer that
+// deciding whether Zorilla covers what they use should be able to answer that
 // on one page.
 // What somebody has to go and find before this is any use, said the way they
 // would say it rather than as a list of field names.

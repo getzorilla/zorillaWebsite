@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import ProfileForm from '@/components/ProfileForm'
 import { currentUser } from '@/lib/auth'
 
-export const metadata = { title: 'settings · zorilla' }
+export const metadata = { title: 'Settings · Zorilla' }
 
 export default async function Settings() {
   const user = await currentUser()
@@ -11,7 +11,7 @@ export default async function Settings() {
 
   return (
     <main className="page section" style={{ borderTop: 0 }}>
-      <h2>your profile</h2>
+      <h2>Your profile</h2>
       <p className="sub mono">
         {user.wallet ? `${user.wallet.slice(0, 6)}…${user.wallet.slice(-4)}` : user.email}
       </p>

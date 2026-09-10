@@ -10,21 +10,20 @@ export default async function Nav() {
       <div className="page nav-inner">
         <Link href="/" className="brand">
           <img src="/logo.svg" alt="" width="22" height="22" />
-          <span>zorilla</span>
+          <span>Zorilla</span>
         </Link>
         <span className="nav-links">
-          <Link href="/docs" className="link">docs</Link>
-          <Link href="/integrations" className="link">integrations</Link>
-          <Link href="/marketplace" className="link">marketplace</Link>
-          <Link href="/try" className="link">try the editor</Link>
+          <Link href="/docs" className="link">Docs</Link>
+          <Link href="/integrations" className="link">Integrations</Link>
+          <Link href="/marketplace" className="link">Marketplace</Link>
         </span>
         <span className="nav-end">
           <a
             className="link icon-link"
-            href="https://github.com/zorilla-automate/zorillaApp"
+            href="https://github.com/getzorilla/zorillaApp"
             target="_blank"
             rel="noreferrer"
-            aria-label="zorilla on GitHub"
+            aria-label="Zorilla on GitHub"
             title="GitHub"
           >
             <GithubMark size={16} />

@@ -4,15 +4,15 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="page row wrap">
-        <span className="dimmer mono">zorilla, MIT</span>
+        <a className="dimmer mono" href="https://github.com/getzorilla/zorillaApp/blob/main/LICENSE" target="_blank" rel="noreferrer">Zorilla, Elastic License 2.0</a>
         <span className="spacer" />
-        <a href="/marketplace">marketplace</a>
+        <a href="/marketplace">Marketplace</a>
         <a
           className="icon-link"
-          href="https://github.com/zorilla-automate/zorillaApp"
+          href="https://github.com/getzorilla/zorillaApp"
           target="_blank"
           rel="noreferrer"
-          aria-label="zorilla on GitHub"
+          aria-label="Zorilla on GitHub"
           title="GitHub"
         >
           <GithubMark size={16} />
@@ -22,7 +22,7 @@ export default function Footer() {
           href="https://x.com/4aykk"
           target="_blank"
           rel="noreferrer"
-          aria-label="zorilla on X"
+          aria-label="Zorilla on X"
           title="X"
         >
           <XMark size={14} />

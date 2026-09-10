@@ -15,7 +15,7 @@ export default function IntegrationPrompt({ prompt }) {
 
   return (
     <div className="panel" style={{ maxWidth: '64ch' }}>
-      <h3>a service that is not here</h3>
+      <h3>A service that is not here</h3>
       <p style={{ fontSize: 13, marginBottom: 12 }}>
         An integration is one JSON file, and you do not have to write it. Copy this prompt,
         replace the service name, hand it to Claude or ChatGPT, and paste the answer into

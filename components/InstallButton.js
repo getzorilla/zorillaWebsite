@@ -22,7 +22,7 @@ export default function InstallButton({ slug, title, kind }) {
 
   return (
     <span className="row">
-      <button className="btn primary" onClick={download}>download the file</button>
+      <button className="btn primary" onClick={download}>Download the file</button>
       {count !== null && <span className="dim" style={{ fontSize: 13 }}>{count} installs</span>}
     </span>
   )

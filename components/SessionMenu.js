@@ -6,10 +6,10 @@ import { useRouter } from 'next/navigation'
 export default function SessionMenu({ user }) {
   const router = useRouter()
 
-  if (!user) return <Link href="/signin" className="btn">sign in</Link>
+  if (!user) return <Link href="/signin" className="btn">Sign in</Link>
 
   if (!user.handle) {
-    return <Link href="/welcome" className="btn primary">pick a handle</Link>
+    return <Link href="/welcome" className="btn primary">Pick a handle</Link>
   }
 
   return (

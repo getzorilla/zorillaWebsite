@@ -19,7 +19,7 @@ export function ListingRow({ listing }) {
         <div className="title">{listing.title}</div>
         <div className="meta">
           {listing.kind} · by {listing.authorHandle}
-          {listing.shipped ? ' · came with zorilla' : ` · ${listing.installs ?? 0} installs`}
+          {listing.shipped ? ' · came with Zorilla' : ` · ${listing.installs ?? 0} installs`}
         </div>
         {listing.summary && <div className="dim" style={{ fontSize: 13, marginTop: 2 }}>{listing.summary}</div>}
         <div style={{ marginTop: 6 }}>

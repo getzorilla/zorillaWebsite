@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { listListings } from '@/lib/store'
 import { ListingRow, Empty } from '@/components/Listings'
 
-export const metadata = { title: 'marketplace · zorilla' }
+export const metadata = { title: 'Marketplace · Zorilla' }
 export const dynamic = 'force-dynamic'
 
 export default async function Marketplace({ searchParams }) {
@@ -23,7 +23,7 @@ export default async function Marketplace({ searchParams }) {
 
   return (
     <main className="page section" style={{ borderTop: 0 }}>
-      <h2>marketplace</h2>
+      <h2>Marketplace</h2>
       <p className="sub">
         Automations and integrations people have published. Downloading needs no account.
         Every listing shows what it contacts, worked out from the file itself.
@@ -35,7 +35,7 @@ export default async function Marketplace({ searchParams }) {
         {tab('integrations', 'integration')}
         {tab('themes', 'theme')}
         <span className="spacer" />
-        <Link href="/publish" className="btn">publish</Link>
+        <Link href="/publish" className="btn">Publish</Link>
       </div>
 
       <form className="row" style={{ marginBottom: 18 }}>
@@ -51,7 +51,7 @@ export default async function Marketplace({ searchParams }) {
               ? 'Try a different word.'
               : 'Build an automation in the app, export it, and publish it here. Yours would be the first.'}
           </p>
-          <Link href="/publish" className="btn primary">publish something</Link>
+          <Link href="/publish" className="btn primary">Publish something</Link>
         </Empty>
       ) : (
         <div className="list">

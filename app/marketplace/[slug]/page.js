@@ -44,7 +44,7 @@ export default async function ListingPage({ params }) {
       )}
 
       <div className="panel">
-        <h3>what this can do</h3>
+        <h3>What this can do</h3>
         <p className="dim" style={{ fontSize: 12.5, marginTop: -4 }}>
           Read out of the file, not written by the author.
         </p>
@@ -79,12 +79,12 @@ export default async function ListingPage({ params }) {
       {isAutomation && derived.runsCode && (
         <div className="notice">
           <b>This runs javascript written by its author.</b> That code is not sandboxed. It
-          runs with the same access as zorilla itself. Read it before you install it.
+          runs with the same access as Zorilla itself. Read it before you install it.
         </div>
       )}
 
       <div className="panel">
-        <h3>the file</h3>
+        <h3>The file</h3>
         <pre className="mono dim" style={{ fontSize: 12, overflowX: 'auto', margin: 0, maxHeight: 320 }}>
           {JSON.stringify(listing.package, null, 2)}
         </pre>
@@ -92,10 +92,10 @@ export default async function ListingPage({ params }) {
 
       <div className="row wrap" style={{ marginTop: 18 }}>
         <InstallButton slug={listing.slug} title={listing.title} kind={listing.kind} />
-        <Link href="/marketplace" className="btn quiet">back</Link>
+        <Link href="/marketplace" className="btn quiet">Back</Link>
       </div>
       <p className="dim" style={{ fontSize: 13 }}>
-        {isAutomation && 'Download it, then in zorilla press add one from a file. You get a screen listing what it contacts and which keys it asks for before anything is saved.'}
+        {isAutomation && 'Download it, then in Zorilla press add one from a file. You get a screen listing what it contacts and which keys it asks for before anything is saved.'}
         {isTheme && 'Save it into ~/.zorilla/themes/ and press refresh in the themes panel, or paste it into add from json.'}
         {listing.kind === 'integration' && 'Save it into ~/.zorilla/integrations/ and reload, or paste it into the integration editor.'}
       </p>

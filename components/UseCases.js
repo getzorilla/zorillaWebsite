@@ -2,11 +2,10 @@
 
 import { useState } from 'react'
 
-// The tabs. Each panel's picture is drawn on the server from the same file the
-// app installs, so it can never drift from what somebody actually gets.
+// Each panel's picture is drawn on the server from the same file the app
+// installs, so it can never drift from what somebody actually gets.
 export default function UseCases({ cases }) {
   const [pick, setPick] = useState(cases[0].id)
-  const current = cases.find((c) => c.id === pick)
 
   return (
     <div className="cases">
@@ -17,8 +16,7 @@ export default function UseCases({ cases }) {
             className={`case-tab${c.id === pick ? ' on' : ''}`}
             onClick={() => setPick(c.id)}
           >
-            <b>{c.who} can</b>
-            <span>{c.line}</span>
+            {c.who}
           </button>
         ))}
       </div>
@@ -26,6 +24,7 @@ export default function UseCases({ cases }) {
       <div className="case-panel">
         {cases.map((c) => (
           <div key={c.id} hidden={c.id !== pick}>
+            <p className="case-line">{c.line}</p>
             <div className="frame">{c.preview}</div>
             <div className="case-steps">
               <ol>

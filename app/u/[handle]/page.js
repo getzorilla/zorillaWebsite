@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({ params }) {
   const { handle } = await params
-  return { title: `${handle} · zorilla` }
+  return { title: `${handle} · Zorilla` }
 }
 
 export default async function ProfilePage({ params }) {
@@ -31,7 +31,7 @@ export default async function ProfilePage({ params }) {
           <div className="dim mono" style={{ fontSize: 13 }}>@{profile.handle}</div>
         </div>
         <span className="spacer" />
-        {mine && <Link href="/settings" className="btn quiet">edit</Link>}
+        {mine && <Link href="/settings" className="btn quiet">Edit</Link>}
       </div>
 
       {profile.bio && <p style={{ maxWidth: '62ch' }}>{profile.bio}</p>}
@@ -47,7 +47,7 @@ export default async function ProfilePage({ params }) {
       {listings.length === 0 ? (
         <Empty title="nothing published yet">
           {mine
-            ? <><p>Export an automation from your app and put it here.</p><Link href="/publish" className="btn primary">publish something</Link></>
+            ? <><p>Export an automation from your app and put it here.</p><Link href="/publish" className="btn primary">Publish something</Link></>
             : <p>Nothing from {profile.handle} so far.</p>}
         </Empty>
       ) : (

@@ -37,7 +37,7 @@ const CASES = [
     needs: 'a Claude key and an X access token',
   },
   {
-    id: 'community', slug: 'price-move-to-discord', who: 'Community leaders',
+    id: 'community', slug: 'price-move-to-discord', who: 'Communities',
     line: 'Announce a price move to Discord with @everyone, once',
     why: 'Checks every ten minutes but stays quiet until the price is 5% away from the last thing it told you.',
     steps: [
@@ -49,7 +49,7 @@ const CASES = [
     needs: 'a Discord webhook',
   },
   {
-    id: 'selling', slug: 'payment-to-slack-and-notion', who: 'Anyone selling something',
+    id: 'selling', slug: 'payment-to-slack-and-notion', who: 'Sellers',
     line: 'Turn a Stripe payment into a Slack message and a Notion row',
     why: 'One step feeding two, so both happen from the same payment. Fires once per payment.',
     steps: ['new stripe payment', 'slack  "$49.00 from buyer@example.com"', 'notion  add a row'],
@@ -79,46 +79,56 @@ export default async function Home() {
   return (
     <main>
       <section className="page hero">
-        <img className="mark" src="/logo.svg" alt="" width="62" height="62" />
-        <h1>automations that run on your machine</h1>
-        <p className="lede">
-          Fully local automation, no strings attached. Reads smart contracts, with web3
-          steps built in. 16 API integrations ship with it, or build your own.
-        </p>
-        <CopyCommand command="npx github:zorilla-automate/zorillaApp" />
-        <div className="cta">
-          <Link href="/docs" className="btn primary">docs</Link>
-          <Link href="/try" className="btn">try the editor</Link>
-          <a
-            className="btn quiet"
-            href="https://github.com/zorilla-automate/zorillaApp"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <GithubMark size={15} /> source
-          </a>
-        </div>
+        <div className="hero-grid">
+          <div>
+            <div className="hero-name">
+              <h1>Zorilla</h1>
+              <img className="mark" src="/logo.svg" alt="" width="56" height="56" />
+            </div>
+            <ul className="hero-points">
+              <li>Runs on your computer. No account, no cloud, no company in the middle.</li>
+              <li>Reads Ethereum (Solidity): balances, events, any read function on any contract.</li>
+              <li>{catalog.integrations.length} integrations and {catalog.nodes.length} steps built in. Write your own as JSON.</li>
+              <li>Keys live in an encrypted vault on your disk and never leave it.</li>
+              <li>Free, and the source is public.</li>
+            </ul>
+            <CopyCommand command="npx github:getzorilla/zorillaApp" />
+            <div className="cta">
+              <Link href="/docs" className="btn primary">Docs</Link>
+              <a
+                className="btn quiet"
+                href="https://github.com/getzorilla/zorillaApp"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <GithubMark size={15} /> Source
+              </a>
+            </div>
+            <p className="hero-note">
+              Node 20 or newer. Elastic License 2.0: read it, run it, change it, use it at
+              work.
+            </p>
+          </div>
 
-        <UseCases cases={cases} />
+          <UseCases cases={cases} />
+        </div>
       </section>
 
       <section className="page section">
         <div className="feature wide">
           <div>
-            <h3>build it by dragging</h3>
+            <h3>Build it by dragging</h3>
             <p>
               Services on the left, one row each. Drop a step on the canvas, drag a wire to the
-              next one, and each step tells you what it still needs before it can run. This one
-              checks a news feed every half hour, keeps the headlines worth posting about, has
-              Claude write the post, and puts it on X.
+              next one, and each step tells you what it still needs before it can run.
             </p>
           </div>
-          <Shot src="/guide/hero-x.png" alt="the zorilla editor building a news to X automation" tilt />
+          <Shot src="/guide/hero-x.png" alt="the Zorilla editor building a news to X automation" tilt />
         </div>
 
         <div className="feature wide">
           <div>
-            <h3>keys are saved once, and say where they point</h3>
+            <h3>Keys are saved once, and say where they point</h3>
             <p>
               Paste a Discord webhook or a Resend key in, name it, and every step that uses it
               shows which channel or account it goes to. Keys are encrypted on your machine, and
@@ -130,7 +140,7 @@ export default async function Home() {
 
         <div className="feature wide">
           <div>
-            <h3>run it, watch what happened</h3>
+            <h3>Run it, watch what happened</h3>
             <p>
               Press run and the log shows every step, what it received, what it sent, and why
               anything failed. When it looks right, switch it live and it runs on its own.
@@ -141,21 +151,21 @@ export default async function Home() {
       </section>
 
       <section className="page section">
-        <h2>what you need</h2>
+        <h2>What you need</h2>
         <p className="sub">
           Node 20 and a terminal to start it once. After that it is a page in your browser.
         </p>
         <div className="grid three">
           <div className="cell">
-            <h3>a computer that stays on</h3>
+            <h3>A computer that stays on</h3>
             <p>
-              zorilla runs on your machine, so an automation set to check every ten minutes
+              Zorilla runs on your machine, so an automation set to check every ten minutes
               only checks while that machine is awake. Shut the laptop and it stops. Open it
               and it runs whatever it missed, once, and tells you how many it skipped.
             </p>
           </div>
           <div className="cell">
-            <h3>a key for each service you use</h3>
+            <h3>A key for each service you use</h3>
             <p>
               To post to Discord you make a webhook in the channel and paste the address in
               once. To send email through Resend you paste an API key. Each one is saved under
@@ -164,7 +174,7 @@ export default async function Home() {
             </p>
           </div>
           <div className="cell">
-            <h3>a public address, only for webhooks</h3>
+            <h3>A public address, only for webhooks</h3>
             <p>
               Stripe, Shopify and GitHub do not sit and wait to be asked. They send a message
               to an address when a sale or a push happens, and your machine has no address
@@ -177,24 +187,24 @@ export default async function Home() {
       </section>
 
       <section className="page section">
-        <h2>features</h2>
+        <h2>Features</h2>
         <div className="grid two">
           <div className="cell">
-            <h3>runs where you are</h3>
+            <h3>Runs where you are</h3>
             <p>
               Binds to 127.0.0.1 and holds an encrypted vault. Put it on a small rented box
               if you want it awake at 3am.
             </p>
           </div>
           <div className="cell">
-            <h3>reads Ethereum (Solidity)</h3>
+            <h3>Reads Ethereum (Solidity)</h3>
             <p>
               Call any read function on any contract. Balances, ERC-20 balances at the
               token&apos;s own decimals, events, gas, ENS. Amounts stay integers end to end.
             </p>
           </div>
           <div className="cell">
-            <h3>simulates contracts before spending</h3>
+            <h3>Simulates contracts before spending</h3>
             <p>
               A step works out what a transaction would do and what the fee would be, then
               refuses anything that would fail. Note: onchain transactions still require
@@ -202,7 +212,7 @@ export default async function Home() {
             </p>
           </div>
           <div className="cell">
-            <h3>the ordinary automation half</h3>
+            <h3>The ordinary automation half</h3>
             <p>
               Start on a schedule, on a webhook, or when something new turns up: a Telegram
               message, a Stripe payment, a Notion row. Then branch on a value, filter a list,
@@ -225,10 +235,10 @@ export default async function Home() {
       </section>
 
       <section className="page section">
-        <h2>themes</h2>
+        <h2>Themes</h2>
         <p className="sub">
-          13 color themes that i ripped off of vscode plus you can build your own, or
-          share/download others.
+          13 color themes ripped off of VS Code, plus you can build your own, or
+          share and download others.
         </p>
         <div className="theme-grid">
           {(catalog.themes ?? []).slice(0, 4).map((theme) => (
@@ -239,12 +249,12 @@ export default async function Home() {
           ))}
         </div>
         <div className="cta" style={{ marginTop: 20 }}>
-          <Link href="/marketplace/themes" className="btn">themes</Link>
+          <Link href="/marketplace/themes" className="btn">Themes</Link>
         </div>
       </section>
 
       <section className="page section">
-        <h2>the marketplace</h2>
+        <h2>The marketplace</h2>
         <p className="sub">
           {counts.automations + counts.integrations > 0
             ? `${counts.automations} automations and ${counts.integrations} integrations, from ${counts.people} people.`
@@ -252,14 +262,14 @@ export default async function Home() {
         </p>
         <div className="grid two">
           <div className="cell">
-            <h3>permissions come from the file</h3>
+            <h3>Permissions come from the file</h3>
             <p>
               Every listing shows the sites it contacts, the keys it needs, and whether it runs
               custom code. All of it is read out of the package itself, not written by the author.
             </p>
           </div>
           <div className="cell">
-            <h3>your keys are never in a package</h3>
+            <h3>Your keys are never in a package</h3>
             <p>
               A package names a key. On install it binds to your own key of that name. The value
               stays in your vault.
@@ -267,8 +277,8 @@ export default async function Home() {
           </div>
         </div>
         <div className="cta" style={{ marginTop: 22 }}>
-          <Link href="/marketplace" className="btn">marketplace</Link>
-          <Link href="/publish" className="btn quiet">publish</Link>
+          <Link href="/marketplace" className="btn">Marketplace</Link>
+          <Link href="/publish" className="btn quiet">Publish</Link>
         </div>
       </section>
     </main>

@@ -1,11 +1,11 @@
-export const metadata = { title: 'try the editor · zorilla' }
+export const metadata = { title: 'The editor · Zorilla' }
 
 export default function Try() {
   return (
     <main>
       <iframe
         src="/editor/index.html"
-        title="zorilla editor"
+        title="Zorilla editor"
         style={{
           width: '100%',
           height: 'calc(100vh - 52px)',

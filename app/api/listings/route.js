@@ -45,7 +45,7 @@ export async function POST(request) {
       if (!payload.nodes.length) return Response.json({ error: 'That automation has no steps in it.' }, { status: 400 })
       derived = derivePermissions(payload)
       if (derived.unknown.length) {
-        return Response.json({ error: `This uses steps that are not part of zorilla: ${derived.unknown.join(', ')}` }, { status: 400 })
+        return Response.json({ error: `This uses steps that are not part of Zorilla: ${derived.unknown.join(', ')}` }, { status: 400 })
       }
     }
   } catch (err) {

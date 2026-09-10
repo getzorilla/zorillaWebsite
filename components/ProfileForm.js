@@ -41,29 +41,29 @@ export default function ProfileForm({ profile, claiming }) {
     <div style={{ maxWidth: 460 }}>
       {claiming && (
         <div className="field">
-          <label>handle</label>
+          <label>Handle</label>
           <input value={form.handle} onChange={set('handle')} placeholder="aykk" spellCheck={false} />
           <div className="help">Your address on the marketplace: zorilla.io/u/handle. This cannot be changed later.</div>
         </div>
       )}
       <div className="field">
-        <label>display name</label>
-        <input value={form.name} onChange={set('name')} placeholder="optional" />
+        <label>Display name</label>
+        <input value={form.name} onChange={set('name')} placeholder="Optional" />
       </div>
       <div className="field">
-        <label>bio</label>
-        <textarea rows={3} value={form.bio} onChange={set('bio')} placeholder="optional" />
+        <label>Bio</label>
+        <textarea rows={3} value={form.bio} onChange={set('bio')} placeholder="Optional" />
       </div>
       <div className="field">
         <label>x</label>
         <input value={form.x} onChange={set('x')} placeholder="4aykk" spellCheck={false} />
       </div>
       <div className="field">
-        <label>github</label>
+        <label>GitHub</label>
         <input value={form.github} onChange={set('github')} placeholder="aykk" spellCheck={false} />
       </div>
       <div className="field">
-        <label>website</label>
+        <label>Website</label>
         <input value={form.site} onChange={set('site')} placeholder="https://" spellCheck={false} />
       </div>
       <div className="row">

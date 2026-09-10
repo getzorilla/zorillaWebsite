@@ -34,25 +34,25 @@ export default function PublishForm() {
   return (
     <div style={{ maxWidth: 620 }}>
       <div className="field">
-        <label>what is it</label>
+        <label>What is it</label>
         <select value={form.kind} onChange={set('kind')}>
-          <option value="automation">an automation</option>
-          <option value="integration">an integration</option>
-          <option value="theme">a theme</option>
+          <option value="automation">An automation</option>
+          <option value="integration">An integration</option>
+          <option value="theme">A theme</option>
         </select>
       </div>
       <div className="field">
-        <label>name</label>
+        <label>Name</label>
         <input value={form.title} onChange={set('title')} placeholder="eth price alert" />
       </div>
       <div className="field">
-        <label>one line about it</label>
+        <label>One line about it</label>
         <input value={form.summary} onChange={set('summary')} placeholder="emails you when eth crosses a price you pick" />
       </div>
       <div className="field">
-        <label>the exported file</label>
+        <label>The exported file</label>
         <input type="file" accept="application/json" onChange={readFile} style={{ marginBottom: 8 }} />
-        <textarea rows={12} value={form.pkg} onChange={set('pkg')} placeholder="or paste the json here" spellCheck={false} />
+        <textarea rows={12} value={form.pkg} onChange={set('pkg')} placeholder="Or paste the JSON here" spellCheck={false} />
         <div className="help">
           {form.kind === 'theme'
             ? 'Copy a theme in the app (themes, copy this one), change the hex values, paste it here.'
@@ -64,7 +64,7 @@ export default function PublishForm() {
         </div>
       </div>
       <div className="row">
-        <button className="btn primary" onClick={publish}>publish</button>
+        <button className="btn primary" onClick={publish}>Publish</button>
       </div>
       {problem && <p style={{ color: 'var(--bad)', fontSize: 13 }}>{problem}</p>}
     </div>

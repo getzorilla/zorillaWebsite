@@ -6,13 +6,13 @@ import Shot from '@/components/Shot'
 import AgentDoc from '@/components/AgentDoc'
 import StepReference from '@/components/StepReference'
 
-export const metadata = { title: 'docs · zorilla' }
+export const metadata = { title: 'Docs · Zorilla' }
 
 const pct = (x, y, w, h) => ({ x: (x / 1280) * 100, y: (y / 760) * 100, w: (w / 1280) * 100, h: (h / 760) * 100 })
 
 const SECTIONS = [
   ['Start here', [
-    ['what-it-is', 'What zorilla is'],
+    ['what-it-is', 'What Zorilla is'],
     ['install', 'Installing it'],
     ['first-automation', 'Your first automation'],
     ['sharing', 'Taking and sharing'],
@@ -44,7 +44,7 @@ export default async function Docs({ searchParams }) {
   if (forAgents) {
     return (
       <main className="page section" style={{ borderTop: 0 }}>
-        <h2>docs for agents</h2>
+        <h2>Docs for agents</h2>
         <p className="sub" style={{ maxWidth: '70ch' }}>
           One file holding every step, every field, every rule the engine enforces, and eight
           working automations to copy from. It is generated from the same catalogue the app
@@ -52,8 +52,8 @@ export default async function Docs({ searchParams }) {
           ask for an automation.
         </p>
         <div className="tabs">
-          <Link href="/docs" className="btn quiet">for people</Link>
-          <Link href="/docs?for=agents" className="btn">for agents</Link>
+          <Link href="/docs" className="btn quiet">For people</Link>
+          <Link href="/docs?for=agents" className="btn">For agents</Link>
         </div>
         <AgentDoc text={agentText} />
       </main>
@@ -62,13 +62,13 @@ export default async function Docs({ searchParams }) {
 
   return (
     <main className="page section" style={{ borderTop: 0 }}>
-      <h2>docs</h2>
+      <h2>Docs</h2>
       <p className="sub" style={{ maxWidth: '70ch' }}>
-        Everything about zorilla: installing it, building something, and what every step takes.
+        Everything about Zorilla: installing it, building something, and what every step takes.
       </p>
       <div className="tabs">
-        <Link href="/docs" className="btn">for people</Link>
-        <Link href="/docs?for=agents" className="btn quiet">for agents</Link>
+        <Link href="/docs" className="btn">For people</Link>
+        <Link href="/docs?for=agents" className="btn quiet">For agents</Link>
       </div>
 
       <div className="docs">
@@ -83,9 +83,9 @@ export default async function Docs({ searchParams }) {
 
         <div className="docs-main">
           <section id="what-it-is">
-            <h2>What zorilla is</h2>
+            <h2>What Zorilla is</h2>
             <p>
-              zorilla is an automation tool that runs on your own computer. You wire steps
+              Zorilla is an automation tool that runs on your own computer. You wire steps
               together on a canvas: something starts a run, other steps read data, decide what
               to do with it, and send it somewhere. It watches prices, reads contracts, calls
               APIs, posts to Discord and Slack, and sends email.
@@ -94,7 +94,9 @@ export default async function Docs({ searchParams }) {
               The difference from Zapier or n8n cloud is that there is no account and no server
               in the middle. The engine, your automations, your keys and your run history are
               files on your machine. Nothing is sent anywhere except the services you
-              deliberately call, and it is MIT licensed, so you can do what you like with it.
+              deliberately call. The source is public and you can read it, run it, change it and use
+              it at work. The one thing you cannot do is sell it to other people as a hosted
+              service.
             </p>
             <p>
               It ships with 16 service integrations, {catalog.nodes.length} steps, and reads
@@ -113,9 +115,9 @@ export default async function Docs({ searchParams }) {
             </ul>
             <h3>Getting it</h3>
             <p>One command, which fetches it, starts it and opens the page:</p>
-            <pre><code>npx github:zorilla-automate/zorillaApp</code></pre>
+            <pre><code>npx github:getzorilla/zorillaApp</code></pre>
             <p>To keep a copy you can edit, clone it instead:</p>
-            <pre><code>{`git clone https://github.com/zorilla-automate/zorillaApp
+            <pre><code>{`git clone https://github.com/getzorilla/zorillaApp
 cd zorillaApp
 npm install
 npm start`}</code></pre>
@@ -155,16 +157,16 @@ npm start`}</code></pre>
 
             <h3>1. Open the workspace</h3>
             <p>
-              zorilla opens on your workspace, and it is empty: nothing is installed on your
+              Zorilla opens on your workspace, and it is empty: nothing is installed on your
               behalf. Thirteen automations came with it, and this is where you take one.
             </p>
             <Shot
               src="/guide/home.png"
-              alt="an empty zorilla workspace"
+              alt="an empty Zorilla workspace"
               spots={[
                 { n: 1, ...pct(0, 44, 150, 629), say: 'automations, keys, integrations, themes' },
                 { n: 2, ...pct(416, 145, 206, 33), say: 'start one, or add one somebody sent you' },
-                { n: 3, ...pct(579, 334, 157, 33), say: 'what came with zorilla' },
+                { n: 3, ...pct(579, 334, 157, 33), say: 'what came with Zorilla' },
               ]}
             />
 
@@ -178,7 +180,7 @@ npm start`}</code></pre>
             </p>
             <Shot
               src="/guide/examples.png"
-              alt="the automations that came with zorilla"
+              alt="the automations that came with Zorilla"
               spots={[
                 { n: 1, ...pct(533, 207, 65, 20), say: 'no setup needed' },
                 { n: 2, ...pct(1184, 226, 50, 27), say: 'take it' },
@@ -194,8 +196,8 @@ npm start`}</code></pre>
               like a password.
             </p>
             <p>
-              In zorilla, go to keys, choose Discord, paste the address in, and name it{' '}
-              <code>signals_webhook</code>. Press save. zorilla checks it with Discord and
+              In Zorilla, go to keys, choose Discord, paste the address in, and name it{' '}
+              <code>signals_webhook</code>. Press save. Zorilla checks it with Discord and
               writes down where it points, so from then on every step using that key says which
               channel it posts to instead of just showing a name.
             </p>
@@ -322,7 +324,7 @@ npm start`}</code></pre>
             <h4>Schedule</h4>
             <p>
               Every so many minutes, hours or days, or once at a set time. Schedules write down
-              when they last fired, so if your computer was asleep, zorilla notices on the next
+              when they last fired, so if your computer was asleep, Zorilla notices on the next
               start, runs the automation once to catch up, and tells you how many it skipped.
               There are no cron expressions.
             </p>
@@ -336,7 +338,7 @@ npm start`}</code></pre>
             <p>
               A new Telegram message, a new Stripe payment, a new Notion row, a new Airtable
               record. These check on a timer you set and pass on only what they have not seen
-              before. What counts as seen is remembered on disk, so restarting zorilla does not
+              before. What counts as seen is remembered on disk, so restarting Zorilla does not
               replay yesterday.
             </p>
           </section>
@@ -379,7 +381,7 @@ npm start`}</code></pre>
             </p>
             <h3>Testing one</h3>
             <p>
-              Press test and zorilla makes one cheap call to the service. It comes back either
+              Press test and Zorilla makes one cheap call to the service. It comes back either
               with a plain reason it was refused, or with where the key points: the channel a
               Discord webhook posts to, the bot a Telegram token belongs to, the workspace a
               Slack token is for. That description is shown next to the key everywhere it
@@ -452,7 +454,7 @@ npm start`}</code></pre>
             <p>
               Stripe, Shopify and GitHub do not wait to be asked. They send a message to an
               address when something happens, and your machine has no address they can reach.
-              Open a webhook step and press <b>let the internet reach this</b>. zorilla fetches
+              Open a webhook step and press <b>let the internet reach this</b>. Zorilla fetches
               Cloudflare&apos;s tunnel program the first time, about 30MB, and gives you an
               address to hand over.
             </p>
@@ -501,7 +503,7 @@ npm start`}</code></pre>
               read off the file before anyone installs it.
             </p>
             <p>
-              You do not have to write it by hand. In zorilla, open integrations, press{' '}
+              You do not have to write it by hand. In Zorilla, open integrations, press{' '}
               <b>create integration</b>, and copy the prompt at the top of that screen: name the
               service you want, hand it to an assistant, and paste the answer back.{' '}
               <a href="/integrations">The same prompt is here.</a>
@@ -541,7 +543,7 @@ npm start`}</code></pre>
             <h3>Extras</h3>
             <ul>
               <li><code>itemsPath</code> points at the list in the answer, so one call becomes one item per row.</li>
-              <li><code>pagination</code> says where the next page marker lives and where it goes back in, and zorilla keeps asking until it has what the step was told to bring back.</li>
+              <li><code>pagination</code> says where the next page marker lives and where it goes back in, and Zorilla keeps asking until it has what the step was told to bring back.</li>
               <li><code>trigger</code> with <code>dedupeBy</code> turns an action into a step that waits, firing only for things it has not seen.</li>
               <li><code>attachments</code> sends whatever files the item is carrying.</li>
               <li><code>icon</code> is a png, jpeg or webp pasted into the file, so a shared integration arrives with its own picture.</li>
@@ -603,8 +605,8 @@ npm start`}</code></pre>
           </section>
 
           <div className="row wrap" style={{ marginTop: 6 }}>
-            <Link href="/try" className="btn primary">try the editor</Link>
-            <a className="btn" href="#install">install guide</a>
+            <a className="btn primary" href="#install">Install it</a>
+            <Link href="/marketplace" className="btn">Marketplace</Link>
           </div>
         </div>
       </div>
