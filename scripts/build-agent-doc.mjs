@@ -112,4 +112,8 @@ w('## What it cannot do',
   '')
 
 await writeFile(path.join(here, '../public/zorilla.md'), out.join('\n'))
+
+// the prompt somebody hands to an assistant to get an integration written
+const { copyFile } = await import('node:fs/promises')
+await copyFile(path.join(app, 'docs/integration-prompt.md'), path.join(here, '../public/integration-prompt.md'))
 console.log(`agent doc: ${out.join('\n').length} characters`)

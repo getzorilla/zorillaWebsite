@@ -455,3 +455,10 @@ textarea { resize: vertical; font-family: var(--mono); font-size: 12px; }
 .install-card ul { margin: 0; padding-left: 18px; color: var(--dim); font-size: 12.5px; }
 .install-card li { margin-bottom: 3px; }
 .install-card .checklist { margin-top: 12px; }
+
+.prompt-help {
+  border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px;
+  margin-bottom: 14px; max-width: 620px; background: var(--raise);
+}
+.prompt-help h4 { margin: 0 0 4px; font-size: 13px; font-weight: 600; }
+.prompt-help p { margin: 0 0 10px; }

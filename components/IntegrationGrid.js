@@ -18,6 +18,17 @@ function Logo({ id, size = 26 }) {
 // Everything a service can do, with the line to paste for each one. Somebody
 // deciding whether zorilla covers what they use should be able to answer that
 // on one page.
+// What somebody has to go and find before this is any use, said the way they
+// would say it rather than as a list of field names.
+function needs(spec) {
+  const fields = (spec.fields ?? []).filter((f) => f.required !== false)
+  if (!fields.length) return 'nothing to set up'
+  // a label that already says "your" should not get another one
+  const labels = fields.map((f) => f.label.toLowerCase().replace(/^your /, ''))
+  if (labels.length === 1) return `you need your ${labels[0]}`
+  return `you need your ${labels.slice(0, -1).join(', ')} and ${labels.at(-1)}`
+}
+
 export default function IntegrationGrid({ integrations, steps }) {
   const [copied, setCopied] = useState('')
   const [term, setTerm] = useState('')
@@ -82,8 +93,8 @@ export default function IntegrationGrid({ integrations, steps }) {
               </ul>
 
               <div className="int-foot">
-                <span>{spec.fields?.length ? `key: ${spec.fields.map((f) => f.label).join(', ')}` : 'no key needed'}</span>
-                <span>{spec.hosts?.join(', ')}</span>
+                <span>{needs(spec)}</span>
+                <span>{(spec.hosts ?? []).map((h) => h.replace(/^a web address you provide.*/, 'an address you provide')).join(', ')}</span>
               </div>
             </div>
           )

@@ -496,11 +496,15 @@ npm start`}</code></pre>
           <section id="integrations">
             <h2>Writing an integration</h2>
             <p>
-              An integration is a JSON file describing a service: the fields its key needs, how a
-              request authenticates, and what each of its steps sends. Nothing in it executes,
-              which is why installing one somebody else wrote cannot run anything on your
-              machine, and why the sites it contacts can be read off the file before you install
-              it.
+              One JSON file per service: the fields its key needs, how a request authenticates,
+              and what each step sends. Nothing in it executes, so the sites it reaches can be
+              read off the file before anyone installs it.
+            </p>
+            <p>
+              You do not have to write it by hand. In zorilla, open integrations, press{' '}
+              <b>create integration</b>, and copy the prompt at the top of that screen: name the
+              service you want, hand it to an assistant, and paste the answer back.{' '}
+              <a href="/integrations">The same prompt is here.</a>
             </p>
             <pre><code>{`{
   "id": "my_api",
@@ -551,10 +555,9 @@ npm start`}</code></pre>
           <section id="themes">
             <h2>Themes</h2>
             <p>
-              A theme is a list of colours and nothing else, so one somebody else wrote cannot
-              run anything. Thirteen ship with zorilla, including Nord, One Dark, Catppuccin,
-              Dracula, Monokai and Tokyo Night. Yours go in <code>~/.zorilla/themes/</code>, or
-              paste one into the themes panel.
+              13 are preloaded, including Nord, One Dark, Catppuccin, Dracula, Monokai and Tokyo
+              Night from VS Code. Yours go in <code>~/.zorilla/themes/</code>, or paste one into
+              the themes panel.
             </p>
             <pre><code>{`{
   "id": "my-theme",
@@ -562,10 +565,7 @@ npm start`}</code></pre>
   "appearance": "dark",
   "colors": { "bg": "#101013", "text": "#d8d8de", "accent": "#6ea8fe" }
 }`}</code></pre>
-            <p>
-              Any colour you leave out falls back to the default, so a theme setting three
-              values is a valid theme.
-            </p>
+            <p>Anything you leave out falls back to the default.</p>
           </section>
 
           <section id="marketplace">

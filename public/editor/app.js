@@ -746,6 +746,25 @@ async function showIntegrationEditor(sourceId) {
     el('h1', { text: sourceId ? 'edit integration' : 'create integration' }),
     el('p', { text: 'saved as a file in ~/.zorilla/integrations. no code in it.' })))
 
+  // Nobody should have to learn this file format to add a service. Hand the
+  // prompt to an assistant, name the service, paste back what it writes.
+  if (!sourceId) {
+    const help = el('div', { class: 'prompt-help' },
+      el('h4', { text: 'have an assistant write it' }),
+      el('p', { class: 'hint', text: 'copy this, replace the service name, paste it into claude or chatgpt, then paste the json it gives you into the box below.' }))
+    const copy = el('button', { class: 'primary', text: 'copy the prompt' })
+    copy.onclick = async () => {
+      try {
+        const { prompt } = await api('/api/integration-prompt')
+        await navigator.clipboard.writeText(prompt)
+        copy.textContent = 'copied'
+        setTimeout(() => { copy.textContent = 'copy the prompt' }, 1600)
+      } catch (err) { toast(err.message, true) }
+    }
+    help.append(copy)
+    sheet.append(help)
+  }
+
   const editor = el('textarea', { rows: 26, spellcheck: false, value: JSON.stringify(spec, null, 2), class: 'max', style: 'width:100%' })
   const readout = el('div', { style: 'margin:10px 0' })
   const problem = el('p', { class: 'error' })
@@ -914,7 +933,7 @@ function renderThemes() {
 
   sheet.append(el('div', { class: 'sheet-head' },
     el('h1', { text: 'themes' }),
-    el('p', { text: 'hex values, nothing else. colours the whole app.' })))
+    el('p', { text: 'colours the workspace, the editor and the run log.' })))
 
   sheet.append(el('div', { class: 'sheet-actions' },
     el('button', { class: 'ghost', text: 'refresh', onclick: async () => { await reloadThemes(); renderThemes(); toast('themes reloaded') } }),

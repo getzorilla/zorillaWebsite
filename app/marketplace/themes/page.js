@@ -15,8 +15,7 @@ export default async function Themes() {
     <main className="page section" style={{ borderTop: 0 }}>
       <h2>themes</h2>
       <p className="sub">
-        Colours for the app you run. Drop a file into <code>~/.zorilla/themes/</code> and hit
-        refresh in the themes panel.
+        Drop a file into <code>~/.zorilla/themes/</code> and hit refresh in the themes panel.
       </p>
 
       <p className="dim" style={{ fontSize: 13, marginTop: 26 }}>{shipped.length} already installed</p>

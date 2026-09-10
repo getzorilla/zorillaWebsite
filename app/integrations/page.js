@@ -1,11 +1,15 @@
 import Link from 'next/link'
 import catalog from '@/public/catalog.json'
 import IntegrationGrid from '@/components/IntegrationGrid'
+import IntegrationPrompt from '@/components/IntegrationPrompt'
+import { readFile } from 'node:fs/promises'
+import path from 'node:path'
 
 export const metadata = { title: 'integrations · zorilla' }
 
-export default function Integrations() {
+export default async function Integrations() {
   const steps = catalog.nodes.filter((n) => n.integration)
+  const prompt = await readFile(path.join(process.cwd(), 'public', 'integration-prompt.md'), 'utf8')
 
   return (
     <main className="page section" style={{ borderTop: 0 }}>
@@ -19,9 +23,12 @@ export default function Integrations() {
 
       <IntegrationGrid integrations={catalog.integrations} steps={steps} />
 
-      <div className="row wrap" style={{ marginTop: 26 }}>
-        <Link href="/docs#integrations" className="btn primary">write your own</Link>
-        <Link href="/docs#steps" className="btn quiet">the rest of the steps</Link>
+      <div style={{ marginTop: 30 }}>
+        <IntegrationPrompt prompt={prompt} />
+      </div>
+
+      <div className="row wrap" style={{ marginTop: 20 }}>
+        <Link href="/docs#integrations" className="btn quiet">the file format, if you would rather write it</Link>
       </div>
     </main>
   )
