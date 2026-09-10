@@ -13,7 +13,7 @@ import starters from '@/public/starters.json'
 const CASES = [
   {
     id: 'traders', slug: 'telegram-post-to-group', who: 'Traders',
-    line: 'Check if @InsertKOLHere posts on X about InsertTopicHere, get it on Telegram',
+    line: 'Check if a KOL posts on X, post it in your Telegram group automatically',
     why: 'Watches one account for the words you care about. Tells you once per post, and never repeats itself after a restart.',
     steps: [
       'every 10 minutes',
