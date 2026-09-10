@@ -8,17 +8,17 @@ export default function LocalDiagram() {
         <span className="machine-tag">Your computer</span>
         <div className="machine-grid">
           <div className="chip"><b>Editor</b><span>127.0.0.1:5177</span></div>
-          <div className="chip"><b>Engine</b><span>runs every step</span></div>
-          <div className="chip stays"><b>Vault</b><span>keys, encrypted</span></div>
-          <div className="chip stays"><b>Files</b><span>automations, run history</span></div>
+          <div className="chip"><b>Engine</b><span>Runs every step</span></div>
+          <div className="chip stays"><b>Vault</b><span>Keys, encrypted</span></div>
+          <div className="chip stays"><b>Files</b><span>Automations, run history</span></div>
         </div>
         <p className="machine-foot">Your keys and your files never leave this box.</p>
       </div>
 
       <div className="out">
-        <span className="out-label top">a step calls out</span>
+        <span className="out-label top">A step calls out</span>
         <span className="out-arrow" aria-hidden="true" />
-        <span className="out-label bottom">nothing calls in</span>
+        <span className="out-label bottom">Nothing calls in</span>
         <span className="out-blocked" aria-hidden="true" />
       </div>
 

@@ -252,8 +252,8 @@ npm start`}</Command>
             </p>
             <p>
               When you are happy with it, press the switch in the top right so it reads{' '}
-              <b>live</b>. From then on it runs on its own every ten minutes, for as long as
-              your computer is awake. Press <b>share</b> to save it as a file you can send to
+              <b>Live</b>. From then on it runs on its own every ten minutes, for as long as
+              your computer is awake. Press <b>Share</b> to save it as a file you can send to
               somebody, naming the keys it needs and never their values.
             </p>
             <Shot
@@ -271,7 +271,7 @@ npm start`}</Command>
             <h2>Taking and sharing automations</h2>
             <p>
               Download one from the <a href="/marketplace">marketplace</a>, then in your
-              workspace press <b>add one from a file</b> and drop it in. Nothing is saved until
+              workspace press <b>Import</b> and drop it in. Nothing is saved until
               you have read what it does.
             </p>
             <p>
@@ -282,7 +282,7 @@ npm start`}</Command>
               switched off.
             </p>
             <p>
-              To send one of yours the other way, open it and press <b>share</b>. You get a file
+              To send one of yours the other way, open it and press <b>Share</b>. You get a file
               naming the keys it needs and never their values, so the person installing it binds
               their own keys of those names.
             </p>
@@ -444,7 +444,7 @@ npm start`}</Command>
             <p>
               Stripe, Shopify and GitHub do not wait to be asked. They send a message to an
               address when something happens, and your machine has no address they can reach.
-              Open a webhook function and press <b>let the internet reach this</b>. Zorilla fetches
+              Open a webhook function and press <b>Let the internet reach this</b>. Zorilla fetches
               Cloudflare&apos;s tunnel program the first time, about 30MB, and gives you an
               address to hand over.
             </p>
@@ -494,7 +494,7 @@ npm start`}</Command>
             </p>
             <p>
               You do not have to write it by hand. In Zorilla, open integrations, press{' '}
-              <b>create integration</b>, and copy the prompt at the top of that screen: name the
+              <b>+ Create integration</b>, and copy the prompt at the top of that screen: name the
               service you want, hand it to an assistant, and paste the answer back.{' '}
               <a href="/integrations">The same prompt is here.</a>
             </p>

@@ -20,9 +20,9 @@ export default function ChainDiagram() {
       <div className="chain-card">
         <span className="chain-tag">Before you spend</span>
         <div className="chain-sim">
-          <div><b>Would succeed</b><span>simulated against the current block</span></div>
-          <div><b>0.00042 ETH</b><span>what the fee would be</span></div>
-          <div><b>Nothing signed</b><span>no key ever reaches a step</span></div>
+          <div><b>Would succeed</b><span>Simulated against the current block</span></div>
+          <div><b>0.00042 ETH</b><span>What the fee would be</span></div>
+          <div><b>Nothing signed</b><span>No key ever reaches a step</span></div>
         </div>
         <p>
           A step works out what a transaction would do and refuses anything that would fail.
