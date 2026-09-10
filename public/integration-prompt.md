@@ -103,6 +103,7 @@ Reply with the JSON and nothing else.
   so zorilla can show "as @yourbot" next to the saved key.
 - Two or three actions is plenty. The ones people will actually use.
 
-If anything above is unclear, or you need the full list of what an integration
-can express, read https://zorilla.io/docs — the reference there is generated
-from the running app, so it is never out of date.
+If anything above is unclear, read https://zorilla.io/docs. The step catalogue
+at https://zorilla.io/docs?for=agents is generated from the running app and
+lists every step with its real fields, which is the place to check what an
+integration's actions turn into once installed.
