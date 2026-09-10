@@ -14,12 +14,6 @@ export default async function Integrations() {
   return (
     <main className="page section" style={{ borderTop: 0 }}>
       <h2>Integrations</h2>
-      <p className="sub" style={{ maxWidth: '68ch' }}>
-        {catalog.integrations.length} services, {steps.length} things they can do, all of it
-        shipped with the app. Each one is a file describing what a service needs and what its
-        steps send, so you can read what it contacts before you use it, and writing your own
-        takes no code.
-      </p>
 
       <IntegrationGrid integrations={catalog.integrations} steps={steps} />
 
