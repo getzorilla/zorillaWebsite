@@ -1,147 +1,5 @@
 [
   {
-    "slug": "chain-news-to-x",
-    "title": "demo01: chain news to x",
-    "summary": "Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has Claude draft a post about it, and puts it on X. Needs a Claude key named claude_key and an X key named x_key with write permission, plus a news feed you can read as JSON.",
-    "package": {
-      "name": "demo01: chain news to x",
-      "nodes": [
-        {
-          "id": "clock",
-          "type": "core.schedule",
-          "params": {
-            "mode": "every",
-            "every": 30,
-            "unit": "minutes"
-          },
-          "position": {
-            "x": 40,
-            "y": 170
-          }
-        },
-        {
-          "id": "news",
-          "type": "net.http",
-          "params": {
-            "method": "GET",
-            "url": "https://api.cryptopanic.com/v1/posts/",
-            "credential": "",
-            "headers": [],
-            "sendBody": false,
-            "timeout": 30,
-            "failOnError": true
-          },
-          "position": {
-            "x": 300,
-            "y": 170
-          }
-        },
-        {
-          "id": "each",
-          "type": "code.js",
-          "params": {
-            "code": "return items.flatMap(i => (i.json.body.results ?? []).map(post => ({ json: post })))",
-            "credential": "",
-            "timeout": 15
-          },
-          "position": {
-            "x": 560,
-            "y": 170
-          }
-        },
-        {
-          "id": "about",
-          "type": "logic.filter",
-          "params": {
-            "value": "{{ $json.title }}",
-            "operation": "contains",
-            "compare": "Robinhood"
-          },
-          "position": {
-            "x": 820,
-            "y": 170
-          }
-        },
-        {
-          "id": "fresh",
-          "type": "logic.once",
-          "params": {
-            "key": "{{ $json.id }}"
-          },
-          "position": {
-            "x": 1080,
-            "y": 170
-          }
-        },
-        {
-          "id": "draft",
-          "type": "anthropic.ask",
-          "params": {
-            "credential": "claude_key",
-            "prompt": "Write one post for X about this headline. Under 240 characters, no hashtags, no emoji, say what happened and why it matters.\n\n{{ $json.title }}",
-            "model": "claude-sonnet-5",
-            "system": "You write for a crypto audience that dislikes hype.",
-            "maxTokens": 300
-          },
-          "position": {
-            "x": 1340,
-            "y": 170
-          }
-        },
-        {
-          "id": "post",
-          "type": "x.post",
-          "params": {
-            "credential": "x_key",
-            "text": "{{ $json.text }}"
-          },
-          "position": {
-            "x": 1600,
-            "y": 170
-          }
-        }
-      ],
-      "edges": [
-        {
-          "from": "clock",
-          "fromPort": "main",
-          "to": "news",
-          "toPort": "main"
-        },
-        {
-          "from": "news",
-          "fromPort": "main",
-          "to": "each",
-          "toPort": "main"
-        },
-        {
-          "from": "each",
-          "fromPort": "main",
-          "to": "about",
-          "toPort": "main"
-        },
-        {
-          "from": "about",
-          "fromPort": "main",
-          "to": "fresh",
-          "toPort": "main"
-        },
-        {
-          "from": "fresh",
-          "fromPort": "main",
-          "to": "draft",
-          "toPort": "main"
-        },
-        {
-          "from": "draft",
-          "fromPort": "main",
-          "to": "post",
-          "toPort": "main"
-        }
-      ]
-    }
-  },
-  {
     "slug": "contract-numbers-by-email",
     "title": "demo02: contract numbers by email",
     "summary": "Reads a number straight off a contract every morning and emails it to you. This one reads how much USDC exists; change the address and the function line to read anything else. Needs a Resend key named resend_key.",
@@ -507,6 +365,107 @@
           "from": "price",
           "fromPort": "main",
           "to": "mail",
+          "toPort": "main"
+        }
+      ]
+    }
+  },
+  {
+    "slug": "news-to-x",
+    "title": "demo01: news to x",
+    "summary": "Every 30 minutes it looks for new Hacker News stories about a subject you choose, has Claude draft a post about each one, and puts it on X. Change what it watches for in the About field on the search step — Robinhood Chain, stablecoins, whatever you follow. Needs a Claude key named claude_key and an X key named x_key with write permission. The news itself needs no key.",
+    "package": {
+      "name": "demo01: news to x",
+      "nodes": [
+        {
+          "id": "clock",
+          "type": "core.schedule",
+          "params": {
+            "mode": "every",
+            "every": 30,
+            "unit": "minutes"
+          },
+          "position": {
+            "x": 40,
+            "y": 170
+          }
+        },
+        {
+          "id": "news",
+          "type": "hackernews.search",
+          "params": {
+            "query": "Robinhood Chain",
+            "tags": "story",
+            "minPoints": 0,
+            "limit": 20
+          },
+          "position": {
+            "x": 310,
+            "y": 170
+          }
+        },
+        {
+          "id": "fresh",
+          "type": "logic.once",
+          "params": {
+            "key": "{{ $json.id }}"
+          },
+          "position": {
+            "x": 580,
+            "y": 170
+          }
+        },
+        {
+          "id": "draft",
+          "type": "anthropic.ask",
+          "params": {
+            "credential": "claude_key",
+            "prompt": "Write one post for X about this story. Under 240 characters, no hashtags, no emoji, say what happened and why it matters.\n\n{{ $json.title }}\n{{ $json.url }}",
+            "model": "claude-sonnet-5",
+            "system": "You write for a technical audience that dislikes hype.",
+            "maxTokens": 300
+          },
+          "position": {
+            "x": 850,
+            "y": 170
+          }
+        },
+        {
+          "id": "post",
+          "type": "x.post",
+          "params": {
+            "credential": "x_key",
+            "text": "{{ $json.text }}"
+          },
+          "position": {
+            "x": 1120,
+            "y": 170
+          }
+        }
+      ],
+      "edges": [
+        {
+          "from": "clock",
+          "fromPort": "main",
+          "to": "news",
+          "toPort": "main"
+        },
+        {
+          "from": "news",
+          "fromPort": "main",
+          "to": "fresh",
+          "toPort": "main"
+        },
+        {
+          "from": "fresh",
+          "fromPort": "main",
+          "to": "draft",
+          "toPort": "main"
+        },
+        {
+          "from": "draft",
+          "fromPort": "main",
+          "to": "post",
           "toPort": "main"
         }
       ]

@@ -26,11 +26,6 @@ export default async function Marketplace({ searchParams }) {
   return (
     <main className="page section" style={{ borderTop: 0 }}>
       <h2>Marketplace</h2>
-      <p className="sub">
-        Automations and integrations people have published. Every listing shows what it
-        contacts, worked out from the file itself.
-      </p>
-
       <div className="row wrap" style={{ marginBottom: 18 }}>
         {tab('everything', null)}
         {tab('automations', 'automation')}

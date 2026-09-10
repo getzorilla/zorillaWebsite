@@ -102,3 +102,7 @@ Reply with the JSON and nothing else.
   Point `identity` at whatever that answer says about who the key belongs to,
   so zorilla can show "as @yourbot" next to the saved key.
 - Two or three actions is plenty. The ones people will actually use.
+
+If anything above is unclear, or you need the full list of what an integration
+can express, read https://zorilla.io/docs — the reference there is generated
+from the running app, so it is never out of date.

@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import catalog from '@/public/catalog.json'
-import { stats } from '@/lib/store'
 import { ThemePreview } from '@/components/ThemeCard'
 import { GithubMark } from '@/components/Icons'
 import LogoBelt from '@/components/LogoBelt'
@@ -25,14 +24,13 @@ const CASES = [
     needs: 'a Telegram bot token',
   },
   {
-    id: 'influencers', slug: 'chain-news-to-x', who: 'Influencers',
-    line: 'Check chain news, have Claude draft a post, put it on X',
-    why: 'Half-hourly. Keeps only the headlines you care about, and never drafts the same one twice.',
+    id: 'influencers', slug: 'news-to-x', who: 'Influencers',
+    line: 'Watch the news on any subject, have Claude draft a post, put it on X',
+    why: 'Half-hourly. You name the subject, and it never drafts the same story twice.',
     steps: [
       'every 30 minutes',
-      'http request  a news feed',
-      'filter  title contains "Robinhood"',
-      'first time only  by article id',
+      'search hacker news  about "Robinhood Chain"',
+      'first time only  by story id',
       'ask claude  "write one post, under 240 characters"',
       'post to x  {{ $json.text }}',
     ],
@@ -71,7 +69,6 @@ const CASES = [
 ]
 
 export default async function Home() {
-  const counts = await stats()
   const integrations = catalog.integrations.map((i) => i.label)
   const cases = CASES.map((c) => ({
     ...c,
@@ -88,11 +85,15 @@ export default async function Home() {
               <h1>Zorilla</h1>
             </div>
             <ul className="hero-points">
-              <li>Runs on your computer. No account, no cloud, no company in the middle.</li>
-              <li>Reads Ethereum (Solidity): balances, events, any read function on any contract.</li>
-              <li>{catalog.integrations.length} integrations and {catalog.nodes.length} steps built in. Write your own as JSON.</li>
-              <li>Keys live in an encrypted vault on your disk and never leave it.</li>
-              <li>Free, and the source is public.</li>
+              <li>Fully local.</li>
+              <li>
+                Plug in any service/API fully encrypted (Bring Your Own Key).{' '}
+                {catalog.integrations.length} integrations built in.
+              </li>
+              <li>Visual editor + readable as JSON.</li>
+              <li>Reads and executes smart contracts (Solidity).</li>
+              <li>In-house agent tooling so your agent can build within Zorilla end-to-end.</li>
+              <li>Fully open source!</li>
             </ul>
             <CopyCommand command="npx github:getzorilla/zorillaApp" />
             <div className="cta">
@@ -114,10 +115,10 @@ export default async function Home() {
       </section>
 
       <section className="page belt-section">
-        <h2>Plug in a service, or build your own</h2>
+        <h2>Plug in a service, or build your own integration</h2>
         <p className="sub">
-          {catalog.integrations.length} are built in. Each one is a file you can read before
-          you use it, and writing another takes no code.
+          {catalog.integrations.length} integrations built in, or you can build your own
+          easily with the <Link href="/integrations" className="inline-link">agent prompt</Link>.
         </p>
         <LogoBelt services={catalog.integrations} />
         <div className="cta" style={{ marginTop: 26 }}>
@@ -131,8 +132,8 @@ export default async function Home() {
           <h2>Fully local</h2>
           <p className="sub">
             The engine, your automations, your keys and your run history are files on your
-            machine. There is no account, and nothing is sent anywhere except the services a
-            step deliberately calls.
+            machine. Accounts are only required if you want to publish content on the
+            marketplace. Zorilla will never see your workspace otherwise.
           </p>
         </div>
         <LocalDiagram />
@@ -151,38 +152,20 @@ export default async function Home() {
 
       <section className="page section">
         <h2>What you need</h2>
-        <p className="sub">
-          Node 20 and a terminal to start it once. After that it is a page in your browser.
-        </p>
-        <div className="grid three">
-          <div className="cell">
-            <h3>A computer that stays on</h3>
-            <p>
-              Zorilla runs on your machine, so an automation set to check every ten minutes
-              only checks while that machine is awake. Shut the laptop and it stops. Open it
-              and it runs whatever it missed, once, and tells you how many it skipped.
-            </p>
-          </div>
-          <div className="cell">
-            <h3>A key for each service you use</h3>
-            <p>
-              To post to Discord you make a webhook in the channel and paste the address in
-              once. To send email through Resend you paste an API key. Each one is saved under
-              a name you choose, and every automation lists the names it is waiting for, like
-              &quot;needs a saved key called my_resend&quot;.
-            </p>
-          </div>
-          <div className="cell">
-            <h3>A public address, only for webhooks</h3>
-            <p>
-              Stripe, Shopify and GitHub do not sit and wait to be asked. They send a message
-              to an address when a sale or a push happens, and your machine has no address
-              they can reach. Pressing <b>let the internet reach this</b> on a webhook step
-              gets you one to paste into Stripe. Nothing else on your computer becomes
-              reachable, and the address stops working when you stop it.
-            </p>
-          </div>
-        </div>
+        <ul className="needs">
+          <li>Node 20 or newer.</li>
+          <li>
+            A computer that stays on, or a server you host and reach over SSH.
+          </li>
+          <li>
+            <b>BYOK (Bring Your Own Key).</b> Your own API keys for any external service you want integrated.
+          </li>
+          <li>
+            <b>A public address, only for webhooks.</b> Stripe, Shopify and GitHub push to an
+            address instead of waiting to be asked, so a webhook step can open one for you,
+            and closing it takes the address away again.
+          </li>
+        </ul>
       </section>
 
       <section className="page section">
@@ -205,32 +188,24 @@ export default async function Home() {
       </section>
 
       <section className="page section">
-        <h2>The marketplace</h2>
+        <h2>Marketplace</h2>
         <p className="sub">
-          {counts.automations + counts.integrations > 0
-            ? `${counts.automations} automations and ${counts.integrations} integrations, from ${counts.people} people.`
-            : 'Nothing published yet. Build something and be the first.'}
+          User-published automations, themes, and integrations. I threw in a couple boilerplate
+          automations you can start off with in there.
         </p>
-        <div className="grid two">
-          <div className="cell">
-            <h3>Permissions come from the file</h3>
-            <p>
-              Every listing shows the sites it contacts, the keys it needs, and whether it runs
-              custom code. All of it is read out of the package itself, not written by the author.
-            </p>
-          </div>
-          <div className="cell">
-            <h3>Your keys are never in a package</h3>
-            <p>
-              A package names a key. On install it binds to your own key of that name. The value
-              stays in your vault.
-            </p>
-          </div>
-        </div>
         <div className="cta" style={{ marginTop: 22 }}>
           <Link href="/marketplace" className="btn">Marketplace</Link>
           <Link href="/publish" className="btn quiet">Publish</Link>
         </div>
+      </section>
+
+      <section className="page section">
+        <h2>What&apos;s next</h2>
+        <p className="sub">
+          Currently working on Rust (Solana) support, and overall QOL features. If you have any
+          feedback please message me on{' '}
+          <a className="inline-link" href="https://x.com/4aykk" target="_blank" rel="noreferrer">X</a>!
+        </p>
       </section>
     </main>
   )

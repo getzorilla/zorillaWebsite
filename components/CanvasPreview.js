@@ -1,4 +1,5 @@
 import catalog from '@/public/catalog.json'
+import { summaryOf } from '@/lib/summary'
 
 const NODES = new Map(catalog.nodes.map((n) => [n.type, n]))
 const LOGOS = new Set([
@@ -74,8 +75,11 @@ export default function CanvasPreview({ workflow, height = 150 }) {
                 return label.length > 26 ? `${label.slice(0, 25)}…` : label
               })()}
             </text>
-            <text x={x + 12} y={y + 45} fill="var(--dimmer)" fontSize="11" fontFamily="ui-monospace, monospace">
-              {node.type}
+            <text x={x + 12} y={y + 45} fill="var(--dim)" fontSize="11">
+              {(() => {
+                const said = summaryOf(node, def)
+                return said.length > 30 ? `${said.slice(0, 29)}…` : said
+              })()}
             </text>
           </g>
         )

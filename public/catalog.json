@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-10T10:30:04.370Z",
+  "generatedAt": "2026-09-10T20:34:01.361Z",
   "nodes": [
     {
       "outputs": [
@@ -402,7 +402,7 @@
           "label": "Body format",
           "type": "select",
           "default": "json",
-          "description": "json for most APIs, form for old ones that want name=value pairs.",
+          "description": "Json for most APIs, form for old ones that want name=value pairs.",
           "options": [
             {
               "value": "json",
@@ -1534,6 +1534,115 @@
       ]
     },
     {
+      "type": "hackernews.search",
+      "label": "Search Hacker News",
+      "category": "action",
+      "description": "Newest stories matching a word or phrase. One item per story.",
+      "outputs": [
+        "main"
+      ],
+      "integration": "hackernews",
+      "poll": false,
+      "params": [
+        {
+          "key": "query",
+          "label": "About",
+          "type": "text",
+          "default": "ethereum",
+          "description": "What the story should be about. Robinhood Chain, base, stablecoins."
+        },
+        {
+          "key": "tags",
+          "label": "Kind",
+          "type": "select",
+          "default": "story",
+          "options": [
+            {
+              "value": "story",
+              "label": "Stories"
+            },
+            {
+              "value": "front_page",
+              "label": "Front page only"
+            },
+            {
+              "value": "show_hn",
+              "label": "Show HN"
+            },
+            {
+              "value": "ask_hn",
+              "label": "Ask HN"
+            }
+          ]
+        },
+        {
+          "key": "minPoints",
+          "label": "At least this many points",
+          "type": "number",
+          "default": 0
+        },
+        {
+          "key": "limit",
+          "label": "How many",
+          "type": "number",
+          "default": 20
+        }
+      ]
+    },
+    {
+      "type": "hackernews.newStory",
+      "label": "New Hacker News story",
+      "category": "trigger",
+      "description": "Fires when a story about your subject appears. Says nothing about the ones it has already mentioned.",
+      "outputs": [
+        "main"
+      ],
+      "integration": "hackernews",
+      "poll": true,
+      "params": [
+        {
+          "key": "query",
+          "label": "About",
+          "type": "text",
+          "default": "ethereum",
+          "description": "What the story should be about. Robinhood Chain, base, stablecoins."
+        },
+        {
+          "key": "minPoints",
+          "label": "At least this many points",
+          "type": "number",
+          "default": 0
+        },
+        {
+          "key": "every",
+          "label": "Check every",
+          "type": "number",
+          "default": 5,
+          "min": 1
+        },
+        {
+          "key": "unit",
+          "label": "Unit",
+          "type": "select",
+          "default": "minutes",
+          "options": [
+            {
+              "value": "minutes",
+              "label": "minutes"
+            },
+            {
+              "value": "hours",
+              "label": "hours"
+            },
+            {
+              "value": "days",
+              "label": "days"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "type": "notion.query",
       "label": "Read a Notion database",
       "category": "action",
@@ -2166,7 +2275,7 @@
     },
     {
       "type": "evmRpc",
-      "label": "Ethereum RPC endpoint",
+      "label": "Ethereum RPC",
       "description": "Your own node URL from Alchemy, Infura or similar. Steps fall back to free public endpoints without one, which rate limit under load.",
       "docs": "https://dashboard.alchemy.com",
       "fields": [
@@ -2782,6 +2891,32 @@
           "key": "ask",
           "label": "Ask Gemini",
           "description": ""
+        }
+      ]
+    },
+    {
+      "id": "hackernews",
+      "label": "Hacker News",
+      "icon": null,
+      "description": "Stories about anything you name. Needs no key.",
+      "docs": "https://hn.algolia.com/api",
+      "category": "action",
+      "editable": false,
+      "fields": [],
+      "hosts": [
+        "hn.algolia.com"
+      ],
+      "warnings": [],
+      "actions": [
+        {
+          "key": "search",
+          "label": "Search Hacker News",
+          "description": "Newest stories matching a word or phrase. One item per story."
+        },
+        {
+          "key": "newStory",
+          "label": "New Hacker News story",
+          "description": "Fires when a story about your subject appears. Says nothing about the ones it has already mentioned."
         }
       ]
     },

@@ -1,5 +1,6 @@
 // Drawn, not screenshotted: the point is where the pieces live, and a picture
-// of the app would not show that.
+// of the app would not show that. The arrow only ever points one way, because
+// that asymmetry is the whole claim.
 export default function LocalDiagram() {
   return (
     <div className="diagram">
@@ -8,17 +9,21 @@ export default function LocalDiagram() {
         <div className="machine-grid">
           <div className="chip"><b>Editor</b><span>127.0.0.1:5177</span></div>
           <div className="chip"><b>Engine</b><span>runs every step</span></div>
-          <div className="chip"><b>Vault</b><span>keys, encrypted</span></div>
-          <div className="chip"><b>Files</b><span>automations, run history</span></div>
+          <div className="chip stays"><b>Vault</b><span>keys, encrypted</span></div>
+          <div className="chip stays"><b>Files</b><span>automations, run history</span></div>
         </div>
+        <p className="machine-foot">Your keys and your files never leave this box.</p>
       </div>
 
       <div className="out">
-        <span className="out-line" />
-        <span className="out-label">only what a step calls</span>
+        <span className="out-label top">a step calls out</span>
+        <span className="out-arrow" aria-hidden="true" />
+        <span className="out-label bottom">nothing calls in</span>
+        <span className="out-blocked" aria-hidden="true" />
       </div>
 
       <div className="far">
+        <span className="far-tag">Only the services a step names</span>
         <div className="far-row">Discord</div>
         <div className="far-row">Resend</div>
         <div className="far-row">An Ethereum endpoint</div>

@@ -29,6 +29,7 @@ export default function ProfileForm({ profile, claiming }) {
   const file = useRef(null)
   const [form, setForm] = useState({
     handle: profile?.handle ?? '',
+    name: profile?.name ?? '',
     bio: profile?.bio ?? '',
     x: profile?.links?.x ?? '',
     github: profile?.links?.github ?? '',
@@ -60,6 +61,7 @@ export default function ProfileForm({ profile, claiming }) {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         handle: form.handle,
+        name: form.name,
         bio: form.bio,
         avatar,
         links: { x: form.x, github: form.github, site: form.site },
@@ -90,6 +92,14 @@ export default function ProfileForm({ profile, claiming }) {
           Lowercase letters, numbers, dashes and underscores. Your page is
           zorilla.io/u/{form.handle || 'username'}.
           {!claiming && ' Changing it moves everything you published, but the old address stops working.'}
+        </div>
+      </div>
+
+      <div className="field">
+        <label>Display name</label>
+        <input value={form.name} onChange={set('name')} placeholder="Optional" />
+        <div className="help">
+          Shown next to your username, never instead of it.
         </div>
       </div>
 

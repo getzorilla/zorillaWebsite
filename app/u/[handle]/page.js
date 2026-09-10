@@ -27,7 +27,10 @@ export default async function ProfilePage({ params }) {
       <div className="row" style={{ gap: 16, marginBottom: 8 }}>
         <Avatar src={profile.avatar} handle={profile.handle} size={56} />
         <div>
-          <h2 className="plain" style={{ margin: 0 }}>@{profile.handle}</h2>
+          {/* the handle is the identity, so a display name is shown with it and
+              never in place of it: otherwise a name is a free disguise */}
+          <h2 className="plain" style={{ margin: 0 }}>{profile.name || `@${profile.handle}`}</h2>
+          {profile.name && <div className="dim mono" style={{ fontSize: 13 }}>@{profile.handle}</div>}
         </div>
         <span className="spacer" />
         {mine && <Link href="/settings" className="btn quiet">Edit</Link>}

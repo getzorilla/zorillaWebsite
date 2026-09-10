@@ -16,6 +16,24 @@ function cleanAvatar(value, fallback = null) {
   return value
 }
 
+// A display name is decoration; the handle is the identity, and every page that
+// shows one shows the other beside it. What still has to be taken away here is
+// the characters that let a name lie about where it ends: bidi overrides that
+// reverse what follows, zero-width joins that hide a word, and lookalike forms
+// that normalise to something else. Without this, "vitalik" is a display name
+// anybody can take.
+const NAME_MAX = 40
+const INVISIBLE = /[\u0000-\u001F\u007F-\u009F\u200B-\u200F\u202A-\u202E\u2066-\u2069\uFEFF]/g
+function cleanName(value, fallback = '') {
+  if (value === undefined) return fallback
+  return String(value)
+    .normalize('NFKC')
+    .replace(INVISIBLE, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, NAME_MAX)
+}
+
 // People paste a whole profile link as often as they type a username. Take
 // either and keep the username, so the page can build the link itself.
 function handleOf(value, hosts) {
@@ -72,6 +90,7 @@ export async function POST(request) {
       if (!mine && handleTaken(handle)) return Response.json({ error: `"${handle}" is not available.` }, { status: 400 })
       const profile = await claimHandle(handle, {
         ...identity,
+        name: cleanName(body.name),
         bio: String(body.bio ?? '').slice(0, 280),
         avatar: cleanAvatar(body.avatar),
         links: cleanLinks(body.links),
@@ -91,6 +110,7 @@ export async function POST(request) {
 
     const profile = await saveProfile({
       handle: existing.handle,
+      name: cleanName(body.name, existing.name ?? ''),
       bio: String(body.bio ?? existing.bio).slice(0, 280),
       avatar: cleanAvatar(body.avatar, existing.avatar ?? null),
       links: cleanLinks(body.links ?? existing.links),

@@ -4,7 +4,9 @@ zorilla runs automations on one person's own machine. An automation is a JSON fi
 steps, and wires between them. This file lists every step, what it takes, and the rules
 the engine enforces. It is generated from the running catalogue.
 
-Steps: 49. Integrations: 16. Generated 2026-09-10.
+Steps: 51. Integrations: 17. Generated 2026-09-10.
+
+For anything this file does not cover, read https://zorilla.io/docs.
 
 ## The file
 
@@ -103,7 +105,7 @@ to their own saved key. Use plain names like `my_slack`, `signals_webhook`.
   - `credential`, credential — Use a saved key. Adds what the service needs to authenticate. No header to write.
   - `headers`, keyvalue — Extra headers. Anything the service asks for beyond the key, like Accept or a version header.
   - `sendBody`, boolean, default false — Send a body. Off for a GET. On when you are sending something with the request.
-  - `bodyType`, select, default "json", one of: json, text, form — Body format. json for most APIs, form for old ones that want name=value pairs.
+  - `bodyType`, select, default "json", one of: json, text, form — Body format. Json for most APIs, form for old ones that want name=value pairs.
   - `body`, textarea — Body. What to send. Expressions work here too.
   - `timeout`, number, default 30 — Timeout (seconds). How long to wait before giving up on a service that is not answering.
   - `failOnError`, boolean, default true — Stop on an error status. On, a 404 or a 500 fails the step. Off, the answer carries on with ok: false so a later step can decide.
@@ -184,6 +186,21 @@ Google's models. Contacts: generativelanguage.googleapis.com.
   - `credential`, credential, a saved gemini key — Gemini key
   - `prompt`, textarea — Prompt. Put {{ $json.field }} in here to feed it whatever the previous step produced.
   - `model`, text, default "gemini-2.0-flash" — Model. gemini-2.0-flash, gemini-1.5-pro
+
+### Hacker News
+
+Stories about anything you name. Needs no key. Contacts: hn.algolia.com.
+
+- **`hackernews.newStory`** (trigger, polls) — Fires when a story about your subject appears. Says nothing about the ones it has already mentioned.
+  - `query`, text, default "ethereum" — About. What the story should be about. Robinhood Chain, base, stablecoins.
+  - `minPoints`, number, default 0 — At least this many points
+  - `every`, number, default 5 — Check every
+  - `unit`, select, default "minutes", one of: minutes, hours, days — Unit
+- **`hackernews.search`** (action) — Newest stories matching a word or phrase. One item per story.
+  - `query`, text, default "ethereum" — About. What the story should be about. Robinhood Chain, base, stablecoins.
+  - `tags`, select, default "story", one of: story, front_page, show_hn, ask_hn — Kind
+  - `minPoints`, number, default 0 — At least this many points
+  - `limit`, number, default 20 — How many
 
 ### logic
 
@@ -411,7 +428,7 @@ Post to X, and search what is being said. Contacts: api.x.com.
 - `deepseek` — DeepSeek: apiKey
 - `discord` — Discord: webhookUrl
 - `etherscan` — Etherscan: apiKey
-- `evmRpc` — Ethereum RPC endpoint: url
+- `evmRpc` — Ethereum RPC: url
 - `gemini` — Gemini: apiKey
 - `generic` — Anything else
 - `github` — GitHub: token
@@ -427,149 +444,6 @@ Post to X, and search what is being said. Contacts: api.x.com.
 - `x` — X: accessToken
 
 ## Working examples
-
-### demo01: chain news to x
-
-Checks a news feed every 30 minutes, keeps anything about Robinhood's chain, has Claude draft a post about it, and puts it on X. Needs a Claude key named claude_key and an X key named x_key with write permission, plus a news feed you can read as JSON.
-
-```json
-{
-  "nodes": [
-    {
-      "id": "clock",
-      "type": "core.schedule",
-      "params": {
-        "mode": "every",
-        "every": 30,
-        "unit": "minutes"
-      },
-      "position": {
-        "x": 40,
-        "y": 170
-      }
-    },
-    {
-      "id": "news",
-      "type": "net.http",
-      "params": {
-        "method": "GET",
-        "url": "https://api.cryptopanic.com/v1/posts/",
-        "credential": "",
-        "headers": [],
-        "sendBody": false,
-        "timeout": 30,
-        "failOnError": true
-      },
-      "position": {
-        "x": 300,
-        "y": 170
-      }
-    },
-    {
-      "id": "each",
-      "type": "code.js",
-      "params": {
-        "code": "return items.flatMap(i => (i.json.body.results ?? []).map(post => ({ json: post })))",
-        "credential": "",
-        "timeout": 15
-      },
-      "position": {
-        "x": 560,
-        "y": 170
-      }
-    },
-    {
-      "id": "about",
-      "type": "logic.filter",
-      "params": {
-        "value": "{{ $json.title }}",
-        "operation": "contains",
-        "compare": "Robinhood"
-      },
-      "position": {
-        "x": 820,
-        "y": 170
-      }
-    },
-    {
-      "id": "fresh",
-      "type": "logic.once",
-      "params": {
-        "key": "{{ $json.id }}"
-      },
-      "position": {
-        "x": 1080,
-        "y": 170
-      }
-    },
-    {
-      "id": "draft",
-      "type": "anthropic.ask",
-      "params": {
-        "credential": "claude_key",
-        "prompt": "Write one post for X about this headline. Under 240 characters, no hashtags, no emoji, say what happened and why it matters.\n\n{{ $json.title }}",
-        "model": "claude-sonnet-5",
-        "system": "You write for a crypto audience that dislikes hype.",
-        "maxTokens": 300
-      },
-      "position": {
-        "x": 1340,
-        "y": 170
-      }
-    },
-    {
-      "id": "post",
-      "type": "x.post",
-      "params": {
-        "credential": "x_key",
-        "text": "{{ $json.text }}"
-      },
-      "position": {
-        "x": 1600,
-        "y": 170
-      }
-    }
-  ],
-  "edges": [
-    {
-      "from": "clock",
-      "fromPort": "main",
-      "to": "news",
-      "toPort": "main"
-    },
-    {
-      "from": "news",
-      "fromPort": "main",
-      "to": "each",
-      "toPort": "main"
-    },
-    {
-      "from": "each",
-      "fromPort": "main",
-      "to": "about",
-      "toPort": "main"
-    },
-    {
-      "from": "about",
-      "fromPort": "main",
-      "to": "fresh",
-      "toPort": "main"
-    },
-    {
-      "from": "fresh",
-      "fromPort": "main",
-      "to": "draft",
-      "toPort": "main"
-    },
-    {
-      "from": "draft",
-      "fromPort": "main",
-      "to": "post",
-      "toPort": "main"
-    }
-  ]
-}
-```
 
 ### demo02: contract numbers by email
 
@@ -941,6 +815,108 @@ Every hour by email. Resend only delivers from a domain you have verified with t
       "from": "price",
       "fromPort": "main",
       "to": "mail",
+      "toPort": "main"
+    }
+  ]
+}
+```
+
+### demo01: news to x
+
+Every 30 minutes it looks for new Hacker News stories about a subject you choose, has Claude draft a post about each one, and puts it on X. Change what it watches for in the About field on the search step — Robinhood Chain, stablecoins, whatever you follow. Needs a Claude key named claude_key and an X key named x_key with write permission. The news itself needs no key.
+
+```json
+{
+  "nodes": [
+    {
+      "id": "clock",
+      "type": "core.schedule",
+      "params": {
+        "mode": "every",
+        "every": 30,
+        "unit": "minutes"
+      },
+      "position": {
+        "x": 40,
+        "y": 170
+      }
+    },
+    {
+      "id": "news",
+      "type": "hackernews.search",
+      "params": {
+        "query": "Robinhood Chain",
+        "tags": "story",
+        "minPoints": 0,
+        "limit": 20
+      },
+      "position": {
+        "x": 310,
+        "y": 170
+      }
+    },
+    {
+      "id": "fresh",
+      "type": "logic.once",
+      "params": {
+        "key": "{{ $json.id }}"
+      },
+      "position": {
+        "x": 580,
+        "y": 170
+      }
+    },
+    {
+      "id": "draft",
+      "type": "anthropic.ask",
+      "params": {
+        "credential": "claude_key",
+        "prompt": "Write one post for X about this story. Under 240 characters, no hashtags, no emoji, say what happened and why it matters.\n\n{{ $json.title }}\n{{ $json.url }}",
+        "model": "claude-sonnet-5",
+        "system": "You write for a technical audience that dislikes hype.",
+        "maxTokens": 300
+      },
+      "position": {
+        "x": 850,
+        "y": 170
+      }
+    },
+    {
+      "id": "post",
+      "type": "x.post",
+      "params": {
+        "credential": "x_key",
+        "text": "{{ $json.text }}"
+      },
+      "position": {
+        "x": 1120,
+        "y": 170
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "clock",
+      "fromPort": "main",
+      "to": "news",
+      "toPort": "main"
+    },
+    {
+      "from": "news",
+      "fromPort": "main",
+      "to": "fresh",
+      "toPort": "main"
+    },
+    {
+      "from": "fresh",
+      "fromPort": "main",
+      "to": "draft",
+      "toPort": "main"
+    },
+    {
+      "from": "draft",
+      "fromPort": "main",
+      "to": "post",
       "toPort": "main"
     }
   ]

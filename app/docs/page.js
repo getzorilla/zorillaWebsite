@@ -19,16 +19,16 @@ const SECTIONS = [
     ['sharing', 'Taking and sharing'],
   ]],
   ['How it works', [
-    ['items', 'Steps and items'],
+    ['items', 'Functions and items'],
     ['triggers', 'What starts a run'],
-    ['expressions', 'Values from earlier steps'],
+    ['expressions', 'Values from earlier functions'],
     ['keys', 'Keys'],
     ['errors', 'When something fails'],
     ['files', 'Files'],
     ['local', 'What local means'],
   ]],
   ['Reference', [
-    ['steps', 'Every step'],
+    ['steps', 'Every function'],
     ['credentials', 'Every kind of key'],
     ['integrations', 'Writing an integration'],
     ['themes', 'Themes'],
@@ -47,9 +47,9 @@ export default async function Docs({ searchParams }) {
       <main className="page section" style={{ borderTop: 0 }}>
         <h2>Docs for agents</h2>
         <p className="sub" style={{ maxWidth: '70ch' }}>
-          One file holding every step, every field, every rule the engine enforces, and eight
+          One file holding every function, every field, every rule the engine enforces, and eight
           working automations to copy from. It is generated from the same catalogue the app
-          loads, so it never describes a step that does not exist. Paste it into an agent and
+          loads, so it never describes a function that does not exist. Paste it into an agent and
           ask for an automation.
         </p>
         <div className="tabs">
@@ -64,9 +64,6 @@ export default async function Docs({ searchParams }) {
   return (
     <main className="page section" style={{ borderTop: 0 }}>
       <h2>Docs</h2>
-      <p className="sub" style={{ maxWidth: '70ch' }}>
-        Everything about Zorilla: installing it, building something, and what every step takes.
-      </p>
       <div className="tabs">
         <Link href="/docs" className="btn">For people</Link>
         <Link href="/docs?for=agents" className="btn quiet">For agents</Link>
@@ -86,13 +83,13 @@ export default async function Docs({ searchParams }) {
           <section id="what-it-is">
             <h2>What Zorilla is</h2>
             <p>
-              Zorilla is an automation tool that runs on your own computer. You wire steps
-              together on a canvas: something starts a run, other steps read data, decide what
+              Zorilla is an automation tool that runs on your own computer. You wire functions
+              together on a canvas: something starts a run, other functions read data, decide what
               to do with it, and send it somewhere. It watches prices, reads contracts, calls
               APIs, posts to Discord and Slack, and sends email.
             </p>
             <p>
-              It ships with 16 service integrations, {catalog.nodes.length} steps, and reads
+              It ships with {catalog.integrations.length} service integrations, {catalog.nodes.length} functions, and reads
               Ethereum (Solidity). It cannot sign a transaction, and there are other limits worth
               knowing before you start, listed at the end.
             </p>
@@ -151,33 +148,33 @@ npm start`}</Command>
             <h3>1. Open the workspace</h3>
             <p>
               Zorilla opens on your workspace, and it is empty: nothing is installed on your
-              behalf. Thirteen automations came with it, and this is where you take one.
+              behalf. Thirteen demos came with it, and this is where you take one.
             </p>
             <Shot
               src="/guide/home.png"
               alt="an empty Zorilla workspace"
               spots={[
-                { n: 1, ...pct(0, 44, 150, 629), say: 'automations, keys, integrations, themes' },
-                { n: 2, ...pct(416, 145, 206, 33), say: 'start one, or add one somebody sent you' },
-                { n: 3, ...pct(579, 334, 157, 33), say: 'what came with Zorilla' },
+                { n: 1, ...pct(6, 50, 144, 704), say: 'automations, keys, integrations, settings' },
+                { n: 2, ...pct(441, 283, 570, 33), say: 'start from nothing, bring in a file, or open a demo' },
+                { n: 3, ...pct(17, 677, 115, 36), say: 'straight to the canvas' },
               ]}
             />
 
             <h3>2. Take one and press run</h3>
             <p>
-              The ones that need nothing are at the top, marked <b>runs now</b>. Take{' '}
-              <b>eth price watch</b>: it reads the price of ETH and writes it in the log, and
-              says something separate when the price has moved 5% since it last mentioned it.
-              Press add, then press run in the top right. The strip along the bottom opens the
-              log, and the price is in it.
+              The demos are numbered, and the ones that need no keys are marked{' '}
+              <b>Ready</b>. Take <b>demo05: eth price watch</b>: it reads the price of ETH and
+              writes it in the log, and says something separate when the price has moved 5%
+              since it last mentioned it. Press add it, then press run in the top right. The
+              strip along the bottom opens the log, and the price is in it.
             </p>
             <Shot
-              src="/guide/examples.png"
-              alt="the automations that came with Zorilla"
+              src="/guide/demos.png"
+              alt="the demos that came with Zorilla"
               spots={[
-                { n: 1, ...pct(533, 207, 65, 20), say: 'no setup needed' },
-                { n: 2, ...pct(1184, 226, 50, 27), say: 'take it' },
-                { n: 3, ...pct(428, 623, 500, 18), say: 'what the others would need first' },
+                { n: 1, ...pct(592, 629, 57, 20), say: 'runs with nothing set up' },
+                { n: 2, ...pct(1183, 648, 51, 27), say: 'take it into your workspace' },
+                { n: 3, ...pct(428, 271, 743, 18), say: 'what the others need first' },
               ]}
             />
 
@@ -189,68 +186,69 @@ npm start`}</Command>
               like a password.
             </p>
             <p>
-              In Zorilla, go to keys, choose Discord, paste the address in, and name it{' '}
-              <code>signals_webhook</code>. Press save. Zorilla checks it with Discord and
-              writes down where it points, so from then on every step using that key says which
+              In Zorilla, go to Keys, choose Discord, paste the address in, and name it{' '}
+              <code>discord_key</code>. Press save. Zorilla checks it with Discord and writes
+              down where it points, so from then on every function using that key says which
               channel it posts to instead of just showing a name.
             </p>
             <Shot
               src="/guide/keys.png"
               alt="the keys panel, with a saved Discord webhook"
               spots={[
-                { n: 1, ...pct(8, 91, 133, 33), say: 'keys' },
-                { n: 2, ...pct(416, 349, 75, 90), say: 'pick the service' },
-                { n: 3, ...pct(416, 145, 560, 53), say: 'where it points' },
+                { n: 1, ...pct(425, 152, 100, 39), say: 'the keys you have saved' },
+                { n: 2, ...pct(416, 323, 560, 244), say: 'pick the service' },
+                { n: 3, ...pct(416, 610, 560, 78), say: 'the name your functions will call it by' },
               ]}
             />
 
-            <h3>4. Put the steps on the canvas</h3>
+            <h3>4. Put the functions on the canvas</h3>
             <p>
-              Start a new automation and you get the editor. The list on the left is every step
-              you can use, with services grouped one row each. Open Discord and you see what
-              Discord can do. Click a step to drop it in the middle of the canvas, or drag it
-              where you want it.
+              Start a new automation and you get the editor. The list on the left is every
+              function you can use, with services grouped one row each. Open Discord and you see
+              what Discord can do. Click a function to drop it in the middle of the canvas, or
+              drag it where you want it.
             </p>
             <p>
-              You need three: Schedule, under starting a run. Coin price, under CoinGecko. Post,
-              under Discord.
+              You need three: Schedule, under starting a run. Coin price, under CoinGecko. Post
+              to Discord, under Discord.
             </p>
             <Shot
               src="/guide/editor-palette.png"
-              alt="the step list with Discord open"
+              alt="the function list with Discord open"
               spots={[
-                { n: 1, ...pct(10, 170, 193, 36), say: 'a service' },
-                { n: 2, ...pct(40, 384, 163, 35), say: 'what it can do' },
+                { n: 1, ...pct(10, 322, 239, 36), say: 'a service, opened' },
+                { n: 2, ...pct(40, 384, 209, 36), say: 'one of its functions' },
               ]}
             />
 
             <h3>5. Join them up and fill them in</h3>
             <p>
-              Every step has a circle on each side. Drag from the right circle of one to the
-              next step to join them, and items flow along that wire. Click a wire to remove it.
+              Every function has a circle on each side. Drag from the right circle of one to
+              the next to join them, and items flow along that wire. Click a wire to remove it.
+              Right-click anywhere for copy, paste, undo and the rest.
             </p>
             <p>
-              Click a step and the panel on the right is its settings. Set the schedule to every
-              10 minutes, the coin to <code>ethereum</code>, and on the Discord step choose the
-              key you saved and write the message. Double braces pull a value out of whatever
-              the step before it produced.
+              Click a function and the panel on the right is its settings. Set the schedule to
+              every 10 minutes, the coin to <code>ethereum</code>, and on the Discord function
+              choose the key you saved and write the message. Double braces pull a value out of
+              whatever the function before it produced.
             </p>
             <pre><code>{`ETH is \${{ $json.ethereum.usd }}`}</code></pre>
             <Shot
               src="/guide/editor-step.png"
-              alt="the settings panel for a Discord step"
+              alt="the settings panel for a Discord function"
               spots={[
-                { n: 1, ...pct(999, 222, 271, 75), say: 'which key' },
-                { n: 2, ...pct(999, 309, 271, 118), say: 'the message' },
-                { n: 3, ...pct(999, 562, 271, 53), say: 'if it breaks' },
+                { n: 1, ...pct(999, 213, 271, 75), say: 'which key it posts with' },
+                { n: 2, ...pct(999, 300, 271, 118), say: 'the message' },
+                { n: 3, ...pct(999, 553, 271, 53), say: 'what happens if it fails' },
               ]}
             />
 
             <h3>6. Run it, then leave it running</h3>
             <p>
-              Press run. The log shows every step, what it received, what it sent, and how long
-              it took. If something is wrong, that is where it says so, in words rather than
-              error codes.
+              Press run. The log shows every function, what it received, what it sent, and how
+              long it took. If something is wrong, that is where it says so, in words rather
+              than error codes.
             </p>
             <p>
               When you are happy with it, press the switch in the top right so it reads{' '}
@@ -260,12 +258,11 @@ npm start`}</Command>
             </p>
             <Shot
               src="/guide/editor-run.png"
-              alt="the editor with the automation switched live"
+              alt="the editor with the run log open"
               spots={[
-                { n: 1, ...pct(1227, 5, 41, 33), say: 'run it now' },
-                { n: 2, ...pct(1007, 7, 77, 29), say: 'live or not' },
-                { n: 3, ...pct(1165, 5, 53, 33), say: 'send it to somebody' },
-                { n: 4, ...pct(0, 618, 240, 43), say: 'the run log' },
+                { n: 1, ...pct(999, 7, 79, 29), say: 'live, or only when you press run' },
+                { n: 2, ...pct(1223, 5, 45, 33), say: 'run it now' },
+                { n: 3, ...pct(0, 479, 1280, 43), say: 'every function, what it got and what it sent' },
               ]}
             />
           </section>
@@ -292,26 +289,26 @@ npm start`}</Command>
           </section>
 
           <section id="items">
-            <h2>Steps and items</h2>
+            <h2>Functions and items</h2>
             <p>
-              Every step takes a list of items and hands back a list of items. An item is a
-              piece of JSON: <code>{'{ json: { ... } }'}</code>. That one shape is why any step
+              Every function takes a list of items and hands back a list of items. An item is a
+              piece of JSON: <code>{'{ json: { ... } }'}</code>. That one shape is why any function
               can feed any other one.
             </p>
             <p>
-              Most steps run once per item. A price step that receives three items runs three
-              times and sends three on. Steps that filter send fewer items than they got. A step
+              Most functions run once per item. A price function that receives three items runs three
+              times and sends three on. Functions that filter send fewer items than they got. A function
               that returns nothing at all passes its input through untouched.
             </p>
             <p>
-              A step that fails sends nothing, so everything downstream of it is skipped and
+              A function that fails sends nothing, so everything downstream of it is skipped and
               says so in the run log. Branches that do not depend on it carry on.
             </p>
           </section>
 
           <section id="triggers">
             <h2>What starts a run</h2>
-            <p>Every automation needs exactly one step that starts it. There are four kinds.</p>
+            <p>Every automation needs exactly one function that starts it. There are four kinds.</p>
             <h4>Manual</h4>
             <p>Runs when you press run. Useful while you are building.</p>
             <h4>Schedule</h4>
@@ -327,7 +324,7 @@ npm start`}</Command>
               works on your own machine. See <a href="#local">what local means</a> for letting
               Stripe or GitHub reach it.
             </p>
-            <h4>Steps that wait</h4>
+            <h4>Functions that wait</h4>
             <p>
               A new Telegram message, a new Stripe payment, a new Notion row, a new Airtable
               record. These check on a timer you set and pass on only what they have not seen
@@ -337,24 +334,24 @@ npm start`}</Command>
           </section>
 
           <section id="expressions">
-            <h2>Values from earlier steps</h2>
+            <h2>Values from earlier functions</h2>
             <p>
-              Anything inside double braces is evaluated as JavaScript when the step runs. Use it
+              Anything inside double braces is evaluated as JavaScript when the function runs. Use it
               in any field.
             </p>
             <pre><code>{`{{ $json.ethereum.usd }}          the value from this item
 {{ $json.amount / 100 }}          cents to pounds
-{{ $items.length }}               how many items this step received
+{{ $items.length }}               how many items this function received
 {{ $index }}                      which item this is, starting at 0
 {{ $now.toISOString() }}          the time right now
-{{ $creds.my_key.field }}         a field of a key this step uses`}</code></pre>
+{{ $creds.my_key.field }}         a field of a key this function uses`}</code></pre>
             <p>
               A field that is only an expression keeps its type, so{' '}
               <code>{'{{ $json.n * 2 }}'}</code> stays a number rather than becoming text. Mix
               it with words and you get text: <code>ETH is {'${{ $json.usd }}'}</code>.
             </p>
             <p>
-              <code>$creds</code> only ever holds the keys chosen on that step. A step cannot
+              <code>$creds</code> only ever holds the keys chosen on that function. A function cannot
               reach a key it does not use.
             </p>
           </section>
@@ -363,7 +360,7 @@ npm start`}</Command>
             <h2>Keys</h2>
             <p>
               A key is whatever a service needs to know it is you: an API key, a bot token, a
-              webhook address. You save each one once, under a name you choose, and steps refer
+              webhook address. You save each one once, under a name you choose, and functions refer
               to it by that name.
             </p>
             <p>
@@ -386,9 +383,9 @@ npm start`}</Command>
               somebody else installs it, that name binds to their own key of the same name. This
               is enforced when the file is written, not left to good manners.
             </p>
-            <h3>What a step can reach</h3>
+            <h3>What a function can reach</h3>
             <p>
-              A step is handed only the keys named on it. If an automation has five steps and
+              A function is handed only the keys named on it. If an automation has five functions and
               one uses your Stripe key, the other four cannot see it, and asking for it fails
               rather than quietly working.
             </p>
@@ -396,17 +393,17 @@ npm start`}</Command>
 
           <section id="errors">
             <h2>When something fails</h2>
-            <p>Services have bad minutes. Every step has two settings for that.</p>
+            <p>Services have bad minutes. Every function has two settings for that.</p>
             <h4>Try again</h4>
             <p>
               How many extra attempts before it counts as failed, and how long to wait between
               them. Two retries covers most temporary failures without you doing anything else.
             </p>
-            <h4>If this step fails</h4>
+            <h4>If this function fails</h4>
             <ul>
-              <li><b>Stop this branch</b>, the default. The step fails, everything after it is skipped, other branches carry on.</li>
-              <li><b>Carry on with the error attached</b>. The items continue with an <code>error</code> field added, so a later step can decide what to do.</li>
-              <li><b>Send it down an error wire</b>. The step grows a second, red output. Drag from it to a step that tells you about it, and you get a message on Telegram when Slack goes down.</li>
+              <li><b>Stop this branch</b>, the default. The function fails, everything after it is skipped, other branches carry on.</li>
+              <li><b>Carry on with the error attached</b>. The items continue with an <code>error</code> field added, so a later function can decide what to do.</li>
+              <li><b>Send it down an error wire</b>. The function grows a second, red output. Drag from it to a function that tells you about it, and you get a message on Telegram when Slack goes down.</li>
             </ul>
             <p>
               The run log keeps the last 200 runs, with the reason for each failure written out.
@@ -424,7 +421,7 @@ npm start`}</Command>
               <code>~/.zorilla/files</code>, and <code>file.read</code> picks one up again.
             </p>
             <p>
-              An email step sends whatever files the item is carrying as attachments. A step can
+              An email function sends whatever files the item is carrying as attachments. A function can
               only write into the files folder, so an automation you installed cannot write
               anywhere else on your machine.
             </p>
@@ -447,7 +444,7 @@ npm start`}</Command>
             <p>
               Stripe, Shopify and GitHub do not wait to be asked. They send a message to an
               address when something happens, and your machine has no address they can reach.
-              Open a webhook step and press <b>let the internet reach this</b>. Zorilla fetches
+              Open a webhook function and press <b>let the internet reach this</b>. Zorilla fetches
               Cloudflare&apos;s tunnel program the first time, about 30MB, and gives you an
               address to hand over.
             </p>
@@ -462,9 +459,9 @@ npm start`}</Command>
           </section>
 
           <section id="steps">
-            <h2>Every step</h2>
+            <h2>Every function</h2>
             <p>
-              {catalog.nodes.length} steps, generated from what the app actually loads. Steps
+              {catalog.nodes.length} functions, generated from what the app actually loads. Functions
               marked <i>waits</i> check on a timer and pass on only what is new.
             </p>
             <StepReference />
@@ -492,7 +489,7 @@ npm start`}</Command>
             <h2>Writing an integration</h2>
             <p>
               One JSON file per service: the fields its key needs, how a request authenticates,
-              and what each step sends. Nothing in it executes, so the sites it reaches can be
+              and what each function sends. Nothing in it executes, so the sites it reaches can be
               read off the file before anyone installs it.
             </p>
             <p>
@@ -525,19 +522,19 @@ npm start`}</Command>
 }`}</code></pre>
             <p>
               Two substitutions exist and no others: <code>{'{{ paramKey }}'}</code> for a value
-              from the step, and <code>{'{{ key.fieldName }}'}</code> for a field of the key
+              from the function, and <code>{'{{ key.fieldName }}'}</code> for a field of the key
               being used. Neither can reach anything else.
             </p>
             <h3>Rules enforced when you save one</h3>
             <ul>
-              <li>The site a step contacts has to be written out, or be a whole address you filled in yourself. An address assembled at run time is refused, because nobody could tell what it reaches.</li>
+              <li>The site a function contacts has to be written out, or be a whole address you filled in yourself. An address assembled at run time is refused, because nobody could tell what it reaches.</li>
               <li>A key travelling in a web address is called out on screen, because it ends up in logs along the route.</li>
             </ul>
             <h3>Extras</h3>
             <ul>
               <li><code>itemsPath</code> points at the list in the answer, so one call becomes one item per row.</li>
-              <li><code>pagination</code> says where the next page marker lives and where it goes back in, and Zorilla keeps asking until it has what the step was told to bring back.</li>
-              <li><code>trigger</code> with <code>dedupeBy</code> turns an action into a step that waits, firing only for things it has not seen.</li>
+              <li><code>pagination</code> says where the next page marker lives and where it goes back in, and Zorilla keeps asking until it has what the function was told to bring back.</li>
+              <li><code>trigger</code> with <code>dedupeBy</code> turns an action into a function that waits, firing only for things it has not seen.</li>
               <li><code>attachments</code> sends whatever files the item is carrying.</li>
               <li><code>icon</code> is a png, jpeg or webp pasted into the file, so a shared integration arrives with its own picture.</li>
             </ul>
@@ -588,9 +585,9 @@ npm start`}</Command>
               <li><b>Run while your computer is asleep.</b> It catches up once when you open it again.</li>
             </ul>
             <p>
-              The Run JavaScript step runs in a separate process with no file access, no way to
+              The Run JavaScript function runs in a separate process with no file access, no way to
               start other programs, and nothing in its environment. It can still reach the
-              network, which is what most code steps are for. Community step files under{' '}
+              network, which is what most code functions are for. Community function files under{' '}
               <code>~/.zorilla/nodes/</code> are ordinary Node code with none of those limits, so
               installing one is the same as running <code>npm install</code> on a package you
               have not read.
