@@ -85,6 +85,28 @@
       return json({ name: 'demo workspace', folders: [], theme: localStorage.getItem(THEME_KEY) ?? 'zorilla-dark' })
     }
     if (path === '/api/runs') return json([])
+    if (path === '/api/examples') {
+      // the same files the app offers, so the demo behaves like the real thing
+      const known = new Map(catalog.nodes.map((n) => [n.type, n]))
+      const specs = new Map(catalog.integrations.map((i) => [i.id, i]))
+      return json((STARTERS ?? []).map((w) => {
+        const hosts = new Set()
+        const credentials = new Set()
+        for (const node of w.nodes ?? []) {
+          const def = known.get(node.type)
+          if (!def) continue
+          if (def.category === 'web3') hosts.add('an Ethereum endpoint')
+          for (const host of specs.get(def.integration)?.hosts ?? []) hosts.add(host)
+          for (const param of def.params ?? []) {
+            if (param.type === 'credential' && node.params?.[param.key]) credentials.add(node.params[param.key])
+          }
+        }
+        return {
+          file: w.name, name: w.name, notes: w.notes ?? '', nodes: w.nodes, edges: w.edges,
+          derived: { steps: (w.nodes ?? []).length, hosts: [...hosts], credentials: [...credentials], triggers: [], unknown: [], runsCode: false, readsChain: false },
+        }
+      }))
+    }
     if (path === '/api/tunnel') {
       return json({ running: false, url: null, installed: false, from: null })
     }
