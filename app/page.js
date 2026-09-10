@@ -82,8 +82,8 @@ export default async function Home() {
         <div className="hero-grid">
           <div>
             <div className="hero-name">
-              <h1>Zorilla</h1>
               <img className="mark" src="/logo.svg" alt="" width="56" height="56" />
+              <h1>Zorilla</h1>
             </div>
             <ul className="hero-points">
               <li>Runs on your computer. No account, no cloud, no company in the middle.</li>
