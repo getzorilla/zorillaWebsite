@@ -27,8 +27,19 @@ for (const spec of integrations.values()) {
   for (const def of nodesFor(spec)) nodes.set(def.type, def)
 }
 
+// The site drew service marks from its own copy of the logo folder, which went
+// stale the moment the app gained one. Copy them across every sync, and record
+// which ones exist so no component has to keep its own list.
+const { readdir: readLogoDir, copyFile, mkdir } = await import('node:fs/promises')
+const logoFrom = path.join(app, 'public/logos')
+const logoInto = path.join(here, '../public/editor/logos')
+await mkdir(logoInto, { recursive: true })
+const logos = (await readLogoDir(logoFrom)).filter((f) => f.endsWith('.svg'))
+for (const file of logos) await copyFile(path.join(logoFrom, file), path.join(logoInto, file))
+
 const catalog = {
   generatedAt: new Date().toISOString(),
+  logos: logos.map((f) => f.replace(/\.svg$/, '')).sort(),
   nodes: [...nodes.values()].map(describe),
   credentialTypes: [...credentialTypes.values()].map(describeType),
   integrations: [...integrations.values()].map(describeIntegration),
@@ -54,4 +65,4 @@ for (const file of (await readdir(exampleDir)).filter((f) => f.endsWith('.json')
 }
 await writeFile(path.join(here, '../public/starters.json'), JSON.stringify(starters, null, 2))
 console.log(`starters: ${starters.length} automations`)
-console.log(`catalog: ${catalog.nodes.length} steps, ${catalog.integrations.length} integrations, ${catalog.themes.length} themes`)
+console.log(`catalog: ${catalog.nodes.length} steps, ${catalog.integrations.length} integrations, ${catalog.themes.length} themes, ${logos.length} logos`)

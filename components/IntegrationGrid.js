@@ -1,12 +1,10 @@
 'use client'
 
+import catalog from '@/public/catalog.json'
 import { useState } from 'react'
 
-const LOGOS = new Set([
-  'airtable', 'anthropic', 'coingecko', 'deepseek', 'discord', 'etherscan', 'gemini',
-  'gmail', 'notion', 'openai', 'resend', 'slack', 'stripe', 'supabase', 'telegram',
-  'twilio', 'web3', 'x',
-])
+// which marks exist is decided by the app's logo folder, copied here on sync
+const LOGOS = new Set(catalog.logos ?? [])
 
 function Logo({ id, size = 26 }) {
   if (!LOGOS.has(id)) {

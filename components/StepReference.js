@@ -1,10 +1,7 @@
 import catalog from '@/public/catalog.json'
 
-const LOGOS = new Set([
-  'airtable', 'anthropic', 'coingecko', 'deepseek', 'discord', 'etherscan', 'gemini',
-  'gmail', 'notion', 'openai', 'resend', 'slack', 'stripe', 'supabase', 'telegram',
-  'twilio', 'web3',
-])
+// which marks exist is decided by the app's logo folder, copied here on sync
+const LOGOS = new Set(catalog.logos ?? [])
 
 const CORE = new Set(['core', 'logic', 'flow', 'transform', 'output', 'net', 'code', 'file'])
 const serviceOf = (def) => {

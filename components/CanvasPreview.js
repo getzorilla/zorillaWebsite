@@ -2,11 +2,8 @@ import catalog from '@/public/catalog.json'
 import { summaryOf } from '@/lib/summary'
 
 const NODES = new Map(catalog.nodes.map((n) => [n.type, n]))
-const LOGOS = new Set([
-  'airtable', 'anthropic', 'coingecko', 'deepseek', 'discord', 'etherscan', 'gemini',
-  'gmail', 'notion', 'openai', 'resend', 'slack', 'stripe', 'supabase', 'telegram',
-  'twilio', 'web3', 'x',
-])
+// which marks exist is decided by the app's logo folder, copied here on sync
+const LOGOS = new Set(catalog.logos ?? [])
 const CORE = new Set(['core', 'logic', 'flow', 'transform', 'output', 'net', 'code', 'file'])
 
 const serviceOf = (def) => {
