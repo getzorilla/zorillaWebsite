@@ -2,7 +2,7 @@ import Link from 'next/link'
 import catalog from '@/public/catalog.json'
 import { stats } from '@/lib/store'
 import { ThemePreview } from '@/components/ThemeCard'
-import { NpmMark } from '@/components/Icons'
+import { GithubMark } from '@/components/Icons'
 import Shot from '@/components/Shot'
 import UseCases from '@/components/UseCases'
 import CanvasPreview from '@/components/CanvasPreview'
@@ -92,16 +92,16 @@ export default async function Home() {
               <li>Keys live in an encrypted vault on your disk and never leave it.</li>
               <li>Free, and the source is public.</li>
             </ul>
-            <CopyCommand command="npx zorilla" />
+            <CopyCommand command="npx github:getzorilla/zorillaApp" />
             <div className="cta">
               <Link href="/docs" className="btn primary">Docs</Link>
               <a
                 className="btn quiet"
-                href="https://unpkg.com/browse/zorilla@latest/"
+                href="https://github.com/getzorilla/zorillaApp"
                 target="_blank"
                 rel="noreferrer"
               >
-                <NpmMark size={26} /> Source
+                <GithubMark size={15} /> Source
               </a>
             </div>
             <p className="hero-note">

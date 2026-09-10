@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { NpmMark, XMark } from './Icons'
+import { GithubMark, XMark } from './Icons'
 
 export default function Footer() {
   return (
@@ -10,13 +10,13 @@ export default function Footer() {
         <a href="/marketplace">Marketplace</a>
         <a
           className="icon-link"
-          href="https://www.npmjs.com/package/zorilla"
+          href="https://github.com/getzorilla/zorillaApp"
           target="_blank"
           rel="noreferrer"
-          aria-label="Zorilla on npm"
-          title="npm"
+          aria-label="Zorilla on GitHub"
+          title="GitHub"
         >
-          <NpmMark size={28} />
+          <GithubMark size={16} />
         </a>
         <a
           className="icon-link"
