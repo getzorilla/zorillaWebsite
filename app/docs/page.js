@@ -444,7 +444,7 @@ npm start`}</Command>
             <p>
               Stripe, Shopify and GitHub do not wait to be asked. They send a message to an
               address when something happens, and your machine has no address they can reach.
-              Open a webhook function and press <b>Get a public address</b>. Zorilla fetches
+              Open a webhook function and press <b>Create address</b>. Zorilla fetches
               Cloudflare&apos;s tunnel program the first time, about 30MB, and gives you an
               address to hand over.
             </p>
