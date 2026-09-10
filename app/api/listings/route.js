@@ -3,6 +3,8 @@ import { readSession } from '@/lib/session'
 import { getListing, saveListing, publishingWorks, SHIPPED_SLUGS } from '@/lib/store'
 import { derivePermissions, describeIntegrationSubmission, describeThemeSubmission, sanitizeWorkflow, slugify } from '@/lib/permissions'
 
+const PACKAGE_LIMIT = 256 * 1024
+
 export async function POST(request) {
   const slowDown = tooMany(request, { name: 'publish', limit: 12, windowMs: 3600000 })
   if (slowDown) return slowDown
@@ -26,6 +28,17 @@ export async function POST(request) {
     return Response.json({ error: `That file is not valid JSON: ${err.message}` }, { status: 400 })
   }
   if (!pkg || typeof pkg !== 'object') return Response.json({ error: 'Paste the exported file.' }, { status: 400 })
+
+  // Every listing is kept whole and handed back on install. The largest thing
+  // that ships is a few kilobytes, and an integration's icon is the only part
+  // that is legitimately big, so this leaves room for one and stops a listing
+  // from being used as storage.
+  const size = JSON.stringify(pkg).length
+  if (size > PACKAGE_LIMIT) {
+    return Response.json({
+      error: `That file is ${Math.round(size / 1024)}KB. A published one has to be under ${PACKAGE_LIMIT / 1024}KB.`,
+    }, { status: 400 })
+  }
 
   let derived
   let payload
