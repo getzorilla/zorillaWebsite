@@ -458,6 +458,111 @@ Post to X, and search what is being said. Contacts: api.x.com.
 
 ## Working examples
 
+### demo15: contract event to slack
+
+Watches a contract for an event, has Claude say what it means in one line, and puts it in Slack. Point the address at your own contract and change the event line to one of yours. Needs a Claude key named claude_key and a Slack key named slack_key.
+
+```json
+{
+  "nodes": [
+    {
+      "id": "clock",
+      "type": "core.schedule",
+      "params": {
+        "mode": "every",
+        "every": 5,
+        "unit": "minutes"
+      },
+      "position": {
+        "x": 40,
+        "y": 170
+      }
+    },
+    {
+      "id": "events",
+      "type": "web3.logs",
+      "params": {
+        "chain": "ethereum",
+        "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "event": "event Transfer(address indexed from, address indexed to, uint256 value)",
+        "match": [],
+        "blocks": 30,
+        "rpc": ""
+      },
+      "position": {
+        "x": 310,
+        "y": 170
+      }
+    },
+    {
+      "id": "fresh",
+      "type": "logic.once",
+      "params": {
+        "key": "{{ $json.transactionHash }}"
+      },
+      "position": {
+        "x": 580,
+        "y": 170
+      }
+    },
+    {
+      "id": "explain",
+      "type": "anthropic.ask",
+      "params": {
+        "credential": "claude_key",
+        "model": "claude-sonnet-5",
+        "maxTokens": 200,
+        "system": "You write one line for a developer channel. No preamble, no hedging, no emoji.",
+        "prompt": "This event fired on our contract. Say what happened in one line, in plain words, and keep the numbers exact.\n\n{{ JSON.stringify($json.args) }}"
+      },
+      "position": {
+        "x": 850,
+        "y": 170
+      }
+    },
+    {
+      "id": "post",
+      "type": "slack.post",
+      "params": {
+        "credential": "slack_key",
+        "channel": "#contracts",
+        "text": "{{ $json.text }}"
+      },
+      "position": {
+        "x": 1120,
+        "y": 170
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "clock",
+      "fromPort": "main",
+      "to": "events",
+      "toPort": "main"
+    },
+    {
+      "from": "events",
+      "fromPort": "main",
+      "to": "fresh",
+      "toPort": "main"
+    },
+    {
+      "from": "fresh",
+      "fromPort": "main",
+      "to": "explain",
+      "toPort": "main"
+    },
+    {
+      "from": "explain",
+      "fromPort": "main",
+      "to": "post",
+      "toPort": "main"
+    }
+  ]
+}
+```
+
 ### demo02: contract numbers by email
 
 Reads a number straight off a contract every morning and emails it to you. This one reads how much USDC exists; change the address and the function line to read anything else. Needs a Resend key named resend_key.
@@ -834,6 +939,87 @@ Every hour by email. Resend only delivers from a domain you have verified with t
 }
 ```
 
+### demo14: kol post to telegram
+
+Watches one account on X for posts about a subject you choose, and sends you the post on Telegram the moment it appears. Change the search on the second function: from:whoever, then the words you care about. Needs an X key named x_key and a Telegram key named telegram_key.
+
+```json
+{
+  "nodes": [
+    {
+      "id": "clock",
+      "type": "core.schedule",
+      "params": {
+        "mode": "every",
+        "every": 10,
+        "unit": "minutes"
+      },
+      "position": {
+        "x": 40,
+        "y": 170
+      }
+    },
+    {
+      "id": "posts",
+      "type": "x.search",
+      "params": {
+        "credential": "x_key",
+        "query": "from:VitalikButerin (rollup OR L2)",
+        "limit": 10
+      },
+      "position": {
+        "x": 310,
+        "y": 170
+      }
+    },
+    {
+      "id": "fresh",
+      "type": "logic.once",
+      "params": {
+        "key": "{{ $json.id }}"
+      },
+      "position": {
+        "x": 580,
+        "y": 170
+      }
+    },
+    {
+      "id": "tell",
+      "type": "telegram.send",
+      "params": {
+        "credential": "telegram_key",
+        "chatId": "",
+        "text": "New post:\n\n{{ $json.text }}"
+      },
+      "position": {
+        "x": 850,
+        "y": 170
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "clock",
+      "fromPort": "main",
+      "to": "posts",
+      "toPort": "main"
+    },
+    {
+      "from": "posts",
+      "fromPort": "main",
+      "to": "fresh",
+      "toPort": "main"
+    },
+    {
+      "from": "fresh",
+      "fromPort": "main",
+      "to": "tell",
+      "toPort": "main"
+    }
+  ]
+}
+```
+
 ### demo01: news to x
 
 Every 30 minutes it looks for new Hacker News stories about a subject you choose, has Claude draft a post about each one, and puts it on X. Change what it watches for in the About field on the search step — Robinhood Chain, stablecoins, whatever you follow. Needs a Claude key named claude_key and an X key named x_key with write permission. The news itself needs no key.
@@ -1061,7 +1247,7 @@ Works out exactly what a transaction would do and what it would cost, on the Sep
 
 ### demo09: price move to discord
 
-Announces a price move to a Discord channel, and only when it actually moves. Checks every 10 minutes but stays quiet until ETH is 5% away from where it last told you. Needs a Discord webhook saved as announcements.
+Announces a price move to a Discord channel, and only when it actually moves. Checks every 10 minutes but stays quiet until SOL is 5% away from where it last told you. Needs a Discord webhook saved as announcements.
 
 ```json
 {
@@ -1083,7 +1269,7 @@ Announces a price move to a Discord channel, and only when it actually moves. Ch
       "id": "price",
       "type": "coingecko.price",
       "params": {
-        "ids": "ethereum",
+        "ids": "solana",
         "currency": "usd"
       },
       "position": {
@@ -1095,7 +1281,7 @@ Announces a price move to a Discord channel, and only when it actually moves. Ch
       "id": "moved",
       "type": "logic.moved",
       "params": {
-        "value": "{{ $json.ethereum.usd }}",
+        "value": "{{ $json.solana.usd }}",
         "amount": 5,
         "unit": "percent",
         "direction": "either",

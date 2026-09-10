@@ -12,16 +12,16 @@ import starters from '@/public/starters.json'
 
 const CASES = [
   {
-    id: 'traders', slug: 'usdc-landing-to-telegram', who: 'Traders',
-    line: 'Get a Telegram message the moment USDC lands in a wallet',
-    why: 'Checks every five minutes, tells you once per transaction, and never repeats itself after a restart.',
+    id: 'traders', slug: 'kol-post-to-telegram', who: 'Traders',
+    line: 'Get a Telegram message the moment someone posts on X about your subject',
+    why: 'Watches one account for the words you care about. Tells you once per post, and never repeats itself after a restart.',
     steps: [
-      'every 5 minutes',
-      'contract events  USDC · Transfer · only where to = your address',
-      'first time only  by transaction hash',
-      'telegram  "USDC in: {{ $json.args.value }}"',
+      'every 10 minutes',
+      'search x  from:VitalikButerin (rollup OR L2)',
+      'first time only  by post id',
+      'telegram  the post, as soon as it appears',
     ],
-    needs: 'a Telegram bot token',
+    needs: 'an X key and a Telegram bot token',
   },
   {
     id: 'influencers', slug: 'news-to-x', who: 'Influencers',
@@ -42,9 +42,9 @@ const CASES = [
     why: 'Checks every ten minutes but stays quiet until the price is 5% away from the last thing it told you.',
     steps: [
       'every 10 minutes',
-      'coin price  ethereum in usd',
+      'coin price  solana in usd',
       'when this moves  by 5 percent, up or down',
-      'discord  "@everyone ETH is up 6% to $4,310"',
+      'discord  "@everyone SOL is up 6% to $214"',
     ],
     needs: 'a Discord webhook',
   },
@@ -56,15 +56,17 @@ const CASES = [
     needs: 'Stripe, Slack and Notion keys',
   },
   {
-    id: 'builders', slug: 'contract-numbers-by-email', who: 'Builders',
-    line: 'Read any contract on a schedule and email yourself the numbers',
-    why: 'Paste a Solidity function line and it reads it. Amounts stay whole numbers the whole way.',
+    id: 'builders', slug: 'contract-event-to-slack', who: 'Builders',
+    line: 'Your contract fires an event, Claude says what it means, it lands in Slack',
+    why: 'Paste a Solidity event line and it decodes every field. Amounts stay whole numbers the whole way, and each transaction is only reported once.',
     steps: [
-      'every day',
-      'read from a contract  function totalSupply() view returns (uint256)',
-      'resend  email it to you',
+      'every 5 minutes',
+      'contract events  event Transfer(address indexed from, address indexed to, uint256 value)',
+      'first time only  by transaction hash',
+      'ask claude  "say what happened in one line, keep the numbers exact"',
+      'slack  #contracts',
     ],
-    needs: 'a Resend key',
+    needs: 'a Claude key and a Slack key',
   },
 ]
 
