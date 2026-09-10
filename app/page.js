@@ -36,6 +36,35 @@ export default async function Home() {
       </section>
 
       <section className="page section">
+        <h2>what you need</h2>
+        <p className="sub">The last one only if something has to call you.</p>
+        <div className="grid three">
+          <div className="cell">
+            <h3>a computer you leave on</h3>
+            <p>
+              A laptop is fine. It runs while the laptop is awake and catches up on what it
+              missed when you open it again.
+            </p>
+          </div>
+          <div className="cell">
+            <h3>an account with the services you use</h3>
+            <p>
+              A Discord webhook, a Resend key, a Slack token. Paste each one in once and press
+              Test. Every automation says which keys it is waiting on.
+            </p>
+          </div>
+          <div className="cell">
+            <h3>one button, if something calls you</h3>
+            <p>
+              Stripe and Shopify call you when something happens. Press <b>let the internet
+              reach this</b> on a webhook step and zorilla opens an address for it. Nothing
+              else on your computer becomes reachable.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="page section">
         <h2>what it actually does</h2>
         <div className="grid three">
           <div className="cell">

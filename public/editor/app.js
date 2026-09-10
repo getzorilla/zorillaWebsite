@@ -28,6 +28,7 @@ const state = {
   integrations: [],
   credentials: [],
   themes: [],
+  tunnel: {},
   paletteService: null,
   keyDraftType: null,
   workflows: [],
@@ -160,6 +161,45 @@ function renderHome() {
 
 // ---------------------------------------------------------------- automations
 
+// What is still missing before this could work, in the words somebody would
+// use themselves. A switched-on automation that quietly does nothing is the
+// worst thing this can do, so the gaps are on the screen rather than in a log.
+function whatItNeeds(workflow) {
+  const needs = []
+  const nodes = workflow.nodes ?? []
+
+  const triggers = nodes.filter((n) => state.defs.get(n.type)?.category === 'trigger')
+  if (!nodes.length) needs.push('nothing in it yet')
+  else if (!triggers.length) needs.push('something to start it: a schedule, a webhook, or a step that waits')
+
+  for (const node of nodes) {
+    const def = state.defs.get(node.type)
+    if (!def) {
+      needs.push(`a step it uses is not installed (${node.type})`)
+      continue
+    }
+    for (const param of def.params ?? []) {
+      if (param.type !== 'credential') continue
+      const chosen = node.params?.[param.key]
+      const optional = param.key !== 'credential'
+      if (!chosen) {
+        if (!optional) needs.push(`a key for ${def.label}`)
+        continue
+      }
+      if (!state.credentials.some((c) => c.name === chosen)) {
+        needs.push(`a saved key called "${chosen}"`)
+      }
+    }
+  }
+
+  const hooks = nodes.filter((n) => n.type === 'core.webhook')
+  if (hooks.length && !(state.tunnel?.url || state.home.publicUrl)) {
+    needs.push('an address the internet can reach, so whoever calls it can get through')
+  }
+
+  return [...new Set(needs)]
+}
+
 function lastRunFor(workflowId) {
   return state.runs.find((r) => r.workflowId === workflowId) ?? null
 }
@@ -222,7 +262,11 @@ function renderAutomations() {
       el('span', { class: `dot${workflow.active ? ' on' : ''}`, title: workflow.active ? 'on' : 'off' }),
       el('div', { class: 'grow' },
         el('div', { class: 'name', text: workflow.name }),
-        el('div', { class: 'meta', text: [workflow.folder || 'loose', run ? `${run.status} ${relative(run.startedAt)}` : 'never run'].join('  ·  ') })),
+        el('div', { class: 'meta', text: [workflow.folder || 'loose', run ? `${run.status} ${relative(run.startedAt)}` : 'never run'].join('  ·  ') }),
+        (() => {
+          const needs = whatItNeeds(workflow)
+          return needs.length ? el('div', { class: 'needs', text: `needs ${needs.join(', ')}` }) : null
+        })()),
       el('div', { class: 'row-actions' },
         el('button', { class: 'ghost', text: 'run', onclick: async (event) => {
           event.stopPropagation()
@@ -1381,12 +1425,91 @@ function visible(param, params) {
   })
 }
 
+// Everything needed to make a webhook reachable, in one place: the address to
+// hand over, whether the outside world can actually get to it, and the button
+// that changes that.
+function webhookAddress(node) {
+  const box = el('div')
+  const tunnel = state.tunnel ?? {}
+  const base = tunnel.url || state.home.publicUrl || `http://127.0.0.1:${state.home.port}`
+  const secret = String(node.params.secret ?? '')
+  const address = `${base}/hook/${String(node.params.path ?? '').replace(/^\//, '')}${secret ? `?secret=${encodeURIComponent(secret)}` : ''}`
+  const reachable = Boolean(tunnel.url || state.home.publicUrl)
+
+  box.append(field('the address to give them',
+    el('div', { class: 'hook-address' }, el('code', { text: address })),
+    reachable
+      ? 'anything on the internet can reach this, so keep a secret on it.'
+      : 'this works from this machine only. stripe, shopify and github cannot reach it yet.'))
+
+  box.append(el('div', { class: 'row-inline', style: 'margin:-8px 0 8px' },
+    el('button', { class: 'ghost', text: 'copy', onclick: async () => { await navigator.clipboard.writeText(address); toast('copied') } }),
+    el('button', { class: 'ghost', text: secret ? 'new secret' : 'add a secret', onclick: () => {
+      node.params.secret = newSecret()
+      touch()
+      renderInspector()
+    } })))
+
+  if (tunnel.url) {
+    box.append(el('div', { class: 'row-inline' },
+      el('span', { class: 'tag on', text: 'reachable' }),
+      el('button', { class: 'ghost', text: 'stop', onclick: async () => {
+        state.tunnel = await api('/api/tunnel', { method: 'DELETE' })
+        toast('the address is gone')
+        renderInspector()
+      } })))
+    box.append(el('p', { class: 'hint', style: 'margin:6px 0 12px' },
+      'this address lasts until you stop it or close zorilla. it changes on a restart, and whoever you gave it to needs the new one.'))
+    return box
+  }
+
+  const note = el('p', { class: 'hint', style: 'margin:4px 0 0' })
+  const open = el('button', { class: 'primary', text: 'let the internet reach this' })
+  open.onclick = async () => {
+    open.disabled = true
+    note.textContent = 'starting…'
+    try {
+      if (!node.params.secret) {
+        node.params.secret = newSecret()
+        touch()
+      }
+      state.tunnel = await api('/api/tunnel', { method: 'POST', body: {} })
+      toast('reachable')
+      renderInspector()
+    } catch (err) {
+      note.textContent = err.message
+      open.disabled = false
+    }
+  }
+
+  box.append(el('div', { class: 'row-inline' }, open), note)
+  box.append(el('p', { class: 'hint', style: 'margin:6px 0 12px' },
+    tunnel.installed
+      ? 'a tunnel dials out from this machine. nothing on your computer is exposed except this one address, and it closes when you stop it.'
+      : `the first time, zorilla fetches cloudflare's tunnel program (about 30MB) from ${tunnel.from ? new URL(tunnel.from).host : 'github.com'} into your zorilla folder. nothing on your computer is exposed except this one address.`))
+  return box
+}
+
+const newSecret = () => [...crypto.getRandomValues(new Uint8Array(16))].map((b) => b.toString(16).padStart(2, '0')).join('')
+
 function renderInspector() {
   const host = $('inspector')
   host.textContent = ''
   const node = state.selected && state.wf ? nodeById(state.selected) : null
   if (!node) {
     $('inspector-title').textContent = 'nothing selected'
+    // with nothing selected, the panel is free to say what the whole thing
+    // still needs before it could run
+    if (state.wf) {
+      const needs = whatItNeeds(state.wf)
+      if (needs.length) {
+        const list = el('ul')
+        for (const line of needs) list.append(el('li', { text: line }))
+        host.append(el('div', { class: 'checklist' }, el('h4', { text: 'before this can run' }), list))
+      } else {
+        host.append(el('p', { class: 'hint' }, 'ready. press run to try it, or switch it to live so it runs on its own.'))
+      }
+    }
     return
   }
   const def = state.defs.get(node.type)
@@ -1394,23 +1517,7 @@ function renderInspector() {
   if (def?.description) host.append(el('p', { class: 'hint', text: def.description }))
 
   // a webhook is only useful if you can see the address to paste elsewhere
-  if (node.type === 'core.webhook') {
-    const base = state.home.publicUrl || `http://127.0.0.1:${state.home.port}`
-    const secret = String(node.params.secret ?? '')
-    const address = `${base}/hook/${String(node.params.path ?? '').replace(/^\//, '')}${secret ? `?secret=${encodeURIComponent(secret)}` : ''}`
-    const line = el('div', { class: 'hook-address' }, el('code', { text: address }))
-    host.append(field('the address to give them', line,
-      state.home.publicUrl
-        ? 'this is your tunnel address, so anything on the internet can reach it. keep the secret on.'
-        : 'this only works from this machine. run a tunnel and set ZORILLA_PUBLIC_URL to let stripe or github reach it.'))
-    host.append(el('div', { class: 'row-inline', style: 'margin:-8px 0 14px' },
-      el('button', { class: 'ghost', text: 'copy', onclick: async () => { await navigator.clipboard.writeText(address); toast('copied') } }),
-      el('button', { class: 'ghost', text: secret ? 'new secret' : 'add a secret', onclick: () => {
-        node.params.secret = [...crypto.getRandomValues(new Uint8Array(16))].map((b) => b.toString(16).padStart(2, '0')).join('')
-        touch()
-        renderInspector()
-      } })))
-  }
+  if (node.type === 'core.webhook') host.append(webhookAddress(node))
 
   const service = def ? serviceOf(def) : null
   const spec = service ? state.integrations.find((i) => i.id === service) : null
@@ -1633,6 +1740,7 @@ state.runs = boot.runs
 state.workspace = boot.workspace
 state.themes = boot.themes ?? []
 state.home = { port: boot.port, path: boot.home, publicUrl: boot.publicUrl ?? '' }
+state.tunnel = boot.tunnel ?? {}
 applyTheme(currentTheme())
 
 renderPalette()
