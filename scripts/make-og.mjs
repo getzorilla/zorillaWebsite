@@ -6,6 +6,11 @@
 //
 // Needs Chrome and a canvas picture at public/og-canvas.png, shot at 570x340
 // or any multiple of it.
+//
+// X caches a card image by URL and will not refetch it when the bytes change,
+// and the validator that used to force a refresh is gone. So after regenerating
+// this, copy it to the next number up (og-3.png) and point app/layout.js at it,
+// or the old picture keeps showing on every new post.
 
 import { readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'

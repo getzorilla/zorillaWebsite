@@ -26,14 +26,14 @@ export const metadata = {
     title: 'Automations that run on your machine',
     description,
     url: '/',
-    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Zorilla: automations that run on your machine' }],
+    images: [{ url: '/og-2.png', width: 1200, height: 630, alt: 'Zorilla: automations that run on your machine' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Automations that run on your machine',
     description,
     creator: '@4aykk',
-    images: ['/og.png'],
+    images: ['/og-2.png'],
   },
 }
 
