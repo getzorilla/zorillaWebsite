@@ -22,12 +22,15 @@ export const metadata = {
   title: 'Zorilla: Web2/3 workflow automation, fully local.',
   description,
   icons: { icon: [{ url: '/favicon.ico', sizes: 'any' }, { url: '/logo.svg', type: 'image/svg+xml' }], apple: '/apple-icon.png' },
+  // No og:url on purpose. It is a canonical, and X keys its card cache on it:
+  // with one set, a link it has already seen can never be re-crawled, so a
+  // changed card image is stuck forever. Without it, X keys on the URL actually
+  // pasted, and ?anything busts the cache.
   openGraph: {
     type: 'website',
     siteName: 'Zorilla',
     title: 'Automations that run on your machine',
     description,
-    url: '/',
     images: [{ url: '/og-2.png', width: 1200, height: 630, alt: 'Zorilla: automations that run on your machine' }],
   },
   twitter: {
