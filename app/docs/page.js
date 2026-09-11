@@ -85,7 +85,7 @@ export default async function Docs({ searchParams }) {
           <section id="what-it-is">
             <h2>What Zorilla is</h2>
             <p>
-              Zorilla is an automation tool that runs on your own computer. You wire functions
+              Zorilla is an automation tool that runs locally. You wire functions
               together on a canvas: something starts a run, other functions read data, decide what
               to do with it, and send it somewhere. It watches prices, reads contracts, calls
               APIs, posts to Discord and Slack, and sends email.
@@ -323,7 +323,7 @@ npm start`}</Command>
             <h4>Webhook</h4>
             <p>
               Runs when something sends a message to an address. On its own that address only
-              works on your own machine. See <a href="#local">what local means</a> for letting
+              works locally. See <a href="#local">what local means</a> for letting
               Stripe or GitHub reach it.
             </p>
             <h4>Functions that wait</h4>

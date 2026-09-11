@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-11T02:14:14.343Z",
+  "generatedAt": "2026-09-11T03:35:40.027Z",
   "logos": [
     "airtable",
     "anthropic",
@@ -1282,7 +1282,7 @@
       "type": "airtable.create",
       "label": "Add an Airtable record",
       "category": "action",
-      "description": "",
+      "description": "Adds one record to a table.",
       "outputs": [
         "main"
       ],
@@ -1382,7 +1382,7 @@
       "type": "anthropic.ask",
       "label": "Ask Claude",
       "category": "action",
-      "description": "",
+      "description": "Sends a prompt to Claude and hands on what it says.",
       "outputs": [
         "main"
       ],
@@ -1461,7 +1461,7 @@
       "type": "deepseek.ask",
       "label": "Ask DeepSeek",
       "category": "action",
-      "description": "",
+      "description": "Sends a prompt to DeepSeek and hands on what it says.",
       "outputs": [
         "main"
       ],
@@ -1499,7 +1499,7 @@
       "type": "discord.post",
       "label": "Post to Discord",
       "category": "action",
-      "description": "",
+      "description": "Posts a message to the channel your webhook points at.",
       "outputs": [
         "main"
       ],
@@ -1583,7 +1583,7 @@
       "type": "gemini.ask",
       "label": "Ask Gemini",
       "category": "action",
-      "description": "",
+      "description": "Sends a prompt to Gemini and hands on what it says.",
       "outputs": [
         "main"
       ],
@@ -1784,7 +1784,7 @@
       "type": "notion.createPage",
       "label": "Add a Notion page",
       "category": "action",
-      "description": "",
+      "description": "Adds one page, or one row of a database.",
       "outputs": [
         "main"
       ],
@@ -1875,7 +1875,7 @@
       "type": "openai.ask",
       "label": "Ask ChatGPT",
       "category": "action",
-      "description": "",
+      "description": "Sends a prompt to ChatGPT and hands on what it says.",
       "outputs": [
         "main"
       ],
@@ -2152,7 +2152,7 @@
       "type": "supabase.insert",
       "label": "Add a row (Supabase)",
       "category": "action",
-      "description": "",
+      "description": "Adds one row to a table.",
       "outputs": [
         "main"
       ],
@@ -2185,7 +2185,7 @@
       "type": "telegram.send",
       "label": "Send a Telegram message",
       "category": "action",
-      "description": "",
+      "description": "Sends a message to the chat your key points at.",
       "outputs": [
         "main"
       ],
@@ -2880,7 +2880,7 @@
         {
           "key": "create",
           "label": "Add an Airtable record",
-          "description": ""
+          "description": "Adds one record to a table."
         },
         {
           "key": "newRecord",
@@ -2914,7 +2914,7 @@
         {
           "key": "ask",
           "label": "Ask Claude",
-          "description": ""
+          "description": "Sends a prompt to Claude and hands on what it says."
         }
       ]
     },
@@ -2964,7 +2964,7 @@
         {
           "key": "ask",
           "label": "Ask DeepSeek",
-          "description": ""
+          "description": "Sends a prompt to DeepSeek and hands on what it says."
         }
       ]
     },
@@ -2993,7 +2993,7 @@
         {
           "key": "post",
           "label": "Post to Discord",
-          "description": ""
+          "description": "Posts a message to the channel your webhook points at."
         }
       ]
     },
@@ -3052,7 +3052,7 @@
         {
           "key": "ask",
           "label": "Ask Gemini",
-          "description": ""
+          "description": "Sends a prompt to Gemini and hands on what it says."
         }
       ]
     },
@@ -3112,7 +3112,7 @@
         {
           "key": "createPage",
           "label": "Add a Notion page",
-          "description": ""
+          "description": "Adds one page, or one row of a database."
         },
         {
           "key": "newRow",
@@ -3146,7 +3146,7 @@
         {
           "key": "ask",
           "label": "Ask ChatGPT",
-          "description": ""
+          "description": "Sends a prompt to ChatGPT and hands on what it says."
         }
       ]
     },
@@ -3289,7 +3289,7 @@
         {
           "key": "insert",
           "label": "Add a row (Supabase)",
-          "description": ""
+          "description": "Adds one row to a table."
         }
       ]
     },
@@ -3324,7 +3324,7 @@
         {
           "key": "send",
           "label": "Send a Telegram message",
-          "description": ""
+          "description": "Sends a message to the chat your key points at."
         },
         {
           "key": "messages",
