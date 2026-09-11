@@ -31,7 +31,7 @@ export const metadata = {
     siteName: 'Zorilla',
     title: 'Automations that run on your machine',
     description,
-    images: [{ url: '/og-2.png', width: 1200, height: 630, alt: 'Zorilla: automations that run on your machine' }],
+    images: [{ url: '/og-2.png', width: 2400, height: 1260, alt: 'Zorilla: automations that run on your machine' }],
   },
   twitter: {
     card: 'summary_large_image',

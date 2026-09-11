@@ -7,6 +7,10 @@
 // Needs Chrome and a canvas picture at public/og-canvas.png, shot at 570x340
 // or any multiple of it.
 //
+// The file is written at 2x (2400x1260) for retina. og:image:width/height in
+// app/layout.js must state those real numbers, not the 1200x630 logical size,
+// or a crawler that checks them against the file sees a mismatch.
+//
 // X caches a card image by URL and will not refetch it when the bytes change,
 // and the validator that used to force a refresh is gone. So after regenerating
 // this, copy it to the next number up (og-3.png) and point app/layout.js at it,
