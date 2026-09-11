@@ -17,7 +17,7 @@ const description =
 
 export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://zorilla.io'),
-  title: 'Zorilla: n8n but for cool people',
+  title: 'Zorilla: Web2/3 workflow automation, fully local.',
   description,
   icons: { icon: [{ url: '/favicon.ico', sizes: 'any' }, { url: '/logo.svg', type: 'image/svg+xml' }], apple: '/apple-icon.png' },
   openGraph: {
