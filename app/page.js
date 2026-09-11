@@ -14,19 +14,16 @@ const CASES = [
   {
     id: 'traders', slug: 'telegram-post-to-group', who: 'Traders',
     line: 'Check if a KOL posts on X, post it in your Telegram group automatically',
-    why: 'Watches one account for the words you care about. Tells you once per post, and never repeats itself after a restart.',
     steps: [
       'Every 10 minutes',
       'Search X  from:VitalikButerin (rollup OR L2)',
       'First time only  By post ID',
       'Telegram  Into your group, as soon as it appears',
     ],
-    needs: 'an X key and a Telegram bot token',
   },
   {
     id: 'influencers', slug: 'news-to-x', who: 'Influencers',
     line: 'Watch the news on any subject, have Claude draft a post, put it on X',
-    why: 'Half-hourly. You name the subject, and it never drafts the same story twice.',
     steps: [
       'Every 30 minutes',
       'Search Hacker News  About "Robinhood Chain"',
@@ -34,31 +31,25 @@ const CASES = [
       'Ask Claude  "write one post, under 240 characters"',
       'Post to X  {{ $json.text }}',
     ],
-    needs: 'a Claude key and an X access token',
   },
   {
     id: 'community', slug: 'sol-price-moves-to-discord', who: 'Communities',
     line: 'Announce a SOL price move to Discord, and stay quiet otherwise',
-    why: 'Checks every ten minutes and says nothing until the price is 5% away from the last figure it announced.',
     steps: [
       'Every 10 minutes',
       'Coin price  Solana in USD',
       'When this moves  By 5 percent, up or down',
       'Discord  "SOL is up 6% to $214"',
     ],
-    needs: 'a Discord webhook',
   },
   {
     id: 'selling', slug: 'payment-to-slack-and-notion', who: 'Sellers',
     line: 'Turn a Stripe payment into a Slack message and a Notion row',
-    why: 'One step feeding two, so both happen from the same payment. Fires once per payment.',
     steps: ['New Stripe payment', 'Slack  "$49.00 from buyer@example.com"', 'Notion  Add a row'],
-    needs: 'Stripe, Slack and Notion keys',
   },
   {
     id: 'builders', slug: 'contract-event-to-telegram', who: 'Builders',
     line: 'Smart contract fires an event, Claude says what it means, it lands in Telegram',
-    why: 'Paste a Solidity event line and it decodes every field. Amounts stay whole numbers the whole way, and each transaction is only reported once.',
     steps: [
       'Every 5 minutes',
       'Contract events  event Transfer(address indexed from, address indexed to, uint256 value)',
@@ -66,7 +57,6 @@ const CASES = [
       'Ask Claude  "say what happened in one line, keep the numbers exact"',
       'Telegram  Into your group',
     ],
-    needs: 'a Claude key and a Telegram bot token',
   },
 ]
 

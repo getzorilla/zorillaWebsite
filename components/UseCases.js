@@ -38,7 +38,6 @@ export default function UseCases({ cases }) {
                   )
                 })}
               </ol>
-              <p className="case-note">{c.why} Needs {c.needs}.</p>
             </div>
           </div>
         ))}
