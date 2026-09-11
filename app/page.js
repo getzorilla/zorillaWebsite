@@ -197,7 +197,7 @@ export default async function Home() {
       <section className="page section">
         <h2>What&apos;s next</h2>
         <p className="sub">
-          Zorilla is brand new (v0.1.0). While I spent time polishing it, things are bound to go
+          Zorilla is brand new (v0.1.1). While I spent time polishing it, things are bound to go
           wrong. If you run into any bugs or have any feedback in general please reach out to me
           on <a className="inline-link" href="https://x.com/4aykk" target="_blank" rel="noreferrer">X</a>.
           Currently working on private in-house cloud and infrastructure for hosting automations,
