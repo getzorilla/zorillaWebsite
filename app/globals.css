@@ -489,8 +489,12 @@ table.ref td.type { font-family: var(--mono); color: var(--dimmer); white-space:
 
 .cases { display: grid; gap: 16px; }
 /* tabs sit in a padded button, so the column reads ~14px lower than the
-   bullet list beside it. pull it back to the same optical start. */
-.hero-grid .cases { margin-top: -14px; }
+   bullet list beside it. pull it back to the same optical start.
+   divider sits in the middle of the 76px gap, not on the column edge. */
+.hero-grid .cases {
+  margin-top: -14px; border-left: 1px solid var(--line-soft);
+  margin-left: -38px; padding-left: 38px;
+}
 .case-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
 .case-tab {
   text-align: left; background: transparent; border: 1px solid transparent;
@@ -534,6 +538,7 @@ table.ref td.type { font-family: var(--mono); color: var(--dimmer); white-space:
 
 @media (max-width: 900px) {
   .hero-grid { grid-template-columns: 1fr; gap: 34px; }
+  .hero-grid .cases { margin-top: 0; border-left: 0; margin-left: 0; padding-left: 0; }
 }
 
 /* integrations */
