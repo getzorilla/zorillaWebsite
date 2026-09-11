@@ -147,15 +147,16 @@ npm start`}</Command>
 
             <h3>1. Open the workspace</h3>
             <p>
-              Zorilla opens on your workspace, and it is empty: nothing is installed on your
-              behalf. Thirteen demos came with it, and this is where you take one.
+              Zorilla opens on your workspace with an <b>Examples</b> folder already in it:
+              the ten demos that ship with it, tagged <b>Example</b>, switched off until you
+              press run. Delete any of them and they stay deleted.
             </p>
             <Shot
               src="/guide/home.png"
               alt="an empty Zorilla workspace"
               spots={[
                 { n: 1, ...pct(6, 50, 144, 704), say: 'automations, keys, integrations, settings' },
-                { n: 2, ...pct(441, 283, 570, 33), say: 'start from nothing, bring in a file, or open a demo' },
+                { n: 2, ...pct(441, 283, 570, 33), say: 'start from nothing, bring in a file, or have an agent write it' },
                 { n: 3, ...pct(17, 677, 115, 36), say: 'straight to the canvas' },
               ]}
             />
@@ -163,10 +164,10 @@ npm start`}</Command>
             <h3>2. Take one and press run</h3>
             <p>
               The demos are numbered, and the ones that need no keys are marked{' '}
-              <b>Ready</b>. Take <b>demo05: eth price watch</b>: it reads the price of ETH and
-              writes it in the log, and says something separate when the price has moved 5%
-              since it last mentioned it. Press add it, then press run in the top right. The
-              strip along the bottom opens the log, and the price is in it.
+              <b>Ready</b>. Take <b>demo09: wallet balance watch</b>: it reads a wallet's
+              balance on Ethereum and writes it in the log, and says something separate when
+              the balance has moved since it last mentioned it. Open it and press run in the
+              top right. The strip along the bottom opens the log, and the balance is in it.
             </p>
             <Shot
               src="/guide/demos.png"
