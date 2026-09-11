@@ -458,7 +458,7 @@ Post to X, and search what is being said. Contacts: api.x.com.
 
 ## Working examples
 
-### demo04: contract event to telegram
+### demo04: Contract Event to Telegram
 
 Watches a contract for an event, has Claude say what it means in one line, and sends it to Telegram. Needs a Claude key named claude_key and a Telegram key named telegram_key.
 
@@ -563,7 +563,7 @@ Watches a contract for an event, has Claude say what it means in one line, and s
 }
 ```
 
-### demo05: news to x
+### demo05: News to X
 
 Finds new Hacker News stories about a subject you choose, has Claude draft a post, and puts it on X. Needs a Claude key named claude_key and an X key named x_key.
 
@@ -665,7 +665,7 @@ Finds new Hacker News stories about a subject you choose, has Claude draft a pos
 }
 ```
 
-### demo06: payment to slack and notion
+### demo06: Payment to Slack and Notion
 
 Turns each new Stripe payment into a Slack message and a Notion row. Needs keys named stripe_key, slack_key and notion_key.
 
@@ -729,7 +729,7 @@ Turns each new Stripe payment into a Slack message and a Notion row. Needs keys 
 }
 ```
 
-### demo07: prepare a transaction
+### demo07: Prepare a Transaction
 
 Works out exactly what a transaction would do and cost, and signs nothing. Needs no keys.
 
@@ -788,7 +788,7 @@ Works out exactly what a transaction would do and cost, and signs nothing. Needs
 }
 ```
 
-### demo02: sol price moves to discord
+### demo02: SOL Price Moves to Discord
 
 Posts to Discord when SOL moves 5% from the last figure it announced, and stays quiet otherwise. Needs a Discord webhook saved as discord_key.
 
@@ -872,7 +872,7 @@ Posts to Discord when SOL moves 5% from the last figure it announced, and stays 
 }
 ```
 
-### demo03: telegram post to group
+### demo03: Telegram Post to Group
 
 Puts new posts from one X account about a subject you choose into a Telegram group. Needs an X key named x_key and a Telegram key named telegram_key.
 
@@ -953,7 +953,7 @@ Puts new posts from one X account about a subject you choose into a Telegram gro
 }
 ```
 
-### demo08: usdc landing to telegram
+### demo08: USDC Landing to Telegram
 
 Tells you on Telegram when USDC arrives in a wallet, once per transaction. Needs a Telegram key named telegram_key.
 
@@ -1042,7 +1042,7 @@ Tells you on Telegram when USDC arrives in a wallet, once per transaction. Needs
 }
 ```
 
-### demo09: wallet balance watch
+### demo09: Wallet Balance Watch
 
 Watches a wallet and says so when its balance drops below a figure you set. Needs no keys.
 
@@ -1122,7 +1122,7 @@ Watches a wallet and says so when its balance drops below a figure you set. Need
 }
 ```
 
-### demo01: daily web3 digest email
+### demo01: Daily Web3 Digest Email
 
 One email a day with new Hacker News stories about web3, blockchain and crypto. Needs a Resend key named resend_key.
 
@@ -1223,7 +1223,7 @@ One email a day with new Hacker News stories about web3, blockchain and crypto. 
 }
 ```
 
-### demo10: webhook to slack
+### demo10: Webhook to Slack
 
 Posts to Slack whenever something calls your webhook address. Needs a Slack key named slack_key and a public address.
 

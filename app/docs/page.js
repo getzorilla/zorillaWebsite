@@ -164,7 +164,7 @@ npm start`}</Command>
             <h3>2. Take one and press run</h3>
             <p>
               The demos are numbered, and the ones that need no keys are marked{' '}
-              <b>Ready</b>. Take <b>demo09: wallet balance watch</b>: it reads a wallet's
+              <b>Ready</b>. Take <b>demo09: Wallet Balance Watch</b>: it reads a wallet's
               balance on Ethereum and writes it in the log, and says something separate when
               the balance has moved since it last mentioned it. Open it and press run in the
               top right. The strip along the bottom opens the log, and the balance is in it.
@@ -173,8 +173,8 @@ npm start`}</Command>
               src="/guide/demos.png"
               alt="the Examples folder, with the keyless demos marked Ready"
               spots={[
-                { n: 1, ...pct(716, 369, 57, 20), say: 'runs with nothing set up' },
-                { n: 2, ...pct(446, 371, 192, 21), say: 'open it' },
+                { n: 1, ...pct(719, 369, 57, 20), say: 'runs with nothing set up' },
+                { n: 2, ...pct(446, 371, 195, 21), say: 'open it' },
                 { n: 3, ...pct(446, 111, 500, 18), say: 'what the others need first' },
               ]}
             />

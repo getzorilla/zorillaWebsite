@@ -4,7 +4,7 @@
     "title": "Contract Event to Telegram",
     "summary": "Watches a contract for an event, has Claude say what it means in one line, and sends it to Telegram. Needs a Claude key named claude_key and a Telegram key named telegram_key.",
     "package": {
-      "name": "contract event to telegram",
+      "name": "Contract Event to Telegram",
       "nodes": [
         {
           "id": "clock",
@@ -108,7 +108,7 @@
     "title": "News to X",
     "summary": "Finds new Hacker News stories about a subject you choose, has Claude draft a post, and puts it on X. Needs a Claude key named claude_key and an X key named x_key.",
     "package": {
-      "name": "news to x",
+      "name": "News to X",
       "nodes": [
         {
           "id": "clock",
@@ -209,7 +209,7 @@
     "title": "Payment to Slack and Notion",
     "summary": "Turns each new Stripe payment into a Slack message and a Notion row. Needs keys named stripe_key, slack_key and notion_key.",
     "package": {
-      "name": "payment to slack and notion",
+      "name": "Payment to Slack and Notion",
       "nodes": [
         {
           "id": "paid",
@@ -272,7 +272,7 @@
     "title": "Prepare a Transaction",
     "summary": "Works out exactly what a transaction would do and cost, and signs nothing. Needs no keys.",
     "package": {
-      "name": "prepare a transaction",
+      "name": "Prepare a Transaction",
       "nodes": [
         {
           "id": "start",
@@ -330,7 +330,7 @@
     "title": "SOL Price Moves to Discord",
     "summary": "Posts to Discord when SOL moves 5% from the last figure it announced, and stays quiet otherwise. Needs a Discord webhook saved as discord_key.",
     "package": {
-      "name": "sol price moves to discord",
+      "name": "SOL Price Moves to Discord",
       "nodes": [
         {
           "id": "clock",
@@ -413,7 +413,7 @@
     "title": "Telegram Post to Group",
     "summary": "Puts new posts from one X account about a subject you choose into a Telegram group. Needs an X key named x_key and a Telegram key named telegram_key.",
     "package": {
-      "name": "telegram post to group",
+      "name": "Telegram Post to Group",
       "nodes": [
         {
           "id": "clock",
@@ -493,7 +493,7 @@
     "title": "USDC Landing to Telegram",
     "summary": "Tells you on Telegram when USDC arrives in a wallet, once per transaction. Needs a Telegram key named telegram_key.",
     "package": {
-      "name": "usdc landing to telegram",
+      "name": "USDC Landing to Telegram",
       "nodes": [
         {
           "id": "clock",
@@ -581,7 +581,7 @@
     "title": "Wallet Balance Watch",
     "summary": "Watches a wallet and says so when its balance drops below a figure you set. Needs no keys.",
     "package": {
-      "name": "wallet balance watch",
+      "name": "Wallet Balance Watch",
       "nodes": [
         {
           "id": "clock",
@@ -660,7 +660,7 @@
     "title": "Daily Web3 Digest Email",
     "summary": "One email a day with new Hacker News stories about web3, blockchain and crypto. Needs a Resend key named resend_key.",
     "package": {
-      "name": "daily web3 digest email",
+      "name": "Daily Web3 Digest Email",
       "nodes": [
         {
           "id": "clock",
@@ -760,7 +760,7 @@
     "title": "Webhook to Slack",
     "summary": "Posts to Slack whenever something calls your webhook address. Needs a Slack key named slack_key and a public address.",
     "package": {
-      "name": "webhook to slack",
+      "name": "Webhook to Slack",
       "nodes": [
         {
           "id": "hook",
