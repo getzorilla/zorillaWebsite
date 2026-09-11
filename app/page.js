@@ -197,8 +197,14 @@ export default async function Home() {
       <section className="page section">
         <h2>What&apos;s next</h2>
         <p className="sub">
-          Currently working on Rust (Solana) support, and overall QOL features. If you have any
-          feedback please message me on{' '}
+          Zorilla runs on your machine, so a live automation only fires while that machine is
+          awake. Next up is making it easy to put Zorilla on a server you own so your
+          automations run around the clock, then an editor you can open in the browser, then
+          encrypted hosting run in-house. After that, Rust (Solana) support and general
+          quality-of-life work.
+        </p>
+        <p className="sub">
+          If you have any feedback please message me on{' '}
           <a className="inline-link" href="https://x.com/4aykk" target="_blank" rel="noreferrer">X</a>!
         </p>
       </section>

@@ -458,6 +458,26 @@ npm start`}</Command>
               your automation off. The address changes each time the tunnel restarts, so whoever
               you gave it to needs the new one.
             </p>
+            <h3>Running it around the clock</h3>
+            <p>
+              A live automation fires on its trigger only while Zorilla is running, which means
+              only while your computer is awake. Shut the lid and the schedules stop until you
+              open it again. Anything missed while the machine slept is noticed and caught up
+              once on the next start, but a run that needed to happen at 3am did not happen at
+              3am.
+            </p>
+            <p>
+              For something that has to run without you, put Zorilla on a machine that stays on:
+              a VPS, a spare box at home, a Raspberry Pi. It is a Node process and a folder, so
+              anywhere Node 20 runs will do. Set <code>ZORILLA_PASSPHRASE</code> so the vault
+              unlocks on a machine you are not sitting at, and reach the editor over an SSH
+              tunnel rather than opening the port.
+            </p>
+            <p>
+              Making that a single step is what I am working on next: a one-command deploy to a
+              host you own, then an editor you can open in the browser, then encrypted hosting
+              run in-house for people who would rather not run anything themselves.
+            </p>
           </section>
 
           <section id="steps">
