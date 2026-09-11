@@ -488,6 +488,9 @@ table.ref td.type { font-family: var(--mono); color: var(--dimmer); white-space:
 /* what people build with it */
 
 .cases { display: grid; gap: 16px; }
+/* tabs sit in a padded button, so the column reads ~14px lower than the
+   bullet list beside it. pull it back to the same optical start. */
+.hero-grid .cases { margin-top: -14px; }
 .case-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
 .case-tab {
   text-align: left; background: transparent; border: 1px solid transparent;
@@ -986,6 +989,7 @@ table.ref td.type { font-family: var(--mono); color: var(--dimmer); white-space:
   }
   .case-tabs::-webkit-scrollbar { display: none; }
   .case-tab { flex: none; }
+  .hero-grid .cases { margin-top: 0; }
   .case-line { font-size: 14.5px; }
   .case-steps li { flex-wrap: wrap; gap: 6px; }
 
