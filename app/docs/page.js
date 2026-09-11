@@ -153,10 +153,10 @@ npm start`}</Command>
             </p>
             <Shot
               src="/guide/home.png"
-              alt="an empty Zorilla workspace"
+              alt="a Zorilla workspace with the Examples folder in it"
               spots={[
-                { n: 1, ...pct(6, 50, 144, 704), say: 'automations, keys, integrations, settings' },
-                { n: 2, ...pct(441, 283, 570, 33), say: 'start from nothing, bring in a file, or have an agent write it' },
+                { n: 1, ...pct(0, 44, 150, 716), say: 'automations, keys, integrations, settings' },
+                { n: 2, ...pct(416, 145, 830, 33), say: 'start from nothing, bring in a file, or have an agent write it' },
                 { n: 3, ...pct(17, 677, 115, 36), say: 'straight to the canvas' },
               ]}
             />
@@ -171,11 +171,11 @@ npm start`}</Command>
             </p>
             <Shot
               src="/guide/demos.png"
-              alt="the demos that came with Zorilla"
+              alt="the Examples folder, with the keyless demos marked Ready"
               spots={[
-                { n: 1, ...pct(592, 629, 57, 20), say: 'runs with nothing set up' },
-                { n: 2, ...pct(1183, 648, 51, 27), say: 'take it into your workspace' },
-                { n: 3, ...pct(428, 271, 743, 18), say: 'what the others need first' },
+                { n: 1, ...pct(716, 369, 57, 20), say: 'runs with nothing set up' },
+                { n: 2, ...pct(446, 371, 192, 21), say: 'open it' },
+                { n: 3, ...pct(446, 111, 500, 18), say: 'what the others need first' },
               ]}
             />
 
@@ -196,9 +196,9 @@ npm start`}</Command>
               src="/guide/keys.png"
               alt="the keys panel, with a saved Discord webhook"
               spots={[
-                { n: 1, ...pct(425, 152, 100, 39), say: 'the keys you have saved' },
-                { n: 2, ...pct(416, 323, 560, 244), say: 'pick the service' },
-                { n: 3, ...pct(416, 610, 560, 78), say: 'the name your functions will call it by' },
+                { n: 1, ...pct(425, 152, 93, 39), say: 'the keys you have saved' },
+                { n: 2, ...pct(416, 323, 560, 231), say: 'pick the service' },
+                { n: 3, ...pct(416, 597, 560, 78), say: 'the name your functions will call it by' },
               ]}
             />
 
@@ -217,8 +217,8 @@ npm start`}</Command>
               src="/guide/editor-palette.png"
               alt="the function list with Discord open"
               spots={[
-                { n: 1, ...pct(10, 322, 239, 36), say: 'a service, opened' },
-                { n: 2, ...pct(40, 384, 209, 36), say: 'one of its functions' },
+                { n: 1, ...pct(10, 355, 193, 36), say: 'a service, opened' },
+                { n: 2, ...pct(40, 417, 163, 36), say: 'one of its functions' },
               ]}
             />
 
@@ -239,9 +239,9 @@ npm start`}</Command>
               src="/guide/editor-step.png"
               alt="the settings panel for a Discord function"
               spots={[
-                { n: 1, ...pct(999, 213, 271, 75), say: 'which key it posts with' },
-                { n: 2, ...pct(999, 300, 271, 118), say: 'the message' },
-                { n: 3, ...pct(999, 553, 271, 53), say: 'what happens if it fails' },
+                { n: 1, ...pct(999, 281, 271, 75), say: 'which key it posts with' },
+                { n: 2, ...pct(999, 369, 271, 118), say: 'the message' },
+                { n: 3, ...pct(999, 622, 271, 53), say: 'what happens if it fails' },
               ]}
             />
 
@@ -261,9 +261,9 @@ npm start`}</Command>
               src="/guide/editor-run.png"
               alt="the editor with the run log open"
               spots={[
-                { n: 1, ...pct(999, 7, 79, 29), say: 'live, or only when you press run' },
-                { n: 2, ...pct(1223, 5, 45, 33), say: 'run it now' },
-                { n: 3, ...pct(0, 479, 1280, 43), say: 'every function, what it got and what it sent' },
+                { n: 1, ...pct(936, 8, 79, 26), say: 'live, or only when you press run' },
+                { n: 2, ...pct(1223, 8, 45, 28), say: 'run it now' },
+                { n: 3, ...pct(0, 531, 1280, 229), say: 'every function, what it got and what it sent' },
               ]}
             />
           </section>
