@@ -94,7 +94,7 @@ export default async function Home() {
               </li>
               <li>Visual editor + readable as JSON.</li>
               <li>Reads and executes smart contracts (Solidity).</li>
-              <li>Agent tooling provided so your agent can build on Zorilla end-to-end.</li>
+              <li>Agent tooling provided, so your agent can build automations and API integrations.</li>
               <li>Fully open source!</li>
             </ul>
             <CopyCommand command="npx github:getzorilla/zorillaApp" />
