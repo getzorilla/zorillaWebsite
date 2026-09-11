@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 import catalog from '@/public/catalog.json'
+import starters from '@/public/starters.json'
 import Shot from '@/components/Shot'
 import AgentDoc from '@/components/AgentDoc'
 import Command from '@/components/Command'
@@ -148,8 +149,8 @@ npm start`}</Command>
             <h3>1. Open the workspace</h3>
             <p>
               Zorilla opens on your workspace with an <b>Examples</b> folder already in it:
-              the ten demos that ship with it, tagged <b>Example</b>, switched off until you
-              press run. Delete any of them and they stay deleted.
+              the {starters.length} demos that ship with it, tagged <b>Example</b>, switched off
+              until you press run. Delete any of them and they stay deleted.
             </p>
             <Shot
               src="/guide/home.png"
