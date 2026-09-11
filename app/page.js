@@ -64,18 +64,18 @@ export default async function Home() {
   const integrations = catalog.integrations.map((i) => i.label)
   const cases = CASES.map((c) => ({
     ...c,
-    preview: <CanvasPreview workflow={starters.find((s) => s.slug === c.slug)?.package} height={150} />,
+    preview: <CanvasPreview workflow={starters.find((s) => s.slug === c.slug)?.package} height={132} />,
   }))
 
   return (
     <main>
       <section className="page hero">
+        <div className="hero-name">
+          <img className="mark" src="/logo.svg" alt="" width="56" height="56" />
+          <h1>Zorilla</h1>
+        </div>
         <div className="hero-grid">
           <div>
-            <div className="hero-name">
-              <img className="mark" src="/logo.svg" alt="" width="56" height="56" />
-              <h1>Zorilla</h1>
-            </div>
             <ul className="hero-points">
               <li>Fully local.</li>
               <li>

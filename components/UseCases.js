@@ -23,7 +23,7 @@ export default function UseCases({ cases }) {
 
       <div className="case-panel">
         {cases.map((c) => (
-          <div key={c.id} hidden={c.id !== pick}>
+          <div key={c.id} hidden={c.id !== pick} inert={c.id !== pick}>
             <p className="case-line">{c.line}</p>
             <div className="frame">{c.preview}</div>
             <div className="case-steps">
@@ -33,7 +33,9 @@ export default function UseCases({ cases }) {
                   return (
                     <li key={i}>
                       <code>{head}</code>
-                      {rest.length > 0 && <span>{rest.join('  ')}</span>}
+                      {rest.length > 0 && (
+                        <span title={rest.join('  ')}>{rest.join('  ')}</span>
+                      )}
                     </li>
                   )
                 })}
