@@ -27,6 +27,7 @@ const SECTIONS = [
     ['errors', 'When something fails'],
     ['files', 'Files'],
     ['local', 'What local means'],
+    ['server', 'Running it 24/7'],
   ]],
   ['Reference', [
     ['steps', 'Every function'],
@@ -458,26 +459,67 @@ npm start`}</Command>
               your automation off. The address changes each time the tunnel restarts, so whoever
               you gave it to needs the new one.
             </p>
-            <h3>Running it around the clock</h3>
+          </section>
+
+          <section id="server">
+            <h2>Running it 24/7</h2>
             <p>
-              A live automation fires on its trigger only while Zorilla is running, which means
-              only while your computer is awake. Shut the lid and the schedules stop until you
-              open it again. Anything missed while the machine slept is noticed and caught up
-              once on the next start, but a run that needed to happen at 3am did not happen at
-              3am.
+              Automations only run while Zorilla is running. Close your laptop and they pause.
+              Anything missed while the machine slept is caught up once on the next start, but a
+              run that needed to happen at 3am did not happen at 3am. To keep them going, put
+              Zorilla on a server you own.
             </p>
             <p>
-              For something that has to run without you, put Zorilla on a machine that stays on:
-              a VPS, a spare box at home, a Raspberry Pi. It is a Node process and a folder, so
-              anywhere Node 20 runs will do. Set <code>ZORILLA_PASSPHRASE</code> so the vault
-              unlocks on a machine you are not sitting at, and reach the editor over an SSH
-              tunnel rather than opening the port.
+              A <code>Dockerfile</code> ships in the repository, so there is nothing to write.
+              On any server with Docker installed:
+            </p>
+            <pre><code>{`git clone https://github.com/getzorilla/zorillaApp
+cd zorillaApp
+docker build -t zorilla .
+
+docker run -d --name zorilla --restart=always --network host \\
+  -v zorilla-data:/data \\
+  -e ZORILLA_PASSPHRASE=pick-something-long-and-private \\
+  zorilla`}</code></pre>
+            <p>Then, from your own computer:</p>
+            <pre><code>ssh -N -L 5177:127.0.0.1:5177 you@your-server</code></pre>
+            <p>
+              Open <code>http://127.0.0.1:5177</code>. Same editor, same workspace, on a machine
+              that does not sleep.
+            </p>
+
+            <h3>What the three flags do</h3>
+            <p>
+              <code>--network host</code> is the load-bearing one. Zorilla binds{' '}
+              <code>127.0.0.1</code> and that is not configurable, because it holds your keys and
+              has no login. Under host networking it binds the server&apos;s own loopback, so it
+              is reachable from that server and from nowhere else, and the SSH tunnel above is
+              the only way in.
             </p>
             <p>
-              Making that a single step is what I am working on next: a one-command deploy to a
-              host you own, then an editor you can open in the browser, then encrypted hosting
-              run in-house for people who would rather not run anything themselves.
+              <code>-v zorilla-data:/data</code> is where the vault, the automations and the run
+              history live. Without it, replacing the container loses all three.
             </p>
+            <p>
+              <code>-e ZORILLA_PASSPHRASE</code> is a password you make up. On your own machine
+              the vault unlocks with a machine key and you never see one; a server has nobody
+              sitting at it, so it needs this instead. Zorilla can generate one for you under{' '}
+              <b>Settings</b>. Keep it somewhere safe: a vault cannot be opened with a different
+              passphrase, and a lost one cannot be recovered.
+            </p>
+
+            <h3>One container holds everything</h3>
+            <p>
+              A container runs a whole Zorilla install, not one workspace. Every workspace you
+              have lives inside that one <code>/data</code> volume and unlocks with that one
+              passphrase. Running two separate servers means two containers, two volumes and two
+              passphrases.
+            </p>
+
+            <h3>Keeping it up to date</h3>
+            <pre><code>{`git pull && docker build -t zorilla .
+docker rm -f zorilla`}</code></pre>
+            <p>Then run it again. The volume carries your automations and keys across.</p>
           </section>
 
           <section id="steps">
