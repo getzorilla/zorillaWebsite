@@ -94,7 +94,7 @@ export default async function Home() {
               </li>
               <li>Visual editor + readable as JSON.</li>
               <li>Reads and executes smart contracts (Solidity).</li>
-              <li>In-house agent tooling so your agent can build within Zorilla end-to-end.</li>
+              <li>Agent tooling provided so your agent can build on Zorilla end-to-end.</li>
               <li>Fully open source!</li>
             </ul>
             <CopyCommand command="npx github:getzorilla/zorillaApp" />
@@ -197,14 +197,12 @@ export default async function Home() {
       <section className="page section">
         <h2>What&apos;s next</h2>
         <p className="sub">
-          Zorilla runs on your machine, so a live automation only fires while that machine is
-          awake. Next up is making it easy to put Zorilla on a server you own so your
-          automations run around the clock, then an editor you can open in the browser, then
-          encrypted hosting run in-house. After that, Rust (Solana) support and general
-          quality-of-life work.
+          Zorilla is on v0.1.0 (just launched!) so any feedback would be appreciated! Currently
+          working on 1. Private in-house cloud and infrastructure for hosting automations 24/7
+          2. Rust (Solana support) 3. General quality-of-life features.
         </p>
         <p className="sub">
-          If you have any feedback please message me on{' '}
+          If you have any feedback or bugs to report please message me on{' '}
           <a className="inline-link" href="https://x.com/4aykk" target="_blank" rel="noreferrer">X</a>!
         </p>
       </section>
