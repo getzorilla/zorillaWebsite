@@ -200,7 +200,7 @@ textarea { font-family: var(--mono); font-size: 12.5px; resize: vertical; }
 .needs li:last-child { margin-bottom: 0; }
 .needs b { color: var(--text); font-weight: 500; }
 
-.section { padding: var(--s5) 0; border-top: 1px solid var(--line); }
+.section { padding-block: var(--s5); border-top: 1px solid var(--line); }
 .section h2 {
   margin: 0 0 var(--s1); font-size: 15px; font-weight: 500;
   letter-spacing: .01em; color: var(--dim);
@@ -281,7 +281,7 @@ html, body { overflow-x: clip; }
 
 .theme-grid {
   display: grid; gap: 14px;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
 }
 .theme-card {
   border: 1px solid var(--line); border-radius: 10px; overflow: hidden;
@@ -397,7 +397,7 @@ html, body { overflow-x: clip; }
 
 .hero-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 40px; align-items: center; }
 .hero-split .frame { padding: 16px; }
-.cases .frame { padding: 14px; border-radius: 13px; }
+.cases .frame { padding: 14px; border-radius: 13px; min-width: 0; }
 @media (max-width: 900px) {
   .hero-split { grid-template-columns: 1fr; gap: 28px; }
   .frame.tilt .shot { transform: none; }
@@ -440,7 +440,10 @@ html, body { overflow-x: clip; }
 }
 .docs-main pre code { background: none; border: 0; padding: 0; }
 
-table.ref { width: 100%; border-collapse: collapse; margin: 0 0 16px; font-size: 12.5px; }
+table.ref {
+  width: 100%; border-collapse: collapse; margin: 0 0 16px; font-size: 12.5px;
+  display: block; overflow-x: auto; max-width: 100%;
+}
 table.ref th {
   text-align: left; font-weight: 600; color: var(--dimmer); font-size: 11px;
   letter-spacing: .01em; padding: 0 10px 6px 0; border-bottom: 1px solid var(--line);
@@ -487,7 +490,7 @@ table.ref td.type { font-family: var(--mono); color: var(--dimmer); white-space:
 
 /* what people build with it */
 
-.cases { display: grid; gap: 16px; }
+.cases { display: grid; gap: 16px; min-width: 0; }
 /* tabs sit in a padded button, so the column reads ~14px lower than the
    bullet list beside it. pull it back to the same optical start.
    divider sits in the middle of the 76px gap, not on the column edge. */
@@ -515,8 +518,8 @@ table.ref td.type { font-family: var(--mono); color: var(--dimmer); white-space:
 
 /* every case is stacked in one grid cell, so the panel is always as tall as the
    longest list and switching tabs never moves the rest of the page. */
-.case-panel { display: grid; }
-.case-panel > div { grid-area: 1 / 1; display: flex; flex-direction: column; gap: 16px; }
+.case-panel { display: grid; min-width: 0; }
+.case-panel > div { grid-area: 1 / 1; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
 .case-panel > div[hidden] { visibility: hidden; }
 .case-steps { margin-top: 6px; }
 .case-steps ol { margin: 0; padding: 0; list-style: none; counter-reset: step; }
@@ -537,14 +540,14 @@ table.ref td.type { font-family: var(--mono); color: var(--dimmer); white-space:
 }
 
 @media (max-width: 900px) {
-  .hero-grid { grid-template-columns: 1fr; gap: 34px; }
+  .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 34px; }
   .hero-grid .cases { margin-top: 0; border-left: 0; margin-left: 0; padding-left: 0; }
 }
 
 /* integrations */
 
 .int-search { max-width: 340px; margin-bottom: 8px; }
-.int-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.int-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: 14px; }
 .int-card {
   border: 1px solid var(--line); border-radius: 10px; background: var(--raise);
   padding: 14px; display: flex; flex-direction: column; gap: 10px;
@@ -579,7 +582,7 @@ table.ref td.type { font-family: var(--mono); color: var(--dimmer); white-space:
 /* the automation, drawn */
 
 .preview {
-  display: block; width: 100%; max-width: 100%;
+  display: block; width: 100%; max-width: 100%; min-width: 0;
   background:
     radial-gradient(circle at 1px 1px, var(--line) 1px, transparent 0) 0 0 / 22px 22px,
     var(--sunk);
@@ -643,7 +646,7 @@ table.ref td.type { font-family: var(--mono); color: var(--dimmer); white-space:
 
 /* the service belt */
 
-.belt-section { padding: var(--s5) 0; border-top: 1px solid var(--line); }
+.belt-section { padding-block: var(--s5); border-top: 1px solid var(--line); }
 .belt {
   margin-top: 26px; overflow: hidden; position: relative;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
@@ -671,7 +674,7 @@ table.ref td.type { font-family: var(--mono); color: var(--dimmer); white-space:
 /* the sections that get a whole screen */
 
 .tall {
-  min-height: calc(100vh - 58px); padding: 96px 0;
+  min-height: calc(100vh - 58px); padding-block: 96px;
   border-top: 1px solid var(--line);
   display: flex; flex-direction: column; justify-content: flex-start; gap: 44px;
 }
@@ -902,7 +905,7 @@ table.ref td.type { font-family: var(--mono); color: var(--dimmer); white-space:
   margin-top: 8px; color: var(--dimmer); font-size: 12.5px; font-family: var(--mono);
 }
 
-.post-thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 10px; }
+.post-thumbs { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(150px, 100%), 1fr)); gap: 10px; margin-top: 10px; }
 .post-thumb img {
   width: 100%; height: 92px; object-fit: cover;
   border-radius: 8px; border: 1px solid var(--line); display: block; margin-bottom: 6px;
@@ -969,7 +972,7 @@ table.ref td.type { font-family: var(--mono); color: var(--dimmer); white-space:
 
   /* the hero kept two columns all the way down, which is what squeezed the
      copy into a gutter and pushed the panel off the side */
-  .hero-grid { grid-template-columns: 1fr; gap: 32px; }
+  .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; }
   .hero-points { gap: 13px; margin-bottom: 26px; }
   .hero-points li { font-size: 14px; }
   .install { width: 100%; }
@@ -983,22 +986,21 @@ table.ref td.type { font-family: var(--mono); color: var(--dimmer); white-space:
   .out { padding: 0; }
   .out-arrow, .out-blocked { max-width: 220px; }
 
-  .section { padding: var(--s4) 0; }
+  .section { padding-block: var(--s4); }
   .section .sub { font-size: 15px; }
   .tall-head { margin-bottom: 20px; }
 
-  /* tabs ran onto a second line and left an orphan; one row that scrolls */
-  .case-tabs {
-    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
-    margin: 0 -20px; padding: 0 20px 2px;
-  }
-  .case-tabs::-webkit-scrollbar { display: none; }
+  /* wrapping beats a scroller here: a scrolled row cuts the last tab in half
+     at the gutter, which reads as broken rather than as "there is more" */
+  .case-tabs { flex-wrap: wrap; }
   .case-tab { flex: none; }
+  /* the svg height is set inline, and at phone width it letterboxes the
+     diagram inside a mostly empty card; let the aspect set the height */
+  .cases .preview { height: auto !important; }
   .hero-grid .cases { margin-top: 0; }
   .case-line { font-size: 14.5px; }
   .case-steps li { flex-wrap: wrap; gap: 6px; }
 
-  table.ref { display: block; overflow-x: auto; }
   .preview-text, .doc-block { font-size: 11.5px; }
   .prompt-cta { flex-direction: column; align-items: flex-start; gap: 12px; }
 }
