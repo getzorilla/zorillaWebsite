@@ -18,8 +18,8 @@ const CASES = [
     steps: [
       'Every 10 minutes',
       'Search X  from:VitalikButerin (rollup OR L2)',
-      'First time only  by post id',
-      'Telegram  into your group, as soon as it appears',
+      'First time only  By post ID',
+      'Telegram  Into your group, as soon as it appears',
     ],
     needs: 'an X key and a Telegram bot token',
   },
@@ -29,8 +29,8 @@ const CASES = [
     why: 'Half-hourly. You name the subject, and it never drafts the same story twice.',
     steps: [
       'Every 30 minutes',
-      'Search Hacker News  about "Robinhood Chain"',
-      'First time only  by story id',
+      'Search Hacker News  About "Robinhood Chain"',
+      'First time only  By story ID',
       'Ask Claude  "write one post, under 240 characters"',
       'Post to X  {{ $json.text }}',
     ],
@@ -42,8 +42,8 @@ const CASES = [
     why: 'Checks every ten minutes and says nothing until the price is 5% away from the last figure it announced.',
     steps: [
       'Every 10 minutes',
-      'Coin price  solana in usd',
-      'When this moves  by 5 percent, up or down',
+      'Coin price  Solana in USD',
+      'When this moves  By 5 percent, up or down',
       'Discord  "SOL is up 6% to $214"',
     ],
     needs: 'a Discord webhook',
@@ -52,7 +52,7 @@ const CASES = [
     id: 'selling', slug: 'payment-to-slack-and-notion', who: 'Sellers',
     line: 'Turn a Stripe payment into a Slack message and a Notion row',
     why: 'One step feeding two, so both happen from the same payment. Fires once per payment.',
-    steps: ['New Stripe payment', 'Slack  "$49.00 from buyer@example.com"', 'Notion  add a row'],
+    steps: ['New Stripe payment', 'Slack  "$49.00 from buyer@example.com"', 'Notion  Add a row'],
     needs: 'Stripe, Slack and Notion keys',
   },
   {
@@ -62,9 +62,9 @@ const CASES = [
     steps: [
       'Every 5 minutes',
       'Contract events  event Transfer(address indexed from, address indexed to, uint256 value)',
-      'First time only  by transaction hash',
+      'First time only  By transaction hash',
       'Ask Claude  "say what happened in one line, keep the numbers exact"',
-      'Telegram  into your group',
+      'Telegram  Into your group',
     ],
     needs: 'a Claude key and a Telegram bot token',
   },
