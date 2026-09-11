@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-11T00:50:57.905Z",
+  "generatedAt": "2026-09-11T02:14:14.343Z",
   "logos": [
     "airtable",
     "anthropic",
@@ -863,6 +863,12 @@
       "mode": "perItem",
       "description": "How much ETH a wallet holds.",
       "type": "web3.balance",
+      "hands": [
+        "chain",
+        "address",
+        "wei",
+        "eth"
+      ],
       "label": "ETH balance",
       "category": "web3",
       "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
@@ -915,6 +921,15 @@
       "mode": "perItem",
       "description": "How much of one token a wallet holds.",
       "type": "web3.erc20Balance",
+      "hands": [
+        "chain",
+        "token",
+        "symbol",
+        "address",
+        "raw",
+        "amount",
+        "decimals"
+      ],
       "label": "Token balance",
       "category": "web3",
       "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
@@ -973,6 +988,12 @@
       "mode": "perItem",
       "description": "Asks a contract a question.",
       "type": "web3.read",
+      "hands": [
+        "chain",
+        "address",
+        "function",
+        "result"
+      ],
       "label": "Read from a contract",
       "category": "web3",
       "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
@@ -1077,6 +1098,13 @@
       "mode": "perItem",
       "description": "What a transaction costs to send right now.",
       "type": "web3.gas",
+      "hands": [
+        "chain",
+        "gasPriceWei",
+        "gasPriceGwei",
+        "maxFeePerGasGwei",
+        "maxPriorityFeePerGasGwei"
+      ],
       "label": "Gas price",
       "category": "web3",
       "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"
@@ -1122,6 +1150,10 @@
       "mode": "perItem",
       "description": "Name to address, or back.",
       "type": "web3.ens",
+      "hands": [
+        "name",
+        "address"
+      ],
       "label": "ENS name",
       "category": "web3",
       "source": "/Users/jungmin/Documents/GitHub/zorilla/zorillaApp/src/nodes"

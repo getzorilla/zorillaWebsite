@@ -49,8 +49,8 @@ export default async function Docs({ searchParams }) {
       <main className="page section" style={{ borderTop: 0 }}>
         <h2>Docs for agents</h2>
         <p className="sub" style={{ maxWidth: '70ch' }}>
-          One file holding every function, every field, every rule the engine enforces, and eight
-          working automations to copy from. It is generated from the same catalogue the app
+          One file holding every function, every field, every rule the engine enforces, and
+          {starters.length} working automations to copy from. It is generated from the same catalogue the app
           loads, so it never describes a function that does not exist. Paste it into an agent and
           ask for an automation.
         </p>
@@ -115,9 +115,8 @@ npm install
 npm start`}</Command>
             <p>
               Either way it opens at <code>http://127.0.0.1:5177</code>. There is no build step
-              and no configuration file. Your workspace starts empty: nothing is installed on
-              your behalf. Thirteen examples come with it, four of which run with no keys at
-              all, and the empty workspace offers them.
+              and no configuration file. Your workspace opens with {starters.length} demos in an
+              Examples group, all switched off. Two of them run with no keys at all.
             </p>
             <h3>Where your things live</h3>
             <p>
@@ -149,15 +148,15 @@ npm start`}</Command>
 
             <h3>1. Open the workspace</h3>
             <p>
-              Zorilla opens on your workspace with an <b>Examples</b> folder already in it:
+              Zorilla opens on your workspace with an <b>Examples</b> group already in it:
               the {starters.length} demos that ship with it, tagged <b>Example</b>, switched off
               until you press run. Delete any of them and they stay deleted.
             </p>
             <Shot
               src="/guide/home.png"
-              alt="a Zorilla workspace with the Examples folder in it"
+              alt="a Zorilla workspace with the Examples group in it"
               spots={[
-                { n: 1, ...pct(0, 44, 150, 716), say: 'automations, keys, integrations, settings' },
+                { n: 1, ...pct(0, 44, 150, 716), say: 'workspace, keys, integrations, settings, guide' },
                 { n: 2, ...pct(416, 145, 830, 33), say: 'start from nothing, bring in a file, or have an agent write it' },
                 { n: 3, ...pct(17, 677, 115, 36), say: 'straight to the canvas' },
               ]}
@@ -173,7 +172,7 @@ npm start`}</Command>
             </p>
             <Shot
               src="/guide/demos.png"
-              alt="the Examples folder, with the keyless demos marked Ready"
+              alt="the Examples group, with the keyless demos marked Ready"
               spots={[
                 { n: 1, ...pct(719, 369, 57, 20), say: 'runs with nothing set up' },
                 { n: 2, ...pct(446, 371, 195, 21), say: 'open it' },

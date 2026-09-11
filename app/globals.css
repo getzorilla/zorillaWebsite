@@ -1010,3 +1010,6 @@ table.ref td.type { font-family: var(--mono); color: var(--dimmer); white-space:
 .meta.by .avatar-img { border-radius: 50%; flex: none; }
 
 .theme-more { margin-top: 16px; }
+
+.item.person { display: flex; align-items: center; gap: 10px; padding: 9px 12px; min-width: 220px; }
+.item.person .title { font-weight: 550; }

@@ -1,7 +1,8 @@
 import Link from 'next/link'
-import { listListings } from '@/lib/store'
+import { listListings, searchProfiles } from '@/lib/store'
 import { currentUser } from '@/lib/auth'
 import { ListingRow, Empty } from '@/components/Listings'
+import Avatar from '@/components/Avatar'
 
 export const metadata = { title: 'Marketplace · Zorilla' }
 export const dynamic = 'force-dynamic'
@@ -12,6 +13,7 @@ export default async function Marketplace({ searchParams }) {
   const query = params?.q ?? ''
   const me = await currentUser()
   const listings = await listListings({ kind, query, viewer: me?.handle ?? null })
+  const people = kind ? [] : await searchProfiles(query)
 
   const tab = (label, value) => (
     <Link
@@ -39,7 +41,7 @@ export default async function Marketplace({ searchParams }) {
 
       <form className="row" style={{ marginBottom: 18 }}>
         {kind && <input type="hidden" name="kind" value={kind} />}
-        <input name="q" defaultValue={query} placeholder="Search" />
+        <input name="q" defaultValue={query} placeholder="Search automations, integrations, themes or people" />
         <button className="btn icon-btn" type="submit" aria-label="search" title="Search">
           <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
             <circle cx="11" cy="11" r="6.5" />
@@ -48,7 +50,24 @@ export default async function Marketplace({ searchParams }) {
         </button>
       </form>
 
-      {listings.length === 0 ? (
+      {people.length > 0 && (
+        <section style={{ marginBottom: 26 }}>
+          <p className="footnote" style={{ marginBottom: 10 }}>People</p>
+          <div className="row wrap">
+            {people.map((person) => (
+              <Link key={person.handle} href={`/u/${person.handle}`} className="item person">
+                <Avatar src={person.avatar} handle={person.handle} size={32} />
+                <span className="grow">
+                  <span className="title">{person.name || person.handle}</span>
+                  <span className="dimmer"> @{person.handle}</span>
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {listings.length === 0 && people.length === 0 ? (
         <Empty title={query ? 'Nothing matched' : 'Nothing published yet'}>
           <p>
             {query
