@@ -7,11 +7,13 @@ import './globals.css'
 // the same face andrewjungminkim.com is set in.
 const sans = Geist({ subsets: ['latin'], variable: '--font-sans', display: 'swap' })
 const mono = Geist_Mono({ subsets: ['latin'], variable: '--font-mono', display: 'swap' })
+import catalog from '@/public/catalog.json'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 
+// the count comes off the catalogue so it cannot drift from what ships
 const description =
-  'Fully local automation, no strings attached. Reads smart contracts, with web3 steps built in. 16 API integrations, or build your own.'
+  `Fully local automation, no strings attached. Reads smart contracts, with web3 steps built in. ${catalog.integrations.length} API integrations, or build your own.`
 
 export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://zorilla.io'),

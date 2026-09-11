@@ -1008,3 +1008,5 @@ table.ref td.type { font-family: var(--mono); color: var(--dimmer); white-space:
 
 .meta.by { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
 .meta.by .avatar-img { border-radius: 50%; flex: none; }
+
+.theme-more { margin-top: 16px; }

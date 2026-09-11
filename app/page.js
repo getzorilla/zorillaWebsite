@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import catalog from '@/public/catalog.json'
-import { ThemePreview } from '@/components/ThemeCard'
+import ThemeGrid from '@/components/ThemeGrid'
 import { GithubMark } from '@/components/Icons'
 import LogoBelt from '@/components/LogoBelt'
 import LocalDiagram from '@/components/LocalDiagram'
@@ -172,20 +172,13 @@ export default async function Home() {
       <section className="page section">
         <h2>Themes</h2>
         <p className="sub">
-          13 color themes I ripped off of VS Code, plus you can build your own, or
+          {(catalog.themes ?? []).length} color themes I ripped off of VS Code, plus you can build your own, or
           share and download from the{' '}
-          <Link href="/marketplace/themes" className="inline-link">marketplace</Link>.
+          <Link href="/marketplace" className="inline-link">marketplace</Link>.
         </p>
-        <div className="theme-grid">
-          {(catalog.themes ?? []).slice(0, 4).map((theme) => (
-            <div key={theme.id} className="theme-card">
-              <ThemePreview colors={theme.colors} />
-              <div className="theme-foot"><strong>{theme.label}</strong><span>{theme.appearance}</span></div>
-            </div>
-          ))}
-        </div>
+        <ThemeGrid themes={catalog.themes ?? []} />
         <div className="cta" style={{ marginTop: 20 }}>
-          <Link href="/marketplace/themes" className="btn">Themes</Link>
+          <Link href="/marketplace?kind=theme" className="btn">Themes on the marketplace</Link>
         </div>
       </section>
 
