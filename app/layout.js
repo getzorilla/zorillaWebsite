@@ -16,7 +16,9 @@ const description =
   `Fully local automation, no strings attached. Reads smart contracts, with web3 steps built in. ${catalog.integrations.length} API integrations, or build your own.`
 
 export const metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://zorilla.io'),
+  // the apex 308-redirects to www, so www is what a crawler actually lands on.
+  // og:url is the identity X keys its card cache on, so it has to be the real one.
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.zorilla.io'),
   title: 'Zorilla: Web2/3 workflow automation, fully local.',
   description,
   icons: { icon: [{ url: '/favicon.ico', sizes: 'any' }, { url: '/logo.svg', type: 'image/svg+xml' }], apple: '/apple-icon.png' },
